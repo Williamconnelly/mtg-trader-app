@@ -45,7 +45,7 @@ module.exports = {
         type: Sequelize.STRING
       },
       text: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING(400)
       },
       power: {
         type: Sequelize.STRING

@@ -1,19 +1,48 @@
-const Sequelize = require('sequelize');
-const Op = Sequelize.Op;
+var express = require('express');
+var db = require("./models");
+const fs = require('fs');
 
-var dataSet = {
-  
-}
+// var dataSet = fs.readFileSync("NewAllCards.json");
+var dataSet = 
 
 const cardFields = ["layout","name","names","manaCost","cmc","colors","colorIdentity",
-"type","supertypes","rarity","text","power","toughness","loyalty"]
+"type","supertypes","types","subtypes","rarity","text","power","toughness","loyalty"]
 
+const longArray = [];
+
+// Finds cards with a text length of greater than the allowed 400
 for (card in dataSet) {
-  let currentCard = dataSet[card]
-  let insertCard = {};
-  for (field in cardFields) {
-    let property = cardFields[field]
-    currentCard.hasOwnProperty(property) ? insertCard[property] = currentCard[property] : insertCard[property] = null;
+  let currentCard = dataSet[card];
+  if (currentCard.text.length > 400) {
+    longArray.push([currentCard.name,currentCard.text.length])
   }
-  console.log(insertCard);
 }
+
+console.log(longArray);
+
+// for (card in dataSet) {
+//   let currentCard = dataSet[card]
+//   let insertCard = {};
+//   for (field in cardFields) {
+//     let property = cardFields[field]
+//     currentCard.hasOwnProperty(property) ? insertCard[property] = currentCard[property] : insertCard[property] = null;
+//   }
+//   db.card.create({
+//     layout: insertCard.layout,
+//     name: insertCard.name,
+//     names: insertCard.names,
+//     mana_cost: insertCard.manaCost,
+//     cmc: insertCard.cmc,
+//     colors: insertCard.colors,
+//     color_identity: insertCard.colorIdentity,
+//     type: insertCard.type,
+//     supertypes: insertCard.supertypes,
+//     types: insertCard.types,
+//     subtypes: insertCard.subtypes,
+//     rarity: insertCard.rarity,
+//     text: insertCard.text,
+//     power: insertCard.power,
+//     toughness: insertCard.toughness,
+//     loyalty: insertCard.loyalty
+//   })
+// }
