@@ -3,22 +3,11 @@ var db = require("./models");
 const fs = require('fs');
 
 // var dataSet = fs.readFileSync("NewAllCards.json");
-var dataSet = 
 
 const cardFields = ["layout","name","names","manaCost","cmc","colors","colorIdentity",
 "type","supertypes","types","subtypes","rarity","text","power","toughness","loyalty"]
 
 const longArray = [];
-
-// Finds cards with a text length of greater than the allowed 400
-for (card in dataSet) {
-  let currentCard = dataSet[card];
-  if (currentCard.text.length > 400) {
-    longArray.push([currentCard.name,currentCard.text.length])
-  }
-}
-
-console.log(longArray);
 
 // for (card in dataSet) {
 //   let currentCard = dataSet[card]
@@ -46,3 +35,12 @@ console.log(longArray);
 //     loyalty: insertCard.loyalty
 //   })
 // }
+
+// Finds cards with a text length of greater than the allowed 400
+// for (card in dataSet) {
+//   let currentCard = dataSet[card];
+//   if (currentCard.hasOwnProperty("text") && currentCard.text.length > 400) {
+//     longArray.push([currentCard.name,currentCard.text.length])
+//   }
+// }
+// console.log(longArray);

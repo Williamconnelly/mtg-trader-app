@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
     types: DataTypes.ARRAY(DataTypes.STRING),
     subtypes: DataTypes.ARRAY(DataTypes.STRING),
     rarity: DataTypes.STRING,
-    text: DataTypes.STRING,
+    text: DataTypes.STRING(660),
     power: DataTypes.STRING,
     toughness: DataTypes.STRING,
     loyalty: DataTypes.INTEGER
