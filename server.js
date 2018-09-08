@@ -13,6 +13,7 @@ app.get("/", (req, res) => {
   res.send("Hello!");
 })
 
+app.use('/auth', require('./controllers/auth'));
 app.use('/card', require('./controllers/cards'));
 
 var port = process.env.PORT || 3000;
