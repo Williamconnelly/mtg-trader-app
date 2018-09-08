@@ -42,12 +42,18 @@ module.exports = (sequelize, DataTypes) => {
   user.prototype.validPassword = passwordTyped => bcrypt.compareSync(passwordTyped, this.password);
   
   // Returns the user without the password
-  user.prototype.toJSON = () => {
+  // user.prototype.toJSON = () => {
+  //   var userData = this.get();
+  //   delete userData.password;
+  //   return userData;
+  // }
+  
+  user.prototype.toJSON = function () {
     var userData = this.get();
     delete userData.password;
     return userData;
-  }
-  
+  };
+
   // Returns user object without password (for token)
   // user.prototype.set("toObject", {
   //   transform: (doc, ret, options) => {

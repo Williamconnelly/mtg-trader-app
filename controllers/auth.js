@@ -13,15 +13,16 @@ router.post("/signup", (req, res) => {
     where: {
       email: req.body.email
     }, defaults: {
-      name: req.body.name,
+      username: req.body.username,
+      email: req.body.email,
       password: req.body.password
     }
   }).spread(((user, created) => {
     // If no email was found
     if (created) {
-      var token = jwt.sign(user.toObject(), process.env.JWT_SECRET, {
+      var token = jwt.sign(user.toJSON(), process.env.JWT_SECRET, {
         expiresIn: 60 * 60 * 24
-      })
+      });
       // Return user and new token
       res.json({user, token})
     // That user already exists
