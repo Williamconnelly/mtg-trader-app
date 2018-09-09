@@ -40,14 +40,7 @@ module.exports = (sequelize, DataTypes) => {
   };
   // This checks the entered password against the database hashed password
   user.prototype.validPassword = passwordTyped => bcrypt.compareSync(passwordTyped, this.password);
-  
-  // Returns the user without the password
-  // user.prototype.toJSON = () => {
-  //   var userData = this.get();
-  //   delete userData.password;
-  //   return userData;
-  // }
-  
+
   user.prototype.toJSON = function () {
     var userData = this.get();
     delete userData.password;
