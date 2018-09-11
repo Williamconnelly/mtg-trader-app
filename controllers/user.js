@@ -37,4 +37,25 @@ router.post("/collection", (req, res) => {
   })
 })
 
+// Add to Wishlist
+router.post("/wishlist", (req, res) => {
+  db.user.find({
+    where: {
+      // TODO: Get at User differently
+      id: req.body.userId
+    }
+  }).then(user => {
+    db.card.find({
+      where: {
+        id: req.body.cardId
+      }
+    }).then(card => {
+      user.addCard(card, {through: {
+        number_wanted: req.body.number_wanted,
+        pref_printing: req.body.pref_printing
+      }})
+    })
+  })
+})
+
 module.exports = router;
