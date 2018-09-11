@@ -15,6 +15,7 @@ app.get("/", (req, res) => {
 
 app.use('/auth', require('./controllers/auth'));
 app.use('/card', require('./controllers/card'));
+app.use('/user', require('./controllers/user'));
 
 var port = process.env.PORT || 3000;
 var server = app.listen(port, () => console.log(`Server now running on ${port}`));

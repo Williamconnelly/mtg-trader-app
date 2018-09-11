@@ -1,6 +1,11 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
   var cardsSets = sequelize.define('cardsSets', {
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true
+    },
     cardId: DataTypes.INTEGER,
     setId: DataTypes.INTEGER
   }, {});

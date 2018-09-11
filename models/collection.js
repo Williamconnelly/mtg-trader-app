@@ -1,7 +1,7 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
   var collection = sequelize.define('collection', {
-    cardId: DataTypes.INTEGER,
+    cardsSetId: DataTypes.INTEGER,
     userId: DataTypes.INTEGER,
     owned_copies: DataTypes.INTEGER,
     trade_copies: DataTypes.INTEGER
