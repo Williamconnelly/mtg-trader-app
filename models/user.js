@@ -37,6 +37,8 @@ module.exports = (sequelize, DataTypes) => {
   });
   user.associate = function(models) {
     // associations can be defined here
+    models.user.belongsToMany(models.card, {through: "wishlist"});
+    models.user.belongsToMany(models.cardsSets, {through: "collection"})
   };
   // This checks the entered password against the database hashed password
   user.prototype.validPassword = passwordTyped => bcrypt.compareSync(passwordTyped, this.password);
