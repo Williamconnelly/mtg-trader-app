@@ -13,4 +13,7 @@ export class SignupComponent implements OnInit {
   ngOnInit() {
   }
 
+  registerUser() {
+    console.log(this.registerUserData);
+  }
 }

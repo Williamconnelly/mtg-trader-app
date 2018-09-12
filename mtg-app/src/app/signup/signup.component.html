@@ -2,11 +2,11 @@
 <div>
   <form>
     <label for="">Username</label>
-    <input type="text">
+    <input [(ngModel)]="registerUserData.username" name="username" type="text">
     <label for="">Email</label>
-    <input type="text">
+    <input [(ngModel)]="registerUserData.email" name="email" type="text">
     <label for="">Password</label>
-    <input type="text">
-    <button>Register</button>
+    <input [(ngModel)]="registerUserData.password" name="password" type="password">
+    <button (click)="registerUser()" >Register</button>
   </form>
 </div>
