@@ -5,9 +5,11 @@ const Op = Sequelize.Op;
 var db = require("./models");
 const axios = require("axios");
 const bp = require("body-parser");
+const cors = require("cors");
 
 var app = express();
 app.use(bp.json());
+app.use(cors());
 
 app.get("/", (req, res) => {
   res.send("Hello!");
