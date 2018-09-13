@@ -18,5 +18,9 @@ export class AuthService {
   loginUser(user) {
     return this.http.post<any>(this._loginUrl, user);
   }
+  loggedIn() {
+    // Returns true or false based on the presence of the token in localStorage
+    return !!localStorage.getItem('token');
+  }
 }
 
