@@ -1,3 +1,10 @@
-<p>
-  login works!
-</p>
+<header>Login</header>
+<div>
+  <form>
+    <label for="">Username</label>
+    <input [(ngModel)]="loginUserData.username" name="username" type="text">
+    <label for="">Password</label>
+    <input [(ngModel)]="loginUserData.password" name="password" type="password">
+    <button (click)="loginUser()">Login</button>
+  </form>
+</div>

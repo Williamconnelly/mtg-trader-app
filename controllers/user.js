@@ -6,15 +6,16 @@ const Sequelize = require('sequelize');
 require('dotenv').config();
 
 // Get User's Collection
-// router.get("/collection", (req, res) => {
-//   db.collection.get({
-//     where: {
-//       userId: req.body.userId
-//     }
-//   }).then(collection => {
-    
-//   })
-// })
+router.get("/collection/:id", (req, res) => {
+  db.collection.findAll({
+    where: {
+      // TODO: Get at User differently
+      userId: req.params.id
+    }
+  }).then(collection => {
+    res.json(collection);
+  })
+})
 
 // Add to Collection
 router.post("/collection", (req, res) => {

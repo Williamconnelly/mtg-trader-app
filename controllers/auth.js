@@ -58,6 +58,12 @@ router.post("/login", (req, res) => {
           message: "Username or Password is incorrect"
         });
       } 
+    } else {
+      res.json({
+        error: true,
+        status: 401,
+        message: "Username or Password is incorrect"
+      })
     }
   });
 })

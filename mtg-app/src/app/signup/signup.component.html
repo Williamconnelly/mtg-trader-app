@@ -1,3 +1,12 @@
-<p>
-  signup works!
-</p>
+<header>Register</header>
+<div>
+  <form>
+    <label for="">Username</label>
+    <input [(ngModel)]="registerUserData.username" name="username" type="text">
+    <label for="">Email</label>
+    <input [(ngModel)]="registerUserData.email" name="email" type="text">
+    <label for="">Password</label>
+    <input [(ngModel)]="registerUserData.password" name="password" type="password">
+    <button (click)="registerUser()">Register</button>
+  </form>
+</div>
