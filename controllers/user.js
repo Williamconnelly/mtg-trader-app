@@ -38,6 +38,18 @@ router.post("/collection", (req, res) => {
   })
 })
 
+// Get User's Wishlist
+router.get("/collection/:id", (req, res) => {
+  db.wishlist.findAll({
+    where: {
+      // TODO: Get at User differently
+      userId: req.params.id
+    }
+  }).then(wishlist => {
+    res.json(wishlist);
+  })
+})
+
 // Add to Wishlist
 router.post("/wishlist", (req, res) => {
   db.user.find({
