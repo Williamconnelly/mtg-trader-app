@@ -17,5 +17,4 @@ export class GatheringComponent implements OnInit {
       err => console.log(err)
     );
   }
-
 }

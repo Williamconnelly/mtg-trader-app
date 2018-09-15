@@ -7,12 +7,13 @@ const verifyToken = require("../middleware/verifyToken");
 require('dotenv').config();
 
 // Find trade partners based on user wishlist
-router.get("/partners/want", (req, res) => {
-  res.status(200).send("Trading!");
+router.get("/gathering/want", verifyToken ,(req, res) => {
+  // res.status(200).send("Trading!");
+  res.json([1,2,3]);
 });
 
 // Find trade partners based on user tradelist
-router.get("/partners/provide", (req, res) => {
+router.get("/gathering/provide", (req, res) => {
   res.status(200).send("Trading!");
 });
 

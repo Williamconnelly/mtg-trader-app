@@ -1,3 +1,6 @@
+const Sequelize = require('sequelize');
+const jwt = require("jsonwebtoken");
+
 // Middleware to check incoming request for auth header and verify token
 const verifyToken = (req, res, next) => {
   // If the req has no auth header, return Unauthorized
