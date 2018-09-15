@@ -11,13 +11,16 @@ import { AuthService } from './auth.service';
 import { AuthGuard } from './auth.guard';
 import { TokenInterceptorService } from './token-interceptor.service';
 import { Token } from '@angular/compiler';
+import { GatheringComponent } from './gathering/gathering.component';
+import { GatheringService } from './gathering.service';
 
 @NgModule({
   declarations: [
     AppComponent,
     SignupComponent,
     LoginComponent,
-    PageNotFoundComponent
+    PageNotFoundComponent,
+    GatheringComponent
   ],
   imports: [
     BrowserModule,
@@ -25,7 +28,7 @@ import { Token } from '@angular/compiler';
     HttpClientModule,
     AppRoutingModule
   ],
-  providers: [AuthService, AuthGuard, {
+  providers: [AuthService, AuthGuard, GatheringService, {
     provide: HTTP_INTERCEPTORS,
     useClass: TokenInterceptorService,
     multi: true
