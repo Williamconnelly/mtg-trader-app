@@ -9,11 +9,11 @@ require('dotenv').config();
 // Find trade partners based on user wishlist
 router.get("/gathering/want", verifyToken ,(req, res) => {
   // res.status(200).send("Trading!");
-  res.json([1,2,3]);
+  console.log(req);
 });
 
 // Find trade partners based on user tradelist
-router.get("/gathering/provide", (req, res) => {
+router.get("/gathering/provide", veryifyToken, (req, res) => {
   res.status(200).send("Trading!");
 });
 
