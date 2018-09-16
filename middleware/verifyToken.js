@@ -18,9 +18,10 @@ const verifyToken = (req, res, next) => {
     // If the verification doesn't return anything, return Unauthorized
     if (!payload) {
       res.status(401).send("Unauthorized Request");
+    } else {
+      // If the token verifies correctly, set userId in the req and call NEXT
+      req.user = payload;
     }
-    // If the token verifies correctly, set userId in the req and call NEXT
-    req.userId = payload.subject;
     next();
   }
 }
