@@ -8,13 +8,43 @@ require('dotenv').config();
 
 // Find trade partners based on user wishlist
 router.get("/gathering/want", verifyToken ,(req, res) => {
-  // res.status(200).send("Trading!");
-  // db.wishlist.findAll({
-  //   where: {
-  //     userId: req.user.id
-  //   } 
-  // }).then(wishlist => {
-    
+  // Find current User and include their associated cards (Wishlist)
+  db.user.findOne({
+    where: {
+      id: req.user.id
+    }, include: [db.card]
+  }).then(user => {
+    // For each card in the user's wishlist, get the card's printings
+    for (card in user.dataValues.cards) {
+      // If the card does not have a preferred printing
+      if (user.dataValues.cards[card].dataValues.wishlist.dataValues.pref_printing === null) {
+        // db.card.find({
+        //   where: {
+        //     id: user.dataValues.cards[card].dataValues.wishlist.dataValues.cardId
+        //   },
+        //   include: [db.set]
+        // }).then(cards => {
+        //   console.log(cards.sets);
+
+        // })
+        db.cardsSets.findAll({
+          where: {
+            cardId: user.dataValues.cards[card].dataValues.wishlist.dataValues.cardId
+          },
+          include: [db.user]
+        }).then(printings => {
+          for (printing in printings) {
+            console.log(printings[printing].dataValues)
+          }
+        })
+      // If the card has a preferred printing
+      } else {
+        console.log("what");
+      }
+    }
+  })
+
+/*
   // });
   db.user.findOne({
     where: {
@@ -42,12 +72,16 @@ router.get("/gathering/want", verifyToken ,(req, res) => {
           include: [db.user]
         }).then(printings => {
           for (printing in printings) {
-            console.log(printings[printing].dataValues);
+            // console.log(printings[printing].dataValues);
+            if (printings[printing].dataValues.users.length > 0) {
+              console.log(printings[printing].dataValues.users[0].dataValues)
+            }
           }
         })
       }
     })
   })
+  */
 });
 
 // Find trade partners based on user tradelist
