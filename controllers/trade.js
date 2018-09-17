@@ -18,23 +18,30 @@ router.get("/gathering/want", verifyToken ,(req, res) => {
     for (card in user.dataValues.cards) {
       // If the card does not have a preferred printing
       if (user.dataValues.cards[card].dataValues.wishlist.dataValues.pref_printing === null) {
-        // db.card.find({
-        //   where: {
-        //     id: user.dataValues.cards[card].dataValues.wishlist.dataValues.cardId
-        //   },
-        //   include: [db.set]
-        // }).then(cards => {
-        //   console.log(cards.sets);
-
-        // })
         db.cardsSets.findAll({
           where: {
             cardId: user.dataValues.cards[card].dataValues.wishlist.dataValues.cardId
           },
           include: [db.user]
         }).then(printings => {
+          // For each printing of the card, check for related owners
           for (printing in printings) {
-            console.log(printings[printing].dataValues)
+            // If a printing has more than 0 owners
+            if (printings[printing].dataValues.users.length > 0) {
+              for (user in printings[printing].dataValues.users) {
+                db.collection.findOne({
+                  raw: true,
+                  where: {
+                    userId: printings[printing].dataValues.users[user].id,
+                    cardsSetId: printings[printing].dataValues.id
+                  }
+                }).then(ownedPrinting => {
+                  if (ownedPrinting.trade_copies > 0) {
+                    console.log("FOUND A USER WILLING TO TRADE!");
+                  }
+                })
+              }
+            }
           }
         })
       // If the card has a preferred printing
@@ -43,45 +50,6 @@ router.get("/gathering/want", verifyToken ,(req, res) => {
       }
     }
   })
-
-/*
-  // });
-  db.user.findOne({
-    where: {
-      id: req.user.id
-    }, include: [db.card]
-  }).then(user => {
-    // console.log(user.cards[0].wishlist.dataValues);
-    // for (card in user.cards) {
-    //   console.log("NEW CARD");
-    //   console.log(user.cards[card].dataValues.wishlist.dataValues);
-    // }
-    db.card.find({
-      where: {
-        id: 50999
-      },
-      include: [db.set]
-    }).then(card => {
-      // console.log(card.sets[0].cardsSets);
-      for (printing in card.sets) {
-        // console.log(card.sets[printing].cardsSets.dataValues)
-        db.cardsSets.findAll({
-          where: {
-            id: card.sets[printing].cardsSets.dataValues.id
-          },
-          include: [db.user]
-        }).then(printings => {
-          for (printing in printings) {
-            // console.log(printings[printing].dataValues);
-            if (printings[printing].dataValues.users.length > 0) {
-              console.log(printings[printing].dataValues.users[0].dataValues)
-            }
-          }
-        })
-      }
-    })
-  })
-  */
 });
 
 // Find trade partners based on user tradelist
