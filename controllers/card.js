@@ -8,12 +8,16 @@ require('dotenv').config();
 // Searches for a card by name
 router.post("/name", (req, res) => {
   db.card.find({
+    // where: {
+    //   name: req.body.name
+    // }, include: [{
+    //   model: db.CardsSets,
+    //   as: 'Printings',
+    //   required: 'false'
+    // }]
     where: {
       name: req.body.name
-    }, include: [{
-      model: db.CardsSets,
-      as: 'Printings'
-    }]
+    }, include: [db.set]
   }).then(card => {
     res.json(card);
   })

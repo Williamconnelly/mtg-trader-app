@@ -17,9 +17,13 @@ export class EditListComponent implements OnInit {
   }
 
   submitCardSearch() {
+    console.log("Searching for " + this.cardSearch);
     let obs = this.card.findCardByName(this.cardSearch);
     obs.subscribe(cardResult => {
-      this.cardArray.push(cardResult);
+      console.log(cardResult);
+      if (cardResult != null) {
+        this.cardArray.push(cardResult);
+      }
     });
   }
 }
