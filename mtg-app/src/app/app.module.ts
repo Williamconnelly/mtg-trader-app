@@ -13,6 +13,7 @@ import { TokenInterceptorService } from './token-interceptor.service';
 import { Token } from '@angular/compiler';
 import { GatheringComponent } from './gathering/gathering.component';
 import { GatheringService } from './gathering.service';
+import { EditListComponent } from './edit-list/edit-list.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { GatheringService } from './gathering.service';
     SignupComponent,
     LoginComponent,
     PageNotFoundComponent,
-    GatheringComponent
+    GatheringComponent,
+    EditListComponent
   ],
   imports: [
     BrowserModule,
