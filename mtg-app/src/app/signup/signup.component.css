@@ -9,12 +9,6 @@ h1 {
   margin: 0 auto;
 }
 
-.auth-wrapper ul {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-}
-
 .auth-wrapper input {
 	margin-top: 2em;
 	height: 4em;
