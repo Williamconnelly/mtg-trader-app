@@ -25,6 +25,10 @@ const routes: Routes = [
     component: GatheringComponent
   },
   {
+    path:'edit-list',
+    component: EditListComponent
+  },
+  {
     path: '**',
     component: PageNotFoundComponent
   }

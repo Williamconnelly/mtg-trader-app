@@ -9,7 +9,7 @@
   <div *ngFor="let card of cardArray; let cardIdx = index">
     <p>{{ card.name }}</p>
     <select name="" id="">
-      <option *ngFor="let set of card.sets let setIdx = index" value="">{{ set.code }}</option>
+      <option *ngFor="let set of card.sets let setIdx = index" value="{{ setIdx }}">{{ set.code }}</option>
     </select>
     <img *ngIf="card.url.length > 0" src="{{ card.url }}" alt="">
   </div>
