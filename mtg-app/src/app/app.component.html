@@ -3,10 +3,10 @@
     <li><a routerLink="/">Home</a></li>
     <li><a *ngIf="!_authService.loggedIn()" routerLink="/signup">Signup</a></li>
     <li><a *ngIf="!_authService.loggedIn()" routerLink="/login">Login</a></li>
-    <li><a *ngIf="_authService.loggedIn()" (click)="_authService.logoutUser()">Logout</a></li>
     <li><a *ngIf="_authService.loggedIn()" routerLink="/gathering">Gathering</a></li>
+    <li><a *ngIf="_authService.loggedIn()" (click)="_authService.logoutUser()">Logout</a></li>
   </ul>
 </nav>
-<div>
+<div class="site-wrapper">
   <router-outlet></router-outlet>
 </div>

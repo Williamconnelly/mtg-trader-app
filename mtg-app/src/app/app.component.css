@@ -1,0 +1,27 @@
+nav {
+  width: 100vw;
+  font-family: sans-serif;
+}
+
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 1.5em 0;
+  background-color: rgb(36, 36, 36);
+}
+
+li {
+  display: inline-block;
+}
+
+a {
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+/* .site-wrapper {
+  padding: 0 3em;
+  text-align: center;
+} */
