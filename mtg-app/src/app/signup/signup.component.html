@@ -1,12 +1,9 @@
-<header>Register</header>
-<div>
-  <form>
-    <label for="">Username</label>
-    <input [(ngModel)]="registerUserData.username" name="username" type="text">
-    <label for="">Email</label>
-    <input [(ngModel)]="registerUserData.email" name="email" type="text">
-    <label for="">Password</label>
-    <input [(ngModel)]="registerUserData.password" name="password" type="password">
-    <button (click)="registerUser()">Register</button>
-  </form>
+<div class="auth-wrapper">
+	<h1>Signup</h1>
+	<form class="login-form">
+    <input [(ngModel)]="registerUserData.username" name="username" type="text" placeholder="Username">
+    <input [(ngModel)]="registerUserData.email" name="email" type="text" placeholder="Email">
+    <input [(ngModel)]="registerUserData.password" name="password" type="password" placeholder="Password">
+		<button class="auth-btn" type="submit" (click)="loginUser()">Signup</button>
+	</form>
 </div>
