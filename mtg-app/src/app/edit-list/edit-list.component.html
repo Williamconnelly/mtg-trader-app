@@ -11,5 +11,6 @@
     <select name="" id="">
       <option *ngFor="let set of card.sets let setIdx = index" value="">{{ set.code }}</option>
     </select>
+    <img *ngIf="card.url.length > 0" src="{{ card.url }}" alt="">
   </div>
 </div>
