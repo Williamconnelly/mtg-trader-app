@@ -14,6 +14,7 @@ import { Token } from '@angular/compiler';
 import { GatheringComponent } from './gathering/gathering.component';
 import { GatheringService } from './gathering.service';
 import { EditListComponent } from './edit-list/edit-list.component';
+import { ViewListComponent } from './view-list/view-list.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { EditListComponent } from './edit-list/edit-list.component';
     LoginComponent,
     PageNotFoundComponent,
     GatheringComponent,
-    EditListComponent
+    EditListComponent,
+    ViewListComponent
   ],
   imports: [
     BrowserModule,

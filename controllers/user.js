@@ -32,13 +32,16 @@ router.post("/collection/batch", verifyToken, (req, res) => {
 
 // Get User's Collection
 router.get("/collection/:id", (req, res) => {
-  db.collection.findAll({
+  db.user.find({
     where: {
       // TODO: Get at User differently
-      userId: req.params.id
-    }
-  }).then(collection => {
-    res.json(collection);
+      id: req.params.id
+    }, include: [{
+      model: db.cardsSets
+      // include: [db.set]
+    }]
+  }).then(user => {
+    res.json(user['cardsSets']);
   })
 })
 

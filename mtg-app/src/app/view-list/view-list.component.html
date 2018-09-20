@@ -1,0 +1,6 @@
+<p>
+  view-list works!
+</p>
+<div *ngFor="let printing of cardArray; let cardIdx = index">
+  <p>id: {{ printing.id }} cardId: {{ printing.cardId }} setId: {{ printing.setId }} ownedCopies: {{ printing.collection.owned_copies }} tradeCopies: {{ printing.collection.trade_copies }}</p>
+</div>
