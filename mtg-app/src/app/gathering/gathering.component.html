@@ -2,9 +2,10 @@
   <mat-accordion *ngFor="let partner of gathering">
     <mat-expansion-panel>
         <mat-expansion-panel-header>
-          User ID: {{ partner.user }}
+          {{ partner.userName }}
         </mat-expansion-panel-header>
-        <p>Matched Cards: {{ partner.card }}</p>
+        <h3>Matched Cards:</h3>
+        <p *ngFor="let card of partner.cards">{{ card.cardName }} - {{ card.trade_copies }} for trade</p>
       </mat-expansion-panel>
   </mat-accordion>
 </div>
