@@ -17,15 +17,24 @@ export class EditListComponent implements OnInit {
 
   ngOnInit() {
     this.card.getLoggedInCollection().subscribe(existingCollection => {
-      this.editArray = existingCollection;
       console.log("existingCollection:");
       console.log(existingCollection);
+      for (let i=0; i<existingCollection.length; i++) {
+        existingCollection[i]["url"] = ""
+        existingCollection[i]["newPrintingId"] = existingCollection[i]['collection']["cardsSetId"];
+        this.card.scryfallFindCardByName(existingCollection[i]['card']['name']).subscribe(scryfallResult => {
+          if (scryfallResult.hasOwnProperty("image_uris")) {
+            existingCollection[i]["url"] = scryfallResult["image_uris"]["small"];
+          }
+        })
+      }
+      this.editArray = existingCollection;
     });
   }
 
   buttonTest(value) {
     console.log("Value: " + value);
-    console.log(this.cardArray[value]);
+    console.log(this.editArray[value]);
   }
 
   submitCardSearch() {
@@ -54,9 +63,11 @@ export class EditListComponent implements OnInit {
   }
 
   submitCardsToCollection() {
-    let cards = this.cardArray;
+    let addCards = this.cardArray;
+    let editCards = this.editArray;
     this.cardArray = [];
-    let obs = this.card.addCardsToCollection(cards);
+    this.card.editCardsInCollection(editCards).subscribe();
+    let obs = this.card.addCardsToCollection(addCards);
     obs.subscribe();
   }
 }

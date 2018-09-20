@@ -13,6 +13,9 @@ export class CardService {
     };
     return this.http.post<any>("http://localhost:3000/user/collection/batch", postObject);
   }
+  editCardsInCollection(printings) {
+    return this.http.put<any>("http://localhost:3000/user/collection/batch", {printings:printings});
+  }
   getLoggedInCollection() {
     return this.http.get<any>("http://localhost:3000/user/collection/loggedin");
   }

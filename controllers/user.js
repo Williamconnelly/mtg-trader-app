@@ -9,28 +9,52 @@ require('dotenv').config();
 // Add multiple cards to collection
 router.post("/collection/batch", verifyToken, (req, res) => {
   console.log("ADDING MULTIPLE CARDS TO COLLECTION");
-  db.user.find({
-    where: {
-      id: req.user.id
-    }
-  }).then(user => {
-    for (let i=0; i<req.body.cards.length; i++) {
-      db.cardsSets.find({
-        where: {
-          id: req.body.cards[i]["printingInput"]["cardsSets"]["id"]
-        }
-      }).then(cardPrinting => {
-        user.addCardsSets(cardPrinting, {through: {
-          owned_copies: req.body.cards[i]["copies"],
-          trade_copies: req.body.cards[i]["tradeCopies"]
-        }})
-      })
-    }
+  if (req.body.cards.length > 0) {
+    db.user.find({
+      where: {
+        id: req.user.id
+      }
+    }).then(user => {
+      for (let i=0; i<req.body.cards.length; i++) {
+        db.cardsSets.find({
+          where: {
+            id: req.body.cards[i]["printingInput"]["cardsSets"]["id"]
+          }
+        }).then(cardPrinting => {
+          user.addCardsSets(cardPrinting, {through: {
+            owned_copies: req.body.cards[i]["copies"],
+            trade_copies: req.body.cards[i]["tradeCopies"]
+          }})
+        })
+      }
+      res.json({});
+    })
+  } else {
     res.json({});
-  })
+  }
 })
 
-// Get a logged in user's collection
+router.put("/collection/batch", verifyToken, (req, res) => {
+  console.log("UPDATING MULTIPLE CARDS IN COLLECTION");
+  if (req.body.printings.length > 0) {
+    for (let i=0; i<req.body.printings.length; i++) {
+      db.collection.find({
+        where: {
+          id: req.body.printings[i].collection.id
+        }
+      }).then(collection => {
+        collection.update({
+          cardsSetId: req.body.printings[i].newPrintingId,
+          owned_copies: req.body.printings[i]['collection']['owned_copies'],
+          trade_copies: req.body.printings[i]['collection']['trade_copies']
+        })
+      })
+    }
+  }
+  res.json({});
+})
+
+// Get a logged in user's collection for editing
 router.get("/collection/loggedin", verifyToken, (req, res) => {
   db.user.find({
     where: {
