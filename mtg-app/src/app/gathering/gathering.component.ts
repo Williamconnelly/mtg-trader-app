@@ -9,12 +9,21 @@ import { GatheringService } from '../gathering.service';
 export class GatheringComponent implements OnInit {
 
   gathering = [];
+  condition = false;
   constructor(private _gatheringService: GatheringService) { }
 
   ngOnInit() {
     this._gatheringService.getGatheringWant().subscribe(
-      res => console.log(res),
+      res => {
+        console.log(res);
+        console.log(this.gathering);
+        this.gathering = res;
+        console.log(this.gathering);
+      },
       err => console.log(err)
     );
+  }
+  test() {
+    console.log('HIT');
   }
 }

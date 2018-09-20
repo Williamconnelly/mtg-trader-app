@@ -1,3 +1,11 @@
-<p>
-  gathering works!
-</p>
+<div *ngIf="gathering.length > 0" class="gathering-wrapper">
+  <mat-accordion *ngFor="let partner of gathering">
+    <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          {{ partner.userName }}
+        </mat-expansion-panel-header>
+        <h3>Matched Cards:</h3>
+        <p *ngFor="let card of partner.cards">{{ card.cardName }} - {{ card.trade_copies }} for trade</p>
+      </mat-expansion-panel>
+  </mat-accordion>
+</div>
