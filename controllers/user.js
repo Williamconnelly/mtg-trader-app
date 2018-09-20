@@ -37,7 +37,15 @@ router.get("/collection/loggedin", verifyToken, (req, res) => {
       id: req.user.id
     }, include:  [{
       model: db.cardsSets,
-      include: [db.card, db.set]
+      include: [{
+        model:db.card,
+        include: [{
+            model: db.cardsSets,
+            as: 'printings',
+            include: [db.set]
+          }]
+        },
+        db.set]
     }]
   }).then(user => {
     res.json(user['cardsSets']);

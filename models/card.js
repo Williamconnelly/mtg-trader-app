@@ -22,6 +22,7 @@ module.exports = (sequelize, DataTypes) => {
     // associations can be defined here
     models.card.belongsToMany(models.set, {through: "cardsSets"});
     models.card.belongsToMany(models.user, {through: "wishlist"});
+    models.card.hasMany(models.cardsSets, {as: "printings"});
   };
   return card;
 };
