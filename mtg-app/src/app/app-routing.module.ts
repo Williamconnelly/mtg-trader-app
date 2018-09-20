@@ -5,6 +5,7 @@ import { LoginComponent } from './login/login.component';
 import { EditListComponent } from './edit-list/edit-list.component'; 
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { GatheringComponent } from './gathering/gathering.component';
+import { ViewListComponent } from './view-list/view-list.component';
 
 const routes: Routes = [
   {
@@ -23,6 +24,14 @@ const routes: Routes = [
   {
     path: 'gathering',
     component: GatheringComponent
+  },
+  {
+    path:'edit-list',
+    component: EditListComponent
+  },
+  {
+    path: 'view-list',
+    component: ViewListComponent
   },
   {
     path: '**',

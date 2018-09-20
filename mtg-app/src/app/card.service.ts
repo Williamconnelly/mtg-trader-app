@@ -7,7 +7,21 @@ import { HttpClient } from '@angular/common/http';
 export class CardService {
 
   constructor(private http : HttpClient) { }
-
+  addCardsToCollection(cards) {
+    let postObject = {
+      cards: cards
+    };
+    return this.http.post<any>("http://localhost:3000/user/collection/batch", postObject);
+  }
+  editCardsInCollection(printings) {
+    return this.http.put<any>("http://localhost:3000/user/collection/batch", {printings:printings});
+  }
+  getLoggedInCollection() {
+    return this.http.get<any>("http://localhost:3000/user/collection/loggedin");
+  }
+  getCollectionById(id) {
+    return this.http.get<any>("http://localhost:3000/user/collection/" + id);
+  }
   findCardByName(name) {
     return this.http.post<any>("http://localhost:3000/card/name",{name:name});
   }

@@ -16,6 +16,7 @@ import { GatheringService } from './gathering.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatExpansionModule, MatInputModule } from '@angular/material';
 import { EditListComponent } from './edit-list/edit-list.component';
+import { ViewListComponent } from './view-list/view-list.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { EditListComponent } from './edit-list/edit-list.component';
     LoginComponent,
     PageNotFoundComponent,
     GatheringComponent,
-    EditListComponent
+    EditListComponent,
+    ViewListComponent
   ],
   imports: [
     BrowserModule,
