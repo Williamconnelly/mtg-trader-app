@@ -8,15 +8,15 @@ import { CardService } from '../card.service';
 })
 export class ViewListComponent implements OnInit {
   cardArray = [];
+  viewListSearch = 1;
 
   constructor(private card : CardService) { }
 
   ngOnInit() {
-    this.getCollectionById(1);
   }
 
-  getCollectionById(id) {
-    this.card.getCollectionById(id).subscribe(collection => {
+  getCollectionById(viewListSearch) {
+    this.card.getCollectionById(viewListSearch).subscribe(collection => {
       console.log(collection);
       this.cardArray = collection;
       for (let i=0; i<this.cardArray.length; i++) {
