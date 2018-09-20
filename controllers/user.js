@@ -37,8 +37,8 @@ router.get("/collection/:id", (req, res) => {
       // TODO: Get at User differently
       id: req.params.id
     }, include: [{
-      model: db.cardsSets
-      // include: [db.set]
+      model: db.cardsSets,
+      include: [db.card, db.set]
     }]
   }).then(user => {
     res.json(user['cardsSets']);
