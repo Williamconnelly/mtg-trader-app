@@ -13,6 +13,8 @@ import { TokenInterceptorService } from './token-interceptor.service';
 import { Token } from '@angular/compiler';
 import { GatheringComponent } from './gathering/gathering.component';
 import { GatheringService } from './gathering.service';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatExpansionModule, MatInputModule } from '@angular/material';
 
 @NgModule({
   declarations: [
@@ -26,7 +28,10 @@ import { GatheringService } from './gathering.service';
     BrowserModule,
     FormsModule,
     HttpClientModule,
-    AppRoutingModule
+    AppRoutingModule,
+    BrowserAnimationsModule,
+    MatExpansionModule,
+    MatInputModule
   ],
   providers: [AuthService, AuthGuard, GatheringService, {
     provide: HTTP_INTERCEPTORS,

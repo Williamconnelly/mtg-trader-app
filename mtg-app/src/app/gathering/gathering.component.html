@@ -1,3 +1,37 @@
-<p>
+<!-- <p>
   gathering works!
 </p>
+
+<div *ngIf="gathering.length > 0">
+  <div *ngFor="let partner of gathering">
+    <p>{{ partner.user }}</p>
+  </div>
+</div> -->
+
+<!-- <div class="gathering-wrapper">
+  <div *ngIf="gathering.length > 0">
+    <div *ngFor="let partner of gathering">
+      <button (click)="openPanel()" class="accordion">{{partner.user}}</button>
+      <div class="panel">
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+      </div>
+    </div>
+  </div>
+</div> -->
+
+<div *ngIf="gathering.length > 0" class="gathering-wrapper">
+  <mat-accordion *ngFor="let partner of gathering">
+    <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          User ID: {{ partner.user }}
+        </mat-expansion-panel-header>
+        <p>Matched Cards: {{ partner.card }}</p>
+      </mat-expansion-panel>
+  </mat-accordion>
+</div>
+
+
+
+<mat-accordion>
+
+</mat-accordion>
