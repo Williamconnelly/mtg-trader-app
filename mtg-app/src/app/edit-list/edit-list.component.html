@@ -1,0 +1,16 @@
+<p>
+  edit-list works!
+</p>
+<form (submit)="submitCardSearch()">
+  <input type="text" [(ngModel)]="cardSearch" name="cardSearch">
+  <input type="submit" value="submit">
+</form>
+<div>
+  <div *ngFor="let card of cardArray; let cardIdx = index">
+    <p>{{ card.name }}</p>
+    <select name="" id="">
+      <option *ngFor="let set of card.sets let setIdx = index" value="">{{ set.code }}</option>
+    </select>
+    <img *ngIf="card.url.length > 0" src="{{ card.url }}" alt="">
+  </div>
+</div>
