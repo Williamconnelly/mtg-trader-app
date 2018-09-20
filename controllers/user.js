@@ -87,7 +87,11 @@ router.get("/collection/:id", (req, res) => {
       include: [db.card, db.set]
     }]
   }).then(user => {
-    res.json(user['cardsSets']);
+    if (user != null && user.hasOwnProperty('cardsSets')) {
+      res.json(user['cardsSets']);
+    } else {
+      res.json({message:'error'});
+    }
   })
 })
 
