@@ -13,6 +13,9 @@ export class CardService {
     };
     return this.http.post<any>("http://localhost:3000/user/collection/batch", postObject);
   }
+  getLoggedInCollection() {
+    return this.http.get<any>("http://localhost:3000/user/collection/loggedin");
+  }
   getCollectionById(id) {
     return this.http.get<any>("http://localhost:3000/user/collection/" + id);
   }

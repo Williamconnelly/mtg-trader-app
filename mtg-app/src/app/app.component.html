@@ -4,6 +4,8 @@
     <li><a *ngIf="!_authService.loggedIn()" routerLink="/signup">Signup</a></li>
     <li><a *ngIf="!_authService.loggedIn()" routerLink="/login">Login</a></li>
     <li><a *ngIf="_authService.loggedIn()" routerLink="/gathering">Gathering</a></li>
+    <li><a *ngIf="_authService.loggedIn()" routerLink="/view-list">ViewList</a></li>
+    <li><a href="_authService.loggedIn()" routerLink="/edit-list">EditList</a></li>
     <li><a *ngIf="_authService.loggedIn()" (click)="_authService.logoutUser()">Logout</a></li>
   </ul>
 </nav>

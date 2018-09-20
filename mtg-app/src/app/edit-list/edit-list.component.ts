@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CardService } from '../card.service';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-edit-list',
@@ -8,12 +9,18 @@ import { CardService } from '../card.service';
 })
 export class EditListComponent implements OnInit {
   cardSearch = "";
+  editArray = [];
   cardArray = [];
 
 
-  constructor(private card : CardService) { }
+  constructor(private card : CardService, private _auth : AuthService) { }
 
   ngOnInit() {
+    this.card.getLoggedInCollection().subscribe(existingCollection => {
+      this.editArray = existingCollection;
+      console.log("existingCollection:");
+      console.log(existingCollection);
+    });
   }
 
   buttonTest(value) {

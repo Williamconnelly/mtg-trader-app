@@ -30,6 +30,20 @@ router.post("/collection/batch", verifyToken, (req, res) => {
   })
 })
 
+// Get a logged in user's collection
+router.get("/collection/loggedin", verifyToken, (req, res) => {
+  db.user.find({
+    where: {
+      id: req.user.id
+    }, include:  [{
+      model: db.cardsSets,
+      include: [db.card, db.set]
+    }]
+  }).then(user => {
+    res.json(user['cardsSets']);
+  })
+})
+
 // Get User's Collection
 router.get("/collection/:id", (req, res) => {
   db.user.find({
