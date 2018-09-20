@@ -16,6 +16,11 @@ export class EditListComponent implements OnInit {
   ngOnInit() {
   }
 
+  buttonTest(value) {
+    console.log("Value: " + value);
+    console.log(this.cardArray[value]);
+  }
+
   submitCardSearch() {
     console.log("Searching for " + this.cardSearch);
     let obs = this.card.findCardByName(this.cardSearch);
@@ -26,6 +31,9 @@ export class EditListComponent implements OnInit {
       console.log(cardResult);
       if (cardResult != null) {
         cardResult["url"] = "";
+        cardResult["printingInput"] = cardResult["sets"][0];
+        cardResult["copies"] = 1;
+        cardResult["tradeCopies"] = 0;
         scryObs.subscribe(scryfallResult => {
           console.log("Scryfall Result:")
           console.log(scryfallResult);
@@ -36,6 +44,12 @@ export class EditListComponent implements OnInit {
         })
       }
     });
-    
+  }
+
+  submitCardsToCollection() {
+    let cards = this.cardArray;
+    this.cardArray = [];
+    let obs = this.card.addCardsToCollection(cards);
+    obs.subscribe();
   }
 }

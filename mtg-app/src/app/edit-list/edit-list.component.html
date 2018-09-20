@@ -8,9 +8,14 @@
 <div>
   <div *ngFor="let card of cardArray; let cardIdx = index">
     <p>{{ card.name }}</p>
-    <select name="" id="">
-      <option *ngFor="let set of card.sets let setIdx = index" value="{{ setIdx }}">{{ set.code }}</option>
+    <label for="">Set: </label>
+    <select [(ngModel)]="card.printingInput" name="" id="">
+      <option *ngFor="let set of card.sets let setIdx = index" [ngValue]="set">{{ set.code }}</option>
     </select>
+    <input type="number" step="1" [(ngModel)]="card.copies">
+    <input type="number" step="1" [(ngModel)]="card.tradeCopies">
     <img *ngIf="card.url.length > 0" src="{{ card.url }}" alt="">
+    <button (click)="buttonTest(cardIdx)">Test</button>
   </div>
 </div>
+<button (click)="submitCardsToCollection()">Submit to Collection</button>

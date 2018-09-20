@@ -3,7 +3,32 @@ var db = require("../models");
 var router = express.Router();
 const axios = require("axios");
 const Sequelize = require('sequelize');
+const verifyToken = require('../middleware/verifyToken.js')
 require('dotenv').config();
+
+// Add multiple cards to collection
+router.post("/collection/batch", verifyToken, (req, res) => {
+  console.log("ADDING MULTIPLE CARDS TO COLLECTION");
+  db.user.find({
+    where: {
+      id: req.user.id
+    }
+  }).then(user => {
+    for (let i=0; i<req.body.cards.length; i++) {
+      db.cardsSets.find({
+        where: {
+          id: req.body.cards[i]["printingInput"]["cardsSets"]["id"]
+        }
+      }).then(cardPrinting => {
+        user.addCardsSets(cardPrinting, {through: {
+          owned_copies: req.body.cards[i]["copies"],
+          trade_copies: req.body.cards[i]["tradeCopies"]
+        }})
+      })
+    }
+    res.json({});
+  })
+})
 
 // Get User's Collection
 router.get("/collection/:id", (req, res) => {
