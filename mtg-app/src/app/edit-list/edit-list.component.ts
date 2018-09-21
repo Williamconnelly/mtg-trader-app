@@ -52,4 +52,20 @@ export class EditListComponent implements OnInit {
       }
     });
   }
+<<<<<<< HEAD
+=======
+
+  submitCardsToCollection() {
+    let addCards = this.cardArray;
+    let editCards = this.editArray;
+    this.cardArray = [];
+    this.card.editCardsInCollection(editCards).subscribe();
+    let obs = this.card.addCardsToCollection(addCards);
+    obs.subscribe();
+  }
+
+  removeFromCardArray(index) {
+    this.cardArray.splice(index, 1);
+  }
+>>>>>>> finished unvalidated crud for edit-list and began moving edit-list to edit-collection
 }
