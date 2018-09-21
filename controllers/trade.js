@@ -78,6 +78,7 @@ router.get("/gathering/want", verifyToken, (req, res) => {
       const newArray = Object.values(tradePartners).sort((a,b) => {
         return a.cards.length - b.cards.length}
       ).reverse();
+      console.log(newArray);
       res.send(newArray);
     }, 100)
   })
