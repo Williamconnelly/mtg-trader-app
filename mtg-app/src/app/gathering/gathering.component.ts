@@ -9,15 +9,15 @@ import { Observable, Observer} from 'rxjs';
 })
 export class GatheringComponent implements OnInit {
 
-  asyncTabs: Observable<any>;
+  // asyncTabs: Observable<any>;
   gathering = [];
   constructor(private _gatheringService: GatheringService) {
-    this.asyncTabs = Observable.create((observer: Observer<any>) => {
-      setTimeout(() => {
-        observer.next([
-]);
-      }, 1000);
-    });
+//     this.asyncTabs = Observable.create((observer: Observer<any>) => {
+//       setTimeout(() => {
+//         observer.next([
+// ]);
+//       }, 1000);
+//     });
   }
 
   ngOnInit() {
