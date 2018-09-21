@@ -11,6 +11,7 @@ export class GatheringComponent implements OnInit {
 
   // asyncTabs: Observable<any>;
   gathering = [];
+  provide = [];
   constructor(private _gatheringService: GatheringService) {
 //     this.asyncTabs = Observable.create((observer: Observer<any>) => {
 //       setTimeout(() => {
@@ -28,6 +29,13 @@ export class GatheringComponent implements OnInit {
         console.log(this.gathering);
       },
       err => console.log(err)
+    );
+    this._gatheringService.getGatheringProvide().subscribe(
+      res => {
+        console.log(res);
+        this.provide = res;
+        console.log(this.provide);
+      }
     );
   }
 }

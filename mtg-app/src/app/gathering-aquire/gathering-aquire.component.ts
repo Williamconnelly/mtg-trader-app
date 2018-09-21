@@ -8,7 +8,7 @@ import { Component, OnInit, Input } from '@angular/core';
 export class GatheringAquireComponent implements OnInit {
 
   @Input() data;
-
+  @Input() Otherdata;
   constructor() { }
 
   ngOnInit() {

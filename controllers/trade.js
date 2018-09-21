@@ -191,7 +191,7 @@ router.get("/gathering/want", verifyToken, (req, res) => {
 
 // Find trade partners based on user tradelist
 router.get("/gathering/provide", verifyToken, (req, res) => {
-  res.status(200).send("Trading!");
+  res.send(["Hello", "Array"])
 });
 
 module.exports = router;
