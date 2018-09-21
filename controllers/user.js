@@ -43,11 +43,19 @@ router.put("/collection/batch", verifyToken, (req, res) => {
           id: req.body.printings[i].collection.id
         }
       }).then(collection => {
-        collection.update({
-          cardsSetId: req.body.printings[i].newPrintingId,
-          owned_copies: req.body.printings[i]['collection']['owned_copies'],
-          trade_copies: req.body.printings[i]['collection']['trade_copies']
-        })
+        console.log("------------------------------------------------------")
+        console.log("------------------------------------------------------")
+        if (req.body.printings[i]['markedForDeletion']) {
+          console.log(collection['id']);
+          console.log("DESTROYED")
+          collection.destroy();
+        } else {
+          collection.update({
+            cardsSetId: req.body.printings[i].newPrintingId,
+            owned_copies: req.body.printings[i]['collection']['owned_copies'],
+            trade_copies: req.body.printings[i]['collection']['trade_copies']
+          });
+        }
       })
     }
   }

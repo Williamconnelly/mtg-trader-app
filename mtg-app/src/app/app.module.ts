@@ -17,6 +17,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatExpansionModule, MatInputModule } from '@angular/material';
 import { EditListComponent } from './edit-list/edit-list.component';
 import { ViewListComponent } from './view-list/view-list.component';
+import { EditCollectionComponent } from './edit-collection/edit-collection.component';
+import { ViewCollectionComponent } from './view-collection/view-collection.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +28,9 @@ import { ViewListComponent } from './view-list/view-list.component';
     PageNotFoundComponent,
     GatheringComponent,
     EditListComponent,
-    ViewListComponent
+    ViewListComponent,
+    EditCollectionComponent,
+    ViewCollectionComponent
   ],
   imports: [
     BrowserModule,
