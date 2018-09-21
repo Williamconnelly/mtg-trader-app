@@ -16,6 +16,7 @@ export class EditListComponent implements OnInit {
   constructor(private card : CardService, private _auth : AuthService) { }
 
   ngOnInit() {
+<<<<<<< HEAD
     this.card.getLoggedInWishlist().subscribe(wishlist => {
       console.log(wishlist);
     })
@@ -66,6 +67,8 @@ export class EditListComponent implements OnInit {
 
   removeFromCardArray(index) {
     this.cardArray.splice(index, 1);
+=======
+>>>>>>> moved edit-list/view-list to edit-collection/view-collection and changed routing
   }
 >>>>>>> finished unvalidated crud for edit-list and began moving edit-list to edit-collection
 }
