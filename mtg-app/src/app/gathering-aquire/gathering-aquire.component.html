@@ -1,4 +1,4 @@
-<div *ngIf="data.length > 0" class="gathering-wrapper">
+<div *ngIf="data && data.length > 0" class="gathering-wrapper">
   <mat-accordion *ngFor="let partner of data">
     <mat-expansion-panel>
         <mat-expansion-panel-header>
@@ -8,4 +8,8 @@
         <p *ngFor="let card of partner.cards">{{ card.cardName }} - {{ card.trade_copies }} for trade</p>
       </mat-expansion-panel>
   </mat-accordion>
+</div>
+
+<div *ngIf="Otherdata && Otherdata.length > 0">
+  <p>{{Otherdata}}</p>
 </div>
