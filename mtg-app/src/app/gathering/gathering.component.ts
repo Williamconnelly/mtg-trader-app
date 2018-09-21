@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { GatheringService } from '../gathering.service';
+import { Observable, Observer} from 'rxjs';
 
 @Component({
   selector: 'app-gathering',
@@ -8,22 +9,25 @@ import { GatheringService } from '../gathering.service';
 })
 export class GatheringComponent implements OnInit {
 
+  asyncTabs: Observable<any>;
   gathering = [];
-  condition = false;
-  constructor(private _gatheringService: GatheringService) { }
+  constructor(private _gatheringService: GatheringService) {
+    this.asyncTabs = Observable.create((observer: Observer<any>) => {
+      setTimeout(() => {
+        observer.next([
+]);
+      }, 1000);
+    });
+  }
 
   ngOnInit() {
     this._gatheringService.getGatheringWant().subscribe(
       res => {
         console.log(res);
-        console.log(this.gathering);
         this.gathering = res;
         console.log(this.gathering);
       },
       err => console.log(err)
     );
-  }
-  test() {
-    console.log('HIT');
   }
 }

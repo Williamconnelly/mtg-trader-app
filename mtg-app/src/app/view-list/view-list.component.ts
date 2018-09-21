@@ -10,7 +10,7 @@ export class ViewListComponent implements OnInit {
   cardArray = [];
   viewListSearch = 1;
 
-  constructor(private card : CardService) { }
+  constructor(private card: CardService) { }
 
   ngOnInit() {
   }
