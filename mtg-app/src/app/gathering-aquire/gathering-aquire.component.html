@@ -2,7 +2,7 @@
   <mat-accordion *ngFor="let partner of data">
     <mat-expansion-panel>
         <mat-expansion-panel-header>
-          {{ partner.userName }}
+          {{ partner.userName }} ({{ partner.cards.length }} Matches)
         </mat-expansion-panel-header>
         <h3>Matched Cards:</h3>
         <p *ngFor="let card of partner.cards">{{ card.cardName }} - {{ card.trade_copies }} for trade</p>
@@ -14,10 +14,10 @@
     <mat-accordion *ngFor="let partner of Otherdata">
         <mat-expansion-panel>
             <mat-expansion-panel-header>
-              {{ partner.userName }}
+              {{ partner.userName }} ({{ partner.cards.length }} Matches)
             </mat-expansion-panel-header>
             <h3>Matched Cards:</h3>
-            <p *ngFor="let card of partner.cards">{{ card.cardName }} - {{ card.number_wanted }} for trade</p>
+            <p *ngFor="let card of partner.cards">{{ card.cardName }} - {{ card.number_wanted }} wanted</p>
           </mat-expansion-panel>
       </mat-accordion>
 </div>
