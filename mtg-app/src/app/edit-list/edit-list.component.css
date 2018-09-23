@@ -13,7 +13,6 @@
 .card-search, .search-button {
   font-size: inherit;
   padding: 0.3em 0.4em;
-  /* margin: 0.1em 0.2em; */
   -moz-box-sizing: content-box;
   -webkit-box-sizing: content-box;
   box-sizing: content-box;
@@ -33,7 +32,6 @@
 
 .search-button {
   margin-left: 0;
-  /* border-radius: 0 0.6em 0.6em 0; */
   background-color: #d8d8d8;
   width: 4em;
 }
@@ -47,8 +45,8 @@
   display: grid;
   grid-template-columns: 146px 6em 5em;
   grid-template-rows: 1.5fr 1fr 1fr 1fr;
-  grid-template-areas: "card-image card-name card-name"
-                       "card-image card-set set-input"
+  grid-template-areas: "card-image card-name  card-name"
+                       "card-image card-set   set-input"
                        "card-image card-owned owned-input"
                        "card-image card-trade trade-input";
   width: 20em;
@@ -120,4 +118,16 @@
 .test-div {
   display: inline-block;
   padding: 1em;
+}
+
+.add-card-button {
+  font-size: inherit;
+  padding: 0.3em 0.4em;
+  -moz-box-sizing: content-box;
+  -webkit-box-sizing: content-box;
+  box-sizing: content-box;
+  border: 1px solid #000000;
+  background-color: #fff;
+  height: 2em;
+  background-color: #d8d8d8;
 }
