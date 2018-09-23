@@ -11,5 +11,13 @@
 </div>
 
 <div *ngIf="Otherdata && Otherdata.length > 0">
-  <p>{{Otherdata}}</p>
+    <mat-accordion *ngFor="let partner of Otherdata">
+        <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              {{ partner.userName }}
+            </mat-expansion-panel-header>
+            <h3>Matched Cards:</h3>
+            <p *ngFor="let card of partner.cards">{{ card.cardName }} - {{ card.number_wanted }} for trade</p>
+          </mat-expansion-panel>
+      </mat-accordion>
 </div>
