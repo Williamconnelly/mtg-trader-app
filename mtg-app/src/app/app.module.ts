@@ -18,6 +18,7 @@ import { MatExpansionModule, MatInputModule, MatTabsModule } from '@angular/mate
 import { EditListComponent } from './edit-list/edit-list.component';
 import { ViewListComponent } from './view-list/view-list.component';
 import { GatheringAquireComponent } from './gathering-aquire/gathering-aquire.component';
+import { HomeComponent } from './home/home.component';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import { GatheringAquireComponent } from './gathering-aquire/gathering-aquire.co
     EditListComponent,
     ViewListComponent,
     GatheringAquireComponent,
+    HomeComponent,
   ],
   imports: [
     BrowserModule,
