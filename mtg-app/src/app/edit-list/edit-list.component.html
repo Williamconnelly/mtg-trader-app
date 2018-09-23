@@ -1,22 +1,36 @@
-<p>
-  edit-list works!
-</p>
-<form (submit)="submitCardSearch()">
-  <input type="text" [(ngModel)]="cardSearch" name="cardSearch">
-  <input type="submit" value="submit">
-</form>
-<p>-----ADD NEW CARDS-----</p>
-<div>
-  <div *ngFor="let card of cardArray; let cardIdx = index">
-    <p>{{ card.name }}</p>
-    <label for="">Pref Printing: </label>
-    <select [(ngModel)]="card.preferredPrinting" name="" id="">
-      <option value="none">No Preference</option>
-      <option *ngFor="let set of card.sets let setIdx = index" [ngValue]="set['cardsSets']['id']">{{ set.code }}</option>
-    </select>
-    <input type="number" step="1" [(ngModel)]="card.desiredCopies">
-    <img *ngIf="card.url.length > 0" src="{{ card.url }}" alt="">
-    <button (click)="removeFromCardArray(cardIdx)">Remove</button>
-    <button (click)="logCardArrayAtIndex(cardIdx)">C.log</button>
+<div class="editlist-wrapper">
+  <form (submit)="submitCardSearch()" class="add-card-form">
+    <input type="text" [(ngModel)]="cardSearch" name="cardSearch" class="card-search" placeholder="Add Card...">
+    <input type="submit" value="Search" class="search-button">
+  </form>
+  <hr>
+  <h1>Collection</h1>
+  <hr>
+  <div>
+    <div *ngFor="let printing of editArray; let cardIdx = index">
+      <p>{{ printing.card.name }}</p>
+      <label for="">Set: </label>
+      <select [(ngModel)]="printing.newPrintingId" name="" id="">
+        <option *ngFor="let subPrinting of printing.card.printings" [ngValue]="subPrinting.id">{{ subPrinting.set.code }}</option>
+      </select>
+      <input type="number" step="1" [(ngModel)]="printing.collection.owned_copies">
+      <input type="number" step="1" [(ngModel)]="printing.collection.trade_copies">
+      <img *ngIf="printing.url.length > 0" src="{{ printing.url }}">
+      <button (click)="buttonTest(cardIdx)">Test</button>
+    </div>
   </div>
+  <p>-----ADD NEW CARDS-----</p>
+  <div>
+    <div *ngFor="let card of cardArray; let cardIdx = index">
+      <p>{{ card.name }}</p>
+      <label for="">Set: </label>
+      <select [(ngModel)]="card.printingInput" name="" id="">
+        <option *ngFor="let set of card.sets let setIdx = index" [ngValue]="set">{{ set.code }}</option>
+      </select>
+      <input type="number" step="1" [(ngModel)]="card.copies">
+      <input type="number" step="1" [(ngModel)]="card.tradeCopies">
+      <img *ngIf="card.url.length > 0" src="{{ card.url }}" alt="">
+    </div>
+  </div>
+  <button (click)="submitCardsToCollection()">Submit to Collection</button>
 </div>
