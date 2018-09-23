@@ -7,19 +7,31 @@
   <h1>Collection</h1>
   <hr>
   <div>
-    <div *ngFor="let printing of editArray; let cardIdx = index">
-      <p>{{ printing.card.name }}</p>
-      <label for="">Set: </label>
-      <select [(ngModel)]="printing.newPrintingId" name="" id="">
-        <option *ngFor="let subPrinting of printing.card.printings" [ngValue]="subPrinting.id">{{ subPrinting.set.code }}</option>
-      </select>
-      <input type="number" step="1" [(ngModel)]="printing.collection.owned_copies">
-      <input type="number" step="1" [(ngModel)]="printing.collection.trade_copies">
-      <img *ngIf="printing.url.length > 0" src="{{ printing.url }}">
-      <button (click)="buttonTest(cardIdx)">Test</button>
+    <div *ngFor="let printing of editArray; let cardIdx = index" class="test-div">
+      <div class="card-display">
+        <img *ngIf="printing.url.length > 0" src="{{ printing.url }}" class="card-image">
+        <p class="card-name">{{ printing.card.name }}</p>
+        <label for="card-set" class="set-display">Card Set: </label>
+        <div class="card-set">
+          <select [(ngModel)]="printing.newPrintingId" name="card-set" id="">
+            <option *ngFor="let subPrinting of printing.card.printings" [ngValue]="subPrinting.id">{{ subPrinting.set.code }}</option>
+          </select>
+        </div>
+        <label for="card-card-owned" class="owned-display">Owned: </label>
+        <div class="card-owned">
+          <input type="number" step="1" [(ngModel)]="printing.collection.owned_copies" name="card-owned">
+        </div>
+        <label for="card-card-owned" class="trade-display">For Trade: </label>
+        <div class="card-trade">
+          <input type="number" step="1" [(ngModel)]="printing.collection.trade_copies" name="card-trade">
+        </div>
+        <!-- <button (click)="buttonTest(cardIdx)">Test</button> -->
+      </div>
     </div>
   </div>
-  <p>-----ADD NEW CARDS-----</p>
+  <hr>
+  <h1>New Cards</h1>
+  <hr>
   <div>
     <div *ngFor="let card of cardArray; let cardIdx = index">
       <p>{{ card.name }}</p>
