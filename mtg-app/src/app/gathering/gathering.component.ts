@@ -35,7 +35,8 @@ export class GatheringComponent implements OnInit {
         console.log(res);
         this.provide = res;
         console.log(this.provide);
-      }
+      },
+      err => console.log(err)
     );
   }
 }
