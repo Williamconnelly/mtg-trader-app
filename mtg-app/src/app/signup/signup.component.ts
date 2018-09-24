@@ -10,6 +10,7 @@ import { AuthService } from '../auth.service';
 export class SignupComponent implements OnInit {
 
   registerUserData = {};
+  errors = {};
   constructor(private _auth: AuthService, private _router: Router) { }
 
   ngOnInit() {
@@ -19,10 +20,13 @@ export class SignupComponent implements OnInit {
     this._auth.registerUser(this.registerUserData).subscribe(
       res => {
         console.log(res);
+        if (res.hasOwnProperty('error')) {
+          this.errors = res;
+        } else {
         localStorage.setItem('token', res.token);
         this._router.navigate(['/']);
-      },
-      err => console.log(err)
+        }
+      }
     );
   }
 }

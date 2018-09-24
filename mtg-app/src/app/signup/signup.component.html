@@ -5,5 +5,6 @@
     <input [(ngModel)]="registerUserData.email" name="email" type="text" placeholder="Email">
     <input [(ngModel)]="registerUserData.password" name="password" type="password" placeholder="Password">
 		<button class="auth-btn" type="submit" (click)="registerUser()">Signup</button>
-	</form>
+  </form>
+  <p *ngIf="errors.hasOwnProperty('error')" class="error-msg">{{ errors.message }}</p>
 </div>

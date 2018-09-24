@@ -44,3 +44,7 @@ h1 {
   color: white;
   background-color: #2db92d;
 }
+
+.error-msg {
+  color: #c20909;
+}
