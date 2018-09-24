@@ -9,8 +9,6 @@ import { ViewListComponent } from './view-list/view-list.component';
 import { EditCollectionComponent } from './edit-collection/edit-collection.component';
 import { ViewCollectionComponent } from './view-collection/view-collection.component';
 import { HomeComponent } from './home/home.component';
-import { EditCollectionComponent } from './edit-collection/edit-collection.component';
-import { ViewCollectionComponent } from './view-collection/view-collection.component';
 
 const routes: Routes = [
   {
