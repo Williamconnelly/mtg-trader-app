@@ -18,6 +18,18 @@ export class EditListComponent implements OnInit {
   ngOnInit() {
     this.card.getLoggedInWishlist().subscribe(wishlist => {
       console.log(wishlist);
+      for (let i=0; i<wishlist.length; i++) {
+        wishlist[i]["url"] = "";
+        if (wishlist[i]["preferredPrinting"] === null) {
+          wishlist[i]["preferredPrinting"] = "none";
+        }
+        wishlist[i]["markedForDeletion"] = false;
+        this.card.scryfallFindCardByName(wishlist[i]["name"]).subscribe(scryfallData =>{
+          // console.log(scryfallData);
+          wishlist[i]["url"] = scryfallData["image_uris"]["small"];
+        });
+      }
+      this.editArray = wishlist;
     })
   }
 
@@ -51,5 +63,10 @@ export class EditListComponent implements OnInit {
         })
       }
     });
+  }
+
+  submitCardsToWishlist() {
+    this.card.addCardsToWishlist(this.cardArray).subscribe();
+    this.card.editCardsInWishlist(this.editArray).subscribe();
   }
 }

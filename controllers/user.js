@@ -125,6 +125,69 @@ router.post("/collection", (req, res) => {
   })
 })
 
+// Add multiple cards to wishlist
+router.post("/wishlist/batch", verifyToken, (req, res) => {
+  console.log("router.post '/wishlist/batch'")
+  if (req.body.cards.length > 0) {
+    db.user.find({
+      where: {
+        id: req.user.id
+      }
+    }).then(user => {
+      for (let i=0; i<req.body.cards.length; i++) {
+        db.card.find({
+          where: {
+            id: req.body.cards[i]["id"]
+          }
+        }).then(card => {
+          if (req.body.cards[i]["preferredPrinting"] == "none") {
+            req.body.cards[i]["preferredPrinting"] = null;
+          }
+          user.addCard(card, {through: {
+            pref_printing: req.body.cards[i]["preferredPrinting"],
+            number_wanted: req.body.cards[i]["desiredCopies"]
+          }})
+        })
+      }
+      res.json({});
+    })
+  } else {
+    res.json({});
+  }
+})
+
+// Update multiple entries in a user's wishlist
+router.put("/wishlist/batch", verifyToken, (req, res) => {
+  console.log("UPDATING MULTIPLE CARDS IN WISHLIST");
+  console.log("req.body.cards.length: " + req.body.cards.length);
+  if (req.body.cards.length > 0) {
+    for (let i=0; i<req.body.cards.length; i++) {
+      db.wishlist.find({
+        where: {
+          id: req.body.cards[i].wishlist.id
+        }
+      }).then(wishlist => {
+        console.log("------------------------------------------------------")
+        console.log(wishlist)
+        if (req.body.cards[i]['markedForDeletion']) {
+          console.log(wishlist['id']);
+          console.log("DESTROYED")
+          wishlist.destroy();
+        } else {
+          if (req.body.cards[i].pref_printing === "none") {
+            req.body.cards[i].pref_printing = null
+          }
+          wishlist.update({
+            pref_printing: req.body.cards[i]["wishlist"]["pref_printing"],
+            number_wanted: req.body.cards[i]['wishlist']['number_wanted']
+          });
+        }
+      })
+    }
+  }
+  res.json({});
+})
+
 // Get a logged in user's wishlist for editing
 router.get("/wishlist/loggedin", verifyToken, (req, res) => {
   db.user.find({
