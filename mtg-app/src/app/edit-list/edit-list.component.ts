@@ -16,25 +16,17 @@ export class EditListComponent implements OnInit {
   constructor(private card : CardService, private _auth : AuthService) { }
 
   ngOnInit() {
-    this.card.getLoggedInCollection().subscribe(existingCollection => {
-      console.log("existingCollection:");
-      console.log(existingCollection);
-      for (let i=0; i<existingCollection.length; i++) {
-        existingCollection[i]["url"] = ""
-        existingCollection[i]["newPrintingId"] = existingCollection[i]['collection']["cardsSetId"];
-        this.card.scryfallFindCardByName(existingCollection[i]['card']['name']).subscribe(scryfallResult => {
-          if (scryfallResult.hasOwnProperty("image_uris")) {
-            existingCollection[i]["url"] = scryfallResult["image_uris"]["small"];
-          }
-        })
-      }
-      this.editArray = existingCollection;
-    });
+    this.card.getLoggedInWishlist().subscribe(wishlist => {
+      console.log(wishlist);
+    })
   }
 
-  buttonTest(value) {
-    console.log("Value: " + value);
-    console.log(this.editArray[value]);
+  logCardArrayAtIndex(index) {
+    console.log(this.cardArray[index]);
+  }
+
+  removeFromCardArray(index) {
+    this.cardArray.splice(index, 1);
   }
 
   submitCardSearch() {
@@ -47,9 +39,8 @@ export class EditListComponent implements OnInit {
       console.log(cardResult);
       if (cardResult != null) {
         cardResult["url"] = "";
-        cardResult["printingInput"] = cardResult["sets"][0];
-        cardResult["copies"] = 1;
-        cardResult["tradeCopies"] = 0;
+        cardResult["preferredPrinting"] = "none";
+        cardResult["desiredCopies"] = 1;
         scryObs.subscribe(scryfallResult => {
           console.log("Scryfall Result:")
           console.log(scryfallResult);
@@ -60,14 +51,5 @@ export class EditListComponent implements OnInit {
         })
       }
     });
-  }
-
-  submitCardsToCollection() {
-    let addCards = this.cardArray;
-    let editCards = this.editArray;
-    this.cardArray = [];
-    this.card.editCardsInCollection(editCards).subscribe();
-    let obs = this.card.addCardsToCollection(addCards);
-    obs.subscribe();
   }
 }

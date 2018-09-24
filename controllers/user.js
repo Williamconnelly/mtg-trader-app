@@ -34,6 +34,7 @@ router.post("/collection/batch", verifyToken, (req, res) => {
   }
 })
 
+// Update multiple entries in a user's collection
 router.put("/collection/batch", verifyToken, (req, res) => {
   console.log("UPDATING MULTIPLE CARDS IN COLLECTION");
   if (req.body.printings.length > 0) {
@@ -43,11 +44,19 @@ router.put("/collection/batch", verifyToken, (req, res) => {
           id: req.body.printings[i].collection.id
         }
       }).then(collection => {
-        collection.update({
-          cardsSetId: req.body.printings[i].newPrintingId,
-          owned_copies: req.body.printings[i]['collection']['owned_copies'],
-          trade_copies: req.body.printings[i]['collection']['trade_copies']
-        })
+        console.log("------------------------------------------------------")
+        console.log("------------------------------------------------------")
+        if (req.body.printings[i]['markedForDeletion']) {
+          console.log(collection['id']);
+          console.log("DESTROYED")
+          collection.destroy();
+        } else {
+          collection.update({
+            cardsSetId: req.body.printings[i].newPrintingId,
+            owned_copies: req.body.printings[i]['collection']['owned_copies'],
+            trade_copies: req.body.printings[i]['collection']['trade_copies']
+          });
+        }
       })
     }
   }
@@ -116,13 +125,38 @@ router.post("/collection", (req, res) => {
   })
 })
 
+// Get a logged in user's wishlist for editing
+router.get("/wishlist/loggedin", verifyToken, (req, res) => {
+  db.user.find({
+    where: {
+      id: req.user.id
+    }, include:  [{
+      model: db.card,
+      include: [{
+            model: db.cardsSets,
+            as: 'printings',
+            include: [db.set]
+        }]
+    }]
+  }).then(user => {
+    res.json(user['cards']);
+  })
+})
+
 // Get User's Wishlist
-router.get("/collection/:id", (req, res) => {
+router.get("/wishlist/:id", (req, res) => {
   db.wishlist.findAll({
     where: {
       // TODO: Get at User differently
       userId: req.params.id
-    }
+    }, include:  [{
+      model: db.card,
+      include: [{
+            model: db.cardsSets,
+            as: 'printings',
+            include: [db.set]
+        }]
+    }]
   }).then(wishlist => {
     res.json(wishlist);
   })

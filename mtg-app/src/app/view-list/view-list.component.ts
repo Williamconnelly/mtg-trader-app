@@ -15,17 +15,17 @@ export class ViewListComponent implements OnInit {
   ngOnInit() {
   }
 
-  getCollectionById(viewListSearch) {
-    this.card.getCollectionById(viewListSearch).subscribe(collection => {
-      console.log(collection);
-      if (!collection.hasOwnProperty('message')) {
-        this.cardArray = collection;
-        for (let i = 0; i < this.cardArray.length; i++) {
-          this.card.scryfallFindCardByName(this.cardArray[i].card.name).subscribe(scryfallData => {
-            console.log(scryfallData);
-            this.cardArray[i]['url'] = scryfallData['image_uris']['small'];
-          });
-        }
+  getWishlistById(viewWishlistSearch) {
+    this.card.getWishlistById(viewWishlistSearch).subscribe(wishlist => {
+      console.log(wishlist);
+      if (!wishlist.hasOwnProperty('message')) {
+        this.cardArray = wishlist;
+        // for (let i=0; i<this.cardArray.length; i++) {
+        //   this.card.scryfallFindCardByName(this.cardArray[i].card.name).subscribe(scryfallData => {
+        //     console.log(scryfallData);
+        //     this.cardArray[i]['url'] = scryfallData['image_uris']['small']
+        //   });
+        // }
       }
     });
   }
