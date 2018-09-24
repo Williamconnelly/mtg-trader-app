@@ -34,6 +34,7 @@ router.post("/collection/batch", verifyToken, (req, res) => {
   }
 })
 
+// Update multiple entries in a user's collection
 router.put("/collection/batch", verifyToken, (req, res) => {
   console.log("UPDATING MULTIPLE CARDS IN COLLECTION");
   if (req.body.printings.length > 0) {
@@ -124,13 +125,38 @@ router.post("/collection", (req, res) => {
   })
 })
 
+// Get a logged in user's wishlist for editing
+router.get("/wishlist/loggedin", verifyToken, (req, res) => {
+  db.user.find({
+    where: {
+      id: req.user.id
+    }, include:  [{
+      model: db.card,
+      include: [{
+            model: db.cardsSets,
+            as: 'printings',
+            include: [db.set]
+        }]
+    }]
+  }).then(user => {
+    res.json(user['cards']);
+  })
+})
+
 // Get User's Wishlist
-router.get("/collection/:id", (req, res) => {
+router.get("/wishlist/:id", (req, res) => {
   db.wishlist.findAll({
     where: {
       // TODO: Get at User differently
       userId: req.params.id
-    }
+    }, include:  [{
+      model: db.card,
+      include: [{
+            model: db.cardsSets,
+            as: 'printings',
+            include: [db.set]
+        }]
+    }]
   }).then(wishlist => {
     res.json(wishlist);
   })

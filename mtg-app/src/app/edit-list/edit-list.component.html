@@ -1,3 +1,22 @@
 <p>
   edit-list works!
 </p>
+<form (submit)="submitCardSearch()">
+  <input type="text" [(ngModel)]="cardSearch" name="cardSearch">
+  <input type="submit" value="submit">
+</form>
+<p>-----ADD NEW CARDS-----</p>
+<div>
+  <div *ngFor="let card of cardArray; let cardIdx = index">
+    <p>{{ card.name }}</p>
+    <label for="">Pref Printing: </label>
+    <select [(ngModel)]="card.preferredPrinting" name="" id="">
+      <option value="none">No Preference</option>
+      <option *ngFor="let set of card.sets let setIdx = index" [ngValue]="set['cardsSets']['id']">{{ set.code }}</option>
+    </select>
+    <input type="number" step="1" [(ngModel)]="card.desiredCopies">
+    <img *ngIf="card.url.length > 0" src="{{ card.url }}" alt="">
+    <button (click)="removeFromCardArray(cardIdx)">Remove</button>
+    <button (click)="logCardArrayAtIndex(cardIdx)">C.log</button>
+  </div>
+</div>

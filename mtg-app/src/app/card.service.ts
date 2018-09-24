@@ -19,8 +19,14 @@ export class CardService {
   getLoggedInCollection() {
     return this.http.get<any>("http://localhost:3000/user/collection/loggedin");
   }
+  getLoggedInWishlist() {
+    return this.http.get<any>("http://localhost:3000/user/wishlist/loggedin");
+  }
   getCollectionById(id) {
     return this.http.get<any>("http://localhost:3000/user/collection/" + id);
+  }
+  getWishlistById(id) {
+    return this.http.get<any>("http://localhost:3000/user/wishlist/" + id);
   }
   findCardByName(name) {
     return this.http.post<any>("http://localhost:3000/card/name",{name:name});

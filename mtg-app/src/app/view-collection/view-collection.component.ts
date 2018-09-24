@@ -8,15 +8,15 @@ import { CardService } from '../card.service';
 })
 export class ViewCollectionComponent implements OnInit {
   cardArray = [];
-  viewListSearch = 1;
+  viewCollectionSearch = 1;
 
   constructor(private card : CardService) { }
 
   ngOnInit() {
   }
 
-  getCollectionById(viewListSearch) {
-    this.card.getCollectionById(viewListSearch).subscribe(collection => {
+  getCollectionById(viewCollectionSearch) {
+    this.card.getCollectionById(viewCollectionSearch).subscribe(collection => {
       console.log(collection);
       if (!collection.hasOwnProperty('message')) {
         this.cardArray = collection;
