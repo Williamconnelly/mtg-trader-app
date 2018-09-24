@@ -1,6 +1,11 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
   var wishlist = sequelize.define('wishlist', {
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true
+    },
     cardId: DataTypes.INTEGER,
     userId: DataTypes.INTEGER,
     number_wanted: DataTypes.INTEGER,

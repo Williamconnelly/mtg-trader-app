@@ -10,7 +10,11 @@ router.post("/name", (req, res) => {
   db.card.find({
     where: {
       name: req.body.name
-    }, include: [db.set]
+    }, include: [{
+      model: db.cardsSets,
+      as: 'printings',
+      include: [db.set]
+    }, db.set]
   }).then(card => {
     res.json(card);
   })

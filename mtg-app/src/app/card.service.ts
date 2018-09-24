@@ -13,8 +13,14 @@ export class CardService {
     };
     return this.http.post<any>("http://localhost:3000/user/collection/batch", postObject);
   }
+  addCardsToWishlist(cards) {
+    return this.http.post<any>("http://localhost:3000/user/wishlist/batch", {cards:cards});
+  }
   editCardsInCollection(printings) {
     return this.http.put<any>("http://localhost:3000/user/collection/batch", {printings:printings});
+  }
+  editCardsInWishlist(cards) {
+    return this.http.put<any>("http://localhost:3000/user/wishlist/batch", {cards:cards});
   }
   getLoggedInCollection() {
     return this.http.get<any>("http://localhost:3000/user/collection/loggedin");
