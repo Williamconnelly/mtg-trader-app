@@ -67,8 +67,7 @@ export class EditCollectionComponent implements OnInit {
     let editCards = this.editArray;
     this.cardArray = [];
     this.card.editCardsInCollection(editCards).subscribe();
-    let obs = this.card.addCardsToCollection(addCards);
-    obs.subscribe();
+    this.card.addCardsToCollection(addCards).subscribe();
   }
 
   removeFromCardArray(index) {

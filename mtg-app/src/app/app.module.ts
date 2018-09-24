@@ -31,10 +31,10 @@ import { HomeComponent } from './home/home.component';
     GatheringComponent,
     EditListComponent,
     ViewListComponent,
-    EditCollectionComponent,
-    ViewCollectionComponent,
     GatheringAquireComponent,
-    HomeComponent
+    HomeComponent,
+    EditCollectionComponent,
+    ViewCollectionComponent
   ],
   imports: [
     BrowserModule,
