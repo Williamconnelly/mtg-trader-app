@@ -37,7 +37,7 @@ const routes: Routes = [
     component: EditListComponent
   },
   {
-    path:'edit-collection',
+    path: 'edit-collection',
     component: EditCollectionComponent
   },
   {
