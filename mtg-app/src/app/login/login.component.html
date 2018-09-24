@@ -4,5 +4,6 @@
       <input [(ngModel)]="loginUserData.username" name="username" type="text" placeholder="Login">
       <input [(ngModel)]="loginUserData.password" name="password" type="password" placeholder="Password">
 		<button class="auth-btn" type="submit" (click)="loginUser()">Login</button>
-	</form>
+  </form>
+  <p *ngIf="errors.hasOwnProperty('error')" class="error-msg">{{ errors.message }}</p>
 </div>

@@ -17,7 +17,7 @@ router.post("/signup", (req, res) => {
       email: req.body.email,
       password: req.body.password
     }
-  }).spread(((user, created) => {
+  }).spread((user, created) => {
     // If no email was found
     if (created) {
       var token = jwt.sign(user.toJSON(), process.env.JWT_SECRET, {
@@ -31,9 +31,14 @@ router.post("/signup", (req, res) => {
         error: true,
         status: 401,
         message: "An account with that email already exists"
-      })
+      });
     }
-  }))
+  }).catch(err => {
+    res.json({
+      error: true,
+      message: err.errors[0].message
+    });
+  })
 })
 
 // Login
