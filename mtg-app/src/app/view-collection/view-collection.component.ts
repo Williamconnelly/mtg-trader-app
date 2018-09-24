@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CardService } from '../card.service';
+import { ActivatedRoute, Router, Params } from '@angular/router';
 
 @Component({
   selector: 'app-view-collection',
@@ -8,15 +9,25 @@ import { CardService } from '../card.service';
 })
 export class ViewCollectionComponent implements OnInit {
   cardArray = [];
+  searchBool = false;
   viewCollectionSearch = 1;
 
-  constructor(private card : CardService) { }
+  constructor(private card : CardService, private _route: ActivatedRoute) { }
 
   ngOnInit() {
+    console.log("ngOnInit")
+    this._route.params.subscribe((params: Params) => {
+      console.log("params['userId']: " + params['userId']);
+      if (params['userId'] === undefined) {
+        this.searchBool = true;
+      } else {
+        this.getCollectionById(params['userId']);
+      }
+    });
   }
 
-  getCollectionById(viewCollectionSearch) {
-    this.card.getCollectionById(viewCollectionSearch).subscribe(collection => {
+  getCollectionById(id) {
+    this.card.getCollectionById(id).subscribe(collection => {
       console.log(collection);
       if (!collection.hasOwnProperty('message')) {
         this.cardArray = collection;

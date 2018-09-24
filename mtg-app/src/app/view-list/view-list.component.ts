@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CardService } from '../card.service';
+import { ActivatedRoute, Router, Params } from '@angular/router';
 
 @Component({
   selector: 'app-view-list',
@@ -10,7 +11,7 @@ export class ViewListComponent implements OnInit {
   cardArray = [];
   viewListSearch = 1;
 
-  constructor(private card: CardService) { }
+  constructor(private card: CardService, private _route: ActivatedRoute) { }
 
   ngOnInit() {
   }
