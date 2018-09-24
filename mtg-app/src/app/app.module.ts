@@ -14,9 +14,11 @@ import { Token } from '@angular/compiler';
 import { GatheringComponent } from './gathering/gathering.component';
 import { GatheringService } from './gathering.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatExpansionModule, MatInputModule } from '@angular/material';
+import { MatExpansionModule, MatInputModule, MatTabsModule } from '@angular/material';
 import { EditListComponent } from './edit-list/edit-list.component';
 import { ViewListComponent } from './view-list/view-list.component';
+import { GatheringAquireComponent } from './gathering-aquire/gathering-aquire.component';
+import { HomeComponent } from './home/home.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +28,9 @@ import { ViewListComponent } from './view-list/view-list.component';
     PageNotFoundComponent,
     GatheringComponent,
     EditListComponent,
-    ViewListComponent
+    ViewListComponent,
+    GatheringAquireComponent,
+    HomeComponent,
   ],
   imports: [
     BrowserModule,
@@ -35,7 +39,8 @@ import { ViewListComponent } from './view-list/view-list.component';
     AppRoutingModule,
     BrowserAnimationsModule,
     MatExpansionModule,
-    MatInputModule
+    MatInputModule,
+    MatTabsModule
   ],
   providers: [AuthService, AuthGuard, GatheringService, {
     provide: HTTP_INTERCEPTORS,

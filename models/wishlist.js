@@ -8,6 +8,8 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   wishlist.associate = function(models) {
     // associations can be defined here
+    models.wishlist.belongsTo(models.card);
+    models.wishlist.belongsTo(models.user);
   };
   return wishlist;
 };

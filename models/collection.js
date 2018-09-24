@@ -13,6 +13,8 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   collection.associate = function(models) {
     // associations can be defined here
+    models.collection.belongsTo(models.cardsSets);
+    models.collection.belongsTo(models.user);
   };
   return collection;
 };
