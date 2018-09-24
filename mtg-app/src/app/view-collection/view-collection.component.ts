@@ -15,7 +15,6 @@ export class ViewCollectionComponent implements OnInit {
   constructor(private card : CardService, private _route: ActivatedRoute) { }
 
   ngOnInit() {
-    console.log("ngOnInit")
     this._route.params.subscribe((params: Params) => {
       console.log("params['userId']: " + params['userId']);
       if (params['userId'] === undefined) {

@@ -208,20 +208,26 @@ router.get("/wishlist/loggedin", verifyToken, (req, res) => {
 
 // Get User's Wishlist
 router.get("/wishlist/:id", (req, res) => {
-  db.wishlist.findAll({
+  console.log("router.get '/wishlist/:id'");
+  console.log("req.params.id: " + req.params.id);
+  db.user.find({
     where: {
       // TODO: Get at User differently
-      userId: req.params.id
-    }, include:  [{
+      id: req.params.id
+    }, include: [{
       model: db.card,
       include: [{
-            model: db.cardsSets,
-            as: 'printings',
-            include: [db.set]
-        }]
+        model: db.cardsSets,
+        as: 'printings',
+        include: [db.set]
+      }]
     }]
-  }).then(wishlist => {
-    res.json(wishlist);
+  }).then(user => {
+    if (user != null && user.hasOwnProperty('cards')) {
+      res.json(user['cards']);
+    } else {
+      res.json({message:'error'});
+    }
   })
 })
 

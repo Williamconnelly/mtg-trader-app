@@ -9,24 +9,33 @@ import { ActivatedRoute, Router, Params } from '@angular/router';
 })
 export class ViewListComponent implements OnInit {
   cardArray = [];
-  viewListSearch = 1;
+  searchBool = false;
+  viewWishlistSearch = 1;
 
   constructor(private card: CardService, private _route: ActivatedRoute) { }
 
   ngOnInit() {
+    this._route.params.subscribe((params: Params) => {
+      console.log("params['userId']: " + params['userId']);
+      if (params['userId'] === undefined) {
+        this.searchBool = true;
+      } else {
+        this.getWishlistById(params['userId']);
+      }
+    });
   }
 
   getWishlistById(viewWishlistSearch) {
     this.card.getWishlistById(viewWishlistSearch).subscribe(wishlist => {
       console.log(wishlist);
       if (!wishlist.hasOwnProperty('message')) {
+        for (let i=0; i<wishlist.length; i++) {
+          this.card.scryfallFindCardByName(wishlist[i].name).subscribe(scryfallData => {
+            console.log(scryfallData);
+            wishlist[i]['url'] = scryfallData['image_uris']['small']
+          });
+        }
         this.cardArray = wishlist;
-        // for (let i=0; i<this.cardArray.length; i++) {
-        //   this.card.scryfallFindCardByName(this.cardArray[i].card.name).subscribe(scryfallData => {
-        //     console.log(scryfallData);
-        //     this.cardArray[i]['url'] = scryfallData['image_uris']['small']
-        //   });
-        // }
       }
     });
   }
