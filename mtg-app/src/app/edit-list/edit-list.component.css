@@ -1,0 +1,154 @@
+.editlist-wrapper {
+  margin: 1em;
+}
+
+.add-card-form {
+  font-size: 1em;
+  padding: 0.5em 0;
+  border-radius: 1em;
+  font-family: sans-serif;
+  border-width: 0;
+}
+
+.card-search, .search-button {
+  font-size: inherit;
+  padding: 0.3em 0.4em;
+  -moz-box-sizing: content-box;
+  -webkit-box-sizing: content-box;
+  box-sizing: content-box;
+  border: 1px solid #000000;
+  background-color: #fff;
+  height: 2em;
+}
+
+.card-search {
+  margin-right: 0;
+  width: 12em;
+}
+
+.card-search:focus {
+  outline: none;
+}
+
+.search-button {
+  margin-left: 0;
+  background-color: #d8d8d8;
+  width: 4em;
+}
+.search-button:active, .search-button:focus {
+  background-color: rgb(175, 175, 175);
+  outline: none;
+}
+
+.card-display {
+  margin: 1em 0;
+  display: grid;
+  grid-template-columns: 146px 6em 5em;
+  grid-template-rows: 1.5fr 1fr 1fr 1fr;
+  grid-template-areas: "card-image card-name  card-name"
+                       "card-image card-printing printing-input"
+                       "card-image card-desire desire-input"
+                       "card-image card-remove remove-input";
+  width: 20em;
+}
+
+.card-display-new {
+  margin: 1em 0;
+  display: grid;
+  grid-template-columns: 146px 6em 5em;
+  grid-template-rows: 1fr 1fr 1fr;
+  grid-template-areas: "card-image card-name  card-name"
+                       "card-image card-printing printing-input"
+                       "card-image card-desire desire-input";
+  width: 20em;
+}
+
+.card-image {
+  display: inline-block;
+  grid-area: card-image;
+}
+
+.card-name {
+  display: inline-block;
+  text-align: top;
+  margin: 0;
+  text-align: left;
+  margin-top: 0.8em;
+  font-weight: bold;
+  grid-area: card-name;
+  margin-left: 1em;
+}
+
+.printing-display {
+  grid-area: card-printing;
+  text-align: left;
+  margin-left: 1em;
+}
+
+.desire-display {
+  grid-area: card-desire;
+  text-align: left;
+  margin-left: 1em;
+}
+
+.trade-display {
+  grid-area: card-trade;
+  text-align: left;
+  margin-left: 1em;
+}
+
+.remove-display {
+  grid-area: card-remove;
+  text-align: left;
+  margin-left: 1em;
+}
+
+.card-printing select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  border-radius: 0;
+  grid-area: printing-input;
+  display: block;
+  padding-left: 1.2em;
+}
+
+.card-desire input {
+  grid-area: desire-input;
+}
+
+.card-trade input {
+  grid-area: trade-input;
+}
+
+.card-remove input {
+  grid-area: remove-input;
+}
+
+.card-printing, .card-desire, .card-trade {
+  font-size: 1em;
+}
+
+.card-printing select, .card-desire input, .card-trade input {
+  width: 80%;
+  box-sizing: border-box;
+  height: 2em;
+  text-align: center;
+}
+
+.card-wrapper {
+  display: inline-block;
+  padding: 1em;
+}
+
+.add-card-button {
+  font-size: inherit;
+  padding: 0.3em 0.4em;
+  -moz-box-sizing: content-box;
+  -webkit-box-sizing: content-box;
+  box-sizing: content-box;
+  border: 1px solid #000000;
+  background-color: #fff;
+  height: 2em;
+  background-color: #d8d8d8;
+}
