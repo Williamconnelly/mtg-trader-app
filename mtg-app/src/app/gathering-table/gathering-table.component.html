@@ -1,6 +1,6 @@
 <!-- MATCHED ON AQUIRE -->
 
-<table *ngIf="data && data.hasOwnProperty('cardId')" mat-table [dataSource]="dataSource">
+<table *ngIf="data && data.length > 0" mat-table [dataSource]="dataSource">
   <!-- Name Column -->
   <ng-container matColumnDef="name">
     <th mat-header-cell *matHeaderCellDef>Card Name</th>
@@ -19,7 +19,7 @@
 
 <!-- MATCHED ON PROVIDE -->
 
-<table *ngIf="Otherdata && Otherdata.hasOwnProperty('cardId')" mat-table [dataSource]="dataSource2">
+<table *ngIf="Otherdata && Otherdata.length > 0" mat-table [dataSource]="dataSource2">
   <!-- Name Column -->
   <ng-container matColumnDef="name">
     <th mat-header-cell *matHeaderCellDef>Card Name</th>
@@ -29,7 +29,7 @@
   <!-- Wanted Column -->
   <ng-container matColumnDef="wanted">
     <th mat-header-cell *matHeaderCellDef> Number Wanted </th>
-    <td mat-cell *matCellDef="let card"> {{card.number_wanted}} </td>
+    <td mat-cell *matCellDef="let card"> {{ card.number_wanted }} </td>
   </ng-container>
 
   <!-- Printing Column -->

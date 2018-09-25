@@ -79,7 +79,7 @@ router.get("/gathering/want", verifyToken, (req, res) => {
         return a.cards.length - b.cards.length}
       ).reverse();
       res.send(newArray);
-    }, 100)
+    }, 1000)
   })
 })
 
@@ -167,7 +167,7 @@ router.get("/gathering/provide", verifyToken, (req, res) => {
         return a.cards.length - b.cards.length}
       ).reverse();
       res.send(newArray);
-    }, 100)
+    }, 1000)
   })
 });
 

@@ -16,8 +16,11 @@ export class GatheringTableComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-    this.dataSource.push(this.data);
-    this.dataSource2.push(this.Otherdata);
+    this.dataSource = this.data;
+    this.dataSource2 = this.Otherdata;
+    setTimeout(() => {
+      console.log(this.dataSource2);
+    }, 1500);
   }
 
 }
