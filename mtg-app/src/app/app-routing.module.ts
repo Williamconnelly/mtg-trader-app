@@ -42,10 +42,20 @@ const routes: Routes = [
   },
   {
     path: 'view-list',
-    component: ViewListComponent
+    component: ViewListComponent,
+    pathMatch: 'full'
   },
   {
     path: 'view-collection',
+    component: ViewCollectionComponent,
+    pathMatch: 'full'
+  },
+  {
+    path: 'view-list/:userId',
+    component: ViewListComponent
+  },
+  {
+    path: 'view-collection/:userId',
     component: ViewCollectionComponent
   },
   {

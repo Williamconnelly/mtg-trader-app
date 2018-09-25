@@ -1,8 +1,7 @@
-<p>
-  view-collection works!
-</p>
-<input type="number" [(ngModel)]="viewCollectionSearch">
-<button (click)="getCollectionById(viewCollectionSearch)">Search by User Id</button>
+<div *ngIf="searchBool">
+  <input type="number" [(ngModel)]="viewCollectionSearch">
+  <button (click)="getCollectionById(viewCollectionSearch)">Search by User Id</button>
+</div>
 <div *ngFor="let printing of cardArray; let cardIdx = index">
   <p>name: {{ printing.card.name }}</p>
   <img *ngIf="printing.hasOwnProperty('url')" src="{{ printing.url }}" alt="">
