@@ -2,8 +2,17 @@
   <input type="number" [(ngModel)]="viewCollectionSearch">
   <button (click)="getCollectionById(viewCollectionSearch)">Search by User Id</button>
 </div>
-<div *ngFor="let printing of cardArray; let cardIdx = index">
-  <p>name: {{ printing.card.name }}</p>
-  <img *ngIf="printing.hasOwnProperty('url')" src="{{ printing.url }}" alt="">
-  <p>id: {{ printing.id }} cardId: {{ printing.cardId }} setId: {{ printing.setId }} ownedCopies: {{ printing.collection.owned_copies }} tradeCopies: {{ printing.collection.trade_copies }}</p>
+<div class="view-wrapper">
+  <hr>
+  <h1>Collection</h1>
+  <hr>
+  <div *ngFor="let printing of cardArray; let cardIdx = index" class="card-wrapper">
+    <div class="card-display">
+      <img *ngIf="printing.hasOwnProperty('url')" src="{{ printing.url }}" alt="" class="card-image">
+      <p class="card-name">{{ printing.card.name }}</p>
+      <p class="card-set">{{ printing.set.title }} ({{ printing.set.code }})</p>
+      <p class="card-owned">Copies Owned: {{ printing.collection.owned_copies }}</p>
+      <p class="card-trade">For trade: {{ printing.collection.trade_copies }}</p>
+    </div>
+  </div>
 </div>
