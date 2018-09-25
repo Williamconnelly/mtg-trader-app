@@ -7,7 +7,7 @@
   <h1>Collection</h1>
   <hr>
   <div>
-    <div *ngFor="let printing of editArray; let cardIdx = index" class="test-div">
+    <div *ngFor="let printing of editArray; let cardIdx = index" class="card-wrapper">
       <div class="card-display">
         <img *ngIf="printing.url.length > 0" src="{{ printing.url }}" class="card-image">
         <p class="card-name">{{ printing.card.name }}</p>
@@ -37,7 +37,7 @@
   <h1>New Cards</h1>
   <hr>
   <div>
-    <div *ngFor="let card of cardArray; let cardIdx = index" class="test-div">
+    <div *ngFor="let card of cardArray; let cardIdx = index" class="card-wrapper">
       <div class="card-display">
         <img *ngIf="card.url.length > 0" src="{{ card.url }}" class="card-image">
         <p class="card-name">{{ card.name }}</p>

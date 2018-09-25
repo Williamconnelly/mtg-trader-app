@@ -20,8 +20,8 @@ export class EditListComponent implements OnInit {
       console.log(wishlist);
       for (let i=0; i<wishlist.length; i++) {
         wishlist[i]["url"] = "";
-        if (wishlist[i]["preferredPrinting"] === null) {
-          wishlist[i]["preferredPrinting"] = "none";
+        if (wishlist[i]["wishlist"]["pref_printing"] === null) {
+          wishlist[i]["wishlist"]["pref_printing"] = "none";
         }
         wishlist[i]["markedForDeletion"] = false;
         this.card.scryfallFindCardByName(wishlist[i]["name"]).subscribe(scryfallData =>{

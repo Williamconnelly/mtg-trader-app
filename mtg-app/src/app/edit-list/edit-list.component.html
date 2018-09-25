@@ -1,41 +1,56 @@
-<form (submit)="submitCardSearch()" class="add-card-form">
-  <input type="text" [(ngModel)]="cardSearch" name="cardSearch" class="card-search" placeholder="Add Card...">
-  <input type="submit" value="Search" class="search-button">
-</form>
-<h1>Wishlist</h1>
-<div>
-  <div *ngFor="let card of editArray; let cardIdx = index" class="test-div">
-      <img *ngIf="card.url.length > 0" src="{{ card.url }}" class="">
-      <p>{{ card.name }}</p>
-      <label for="">Preferred Printing: </label>
-      <select [(ngModel)]="card.wishlist.pref_printing" name="" id="">
-        <option value="none">No Pref</option>
-        <option *ngFor="let printing of card.printings" [ngValue]="printing.id">{{ printing.set.code }}</option>
-      </select>
-      <label for="">Desired Copies: </label>
-      <input type="number" step="1" [(ngModel)]="card.wishlist.number_wanted" name="">
-      <label for="">Remove</label>
-      <input type="checkbox" [(ngModel)]="card.markedForDeletion">
+<div class="editlist-wrapper">
+  <form (submit)="submitCardSearch()" class="add-card-form">
+    <input type="text" [(ngModel)]="cardSearch" name="cardSearch" class="card-search" placeholder="Add Card...">
+    <input type="submit" value="Search" class="search-button">
+  </form>
+  <hr>
+  <h1>Wishlist</h1>
+  <hr>
+  <div>
+    <div *ngFor="let card of editArray; let cardIdx = index" class="card-wrapper">
+      <div class="card-display">
+        <img *ngIf="card.url.length > 0" src="{{ card.url }}" class="card-image">
+        <p class="card-name">{{ card.name }}</p>
+        <label for="" class="printing-display">Preferred Printing: </label>
+        <div class="card-printing">
+          <select [(ngModel)]="card.wishlist.pref_printing" name="" id="">
+            <option value="none">No Pref</option>
+            <option *ngFor="let printing of card.printings" [ngValue]="printing.id">{{ printing.set.code }}</option>
+          </select>
+        </div>
+        <label for="" class="desire-display">Desired Copies: </label>
+        <div class="card-desire">
+          <input type="number" step="1" [(ngModel)]="card.wishlist.number_wanted" name="">
+        </div>
+        <label for="" class="remove-display">Remove</label>
+        <div class="card-remove">
+          <input type="checkbox" [(ngModel)]="card.markedForDeletion">
+        </div>
+      </div>
+    </div>
   </div>
-</div>
-<h1>New Cards</h1>
-<div>
-  <div *ngFor="let card of cardArray; let cardIdx = index" class="test-div">
-    
-      <img *ngIf="card.url.length > 0" src="{{ card.url }}" class="card-image">
-      <p class="card-name">{{ card.name }}</p>
-      <label for="card-set" class="set-display">Preferred Printing</label>
-      
-      <select [(ngModel)]="card.preferredPrinting" name="" id="">
-        <option value="none">No Pref</option>
-        <option *ngFor="let printing of card.printings; let setIdx = index" [ngValue]="printing.id">{{ printing.set.code }}</option>
-      </select>
-      
-      <label for="card-owned" class="owned-display">Desired # of Copies:</label>
-      <input type="number" step="1" [(ngModel)]="card.desiredCopies" name="">
-      <button (click)="logCardArrayAtIndex(cardIdx)">C LOG</button>
-      
-    
+  <hr>
+  <h1>New Cards</h1>
+  <hr>
+  <div>
+    <div *ngFor="let card of cardArray; let cardIdx = index" class="card-wrapper">
+      <div class="card-display-new">
+        <img *ngIf="card.url.length > 0" src="{{ card.url }}" class="card-image">
+        <p class="card-name">{{ card.name }}</p>
+        <label for="card-printing" class="printing-display">Preferred Printing</label>
+        <div class="card-printing">
+          <select [(ngModel)]="card.preferredPrinting" name="" id="">
+            <option value="none">No Pref</option>
+            <option *ngFor="let printing of card.printings; let setIdx = index" [ngValue]="printing.id">{{ printing.set.code }}</option>
+          </select>
+        </div>
+        <label for="card-desire" class="desire-display">Desired Copies:</label>
+        <div class="card-desire">
+          <input type="number" step="1" [(ngModel)]="card.desiredCopies" name="">
+        </div>
+        <!-- <button (click)="logCardArrayAtIndex(cardIdx)">C LOG</button> -->
+      </div>
+    </div>
   </div>
+  <button (click)="submitCardsToWishlist()" class="add-card-button">Submit to Wishlist</button>
 </div>
-<button (click)="submitCardsToWishlist()" class="">Submit to Wishlist</button>
