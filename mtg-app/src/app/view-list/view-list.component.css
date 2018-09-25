@@ -1,0 +1,63 @@
+.view-wrapper {
+  margin: 1em;
+}
+
+.card-display {
+  margin: 1em 0;
+  display: grid;
+  grid-template-columns: 146px 1fr;
+  grid-template-rows: 3em 4em 1fr;
+  grid-template-areas: "card-image card-name"
+                       "card-image card-set"
+                       "card-image card-trade";
+  width: 20em;
+}
+
+.card-image {
+  display: inline-block;
+  grid-area: card-image;
+}
+
+.card-name {
+  display: inline-block;
+  text-align: top;
+  margin: 0;
+  text-align: left;
+  margin-top: 0.8em;
+  font-weight: bold;
+  grid-area: card-name;
+  margin-left: 1em;
+}
+
+.card-set {
+  grid-area: card-set;
+}
+
+.card-owned {
+  grid-area: card-owned;
+}
+
+.card-trade {
+  grid-area: card-trade
+}
+
+.card-name, .card-set, .card-owned, .card-trade {
+  margin-left: 1em;
+}
+
+.card-wrapper {
+  display: inline-block;
+  padding: 1em;
+}
+
+.add-card-button {
+  font-size: inherit;
+  padding: 0.3em 0.4em;
+  -moz-box-sizing: content-box;
+  -webkit-box-sizing: content-box;
+  box-sizing: content-box;
+  border: 1px solid #000000;
+  background-color: #fff;
+  height: 2em;
+  background-color: #d8d8d8;
+}
