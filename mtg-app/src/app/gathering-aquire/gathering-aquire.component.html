@@ -4,12 +4,12 @@
       <mat-expansion-panel-header>
         {{ partner.userName }} ({{ partner.cards.length }} Match<span *ngIf="partner.cards.length > 1">es</span>)
       </mat-expansion-panel-header>
-      <h3>Matched Cards:</h3>
+      <!-- <h3>Matched Cards:</h3> -->
       <div *ngFor="let card of partner.cards">
         <app-gathering-table [data]="card"></app-gathering-table>
       </div>
-      <a routerLink="/view-collection/{{ partner.userId }}">Collection</a>
-      <a routerLink="/view-list/{{ partner.userId }}">Wishlist</a>
+      <a routerLink="/view-collection/{{ partner.userId }}" class="user-btn">Collection</a>
+      <a routerLink="/view-list/{{ partner.userId }}" class="user-btn">Wishlist</a>
     </mat-expansion-panel>
   </mat-accordion>
 </div>
@@ -20,13 +20,13 @@
       <mat-expansion-panel-header>
         {{ partner.userName }} ({{ partner.cards.length }} Match<span *ngIf="partner.cards.length > 1">es</span>)
       </mat-expansion-panel-header>
-      <h3>Matched Cards:</h3>
+      <!-- <h3>Matched Cards:</h3> -->
       <!-- <p *ngFor="let card of partner.cards">{{ card.cardName }} - {{ card.number_wanted }} wanted</p> -->
       <div *ngFor="let cardcard of partner.cards">
         <app-gathering-table [Otherdata]="cardcard"></app-gathering-table>
       </div>
-      <a routerLink="/view-collection/{{ partner.userId }}">Collection</a>
-      <a routerLink="/view-list/{{ partner.userId }}">Wishlist</a>
+      <a routerLink="/view-collection/{{ partner.userId }}" class="user-btn">Collection</a>
+      <a routerLink="/view-list/{{ partner.userId }}" class="user-btn">Wishlist</a>
     </mat-expansion-panel>
   </mat-accordion>
 </div>
