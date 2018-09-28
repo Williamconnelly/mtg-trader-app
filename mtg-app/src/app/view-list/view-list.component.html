@@ -2,10 +2,10 @@
   <input type="number" [(ngModel)]="viewWishlistSearch">
   <button (click)="getWishlistById(viewWishlistSearch)">Search by User Id</button>
 </div>
-
 <div class="view-wrapper">
   <hr>
   <h1>Wishlist</h1>
+  <a routerLink="/edit-list">Edit Wishlist</a>
   <hr>
   <div *ngFor="let card of cardArray; let cardIdx = index" class="card-wrapper">
     <div class="card-display">
