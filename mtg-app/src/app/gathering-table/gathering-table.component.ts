@@ -10,7 +10,7 @@ export class GatheringTableComponent implements OnInit {
   @Input() Otherdata;
   dataSource = [];
   dataSource2 = [];
-  displayedColumns: string[] = ['name', 'trade'];
+  displayedColumns: string[] = ['name', 'set', 'trade'];
   displayedColumns2: string[] = ['name', 'wanted', 'printing'];
 
   constructor() { }
