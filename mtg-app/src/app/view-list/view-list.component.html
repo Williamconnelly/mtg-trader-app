@@ -1,10 +1,21 @@
-<p>
-  view-list works!
-</p>
-<input type="number" [(ngModel)]="viewWishlistSearch">
-<button (click)="getWishlistById(viewWishlistSearch)">Search by User Id</button>
-<div *ngFor="let card of cardArray; let cardIdx = index">
-  <p>name: {{ card.name }}</p>
-  <img *ngIf="card.hasOwnProperty('url')" src="{{ card.url }}" alt="">
-  <p>id: {{ card.wishlist.id }} cardId: {{ card.id }} prefPrinting: {{ card.wishlist.pref_printing }} numberWanted: {{ card.wishlist.number_wanted }}</p>
+<div *ngIf="searchBool">
+  <input type="number" [(ngModel)]="viewWishlistSearch">
+  <button (click)="getWishlistById(viewWishlistSearch)">Search by User Id</button>
+</div>
+<div class="view-wrapper">
+  <hr>
+  <h1>Wishlist</h1>
+  <a routerLink="/edit-list">Edit Wishlist</a>
+  <hr>
+  <div *ngFor="let card of cardArray; let cardIdx = index" class="card-wrapper">
+    <div class="card-display">
+      <img *ngIf="card.hasOwnProperty('url')" src="{{ card.url }}" alt="">
+      <p class="card-name">{{ card.name }}</p>
+      <p *ngIf="card.wishlist.pref_printing === null" class="card-set">Preferred: None</p>
+      <div *ngFor="let printing of card.printings" class="card-set">
+        <p *ngIf="printing.id === card.wishlist.pref_printing">Preferred: {{ printing.set.title }} ({{ printing.set.code }})</p>
+      </div>
+      <p class="card-trade">Number Wanted: {{ card.wishlist.number_wanted }}</p>
+    </div>
+  </div>
 </div>
