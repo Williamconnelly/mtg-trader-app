@@ -41,7 +41,6 @@ router.get("/gathering/want", verifyToken, (req, res) => {
       Sequelize.Promise.props(partnerSearch).then(printings => {
         for (printing in printings) {
           let currentPrinting = printings[printing].dataValues;
-          // let currentSet = currentPrinting.set
           for (user in printings[printing].dataValues.users) {
             let currentUser = currentPrinting.users[user].dataValues;
             db.collection.findOne({
@@ -100,11 +99,12 @@ router.get("/gathering/provide", verifyToken, (req, res) => {
       trade_copies: {
         [op.gt]: 0
       }
-    }, include: [db.cardsSets]
+    }, include: [{model: db.cardsSets, include: [db.set]}]
   }).then(userCollection => {
     // For each of the printings they want to trade, compare it to all of the wishlists
     for (printing in userCollection) {
       let currentPrinting = userCollection[printing].dataValues;
+      let currentSet = currentPrinting.cardsSet.dataValues.set.dataValues;
       db.wishlist.findAll({
         where: {
           userId: {
@@ -125,6 +125,8 @@ router.get("/gathering/provide", verifyToken, (req, res) => {
               tradePartners[currentWishCard.userId].cards.push({
                 cardId: currentWishCard.cardId,
                 cardName: currentWishCard.card.dataValues.name,
+                setId: currentSet.id,
+                setTitle: currentSet.title,
                 number_wanted: currentWishCard.number_wanted,
                 cardPrinting: currentWishCard.pref_printing
               }) : 
@@ -135,6 +137,8 @@ router.get("/gathering/provide", verifyToken, (req, res) => {
                 cards: [{
                   cardId: currentWishCard.cardId,
                   cardName: currentWishCard.card.dataValues.name,
+                  setId: currentSet.id,
+                  setTitle: currentSet.title,
                   number_wanted: currentWishCard.number_wanted,
                   cardPrinting: currentWishCard.pref_printing
                 }]
@@ -150,6 +154,8 @@ router.get("/gathering/provide", verifyToken, (req, res) => {
               tradePartners[currentWishCard.userId].cards.push({
                 cardId: currentWishCard.cardId,
                 cardName: currentWishCard.card.dataValues.name,
+                setId: currentSet.id,
+                setTitle: currentSet.title,
                 number_wanted: currentWishCard.number_wanted,
                 cardPrinting: currentWishCard.pref_printing
               }) : 
@@ -160,6 +166,8 @@ router.get("/gathering/provide", verifyToken, (req, res) => {
                 cards: [{
                   cardId: currentWishCard.cardId,
                   cardName: currentWishCard.card.dataValues.name,
+                  setId: currentSet.id,
+                  setTitle: currentSet.title,
                   number_wanted: currentWishCard.number_wanted,
                   cardPrinting: currentWishCard.pref_printing
                 }]
