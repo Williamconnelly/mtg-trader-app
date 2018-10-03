@@ -11,98 +11,17 @@
   background: #fff;
 }
 
-.content {
-  display: flex;
-  flex-wrap: nowrap;
-}
-
-@media (max-width: 580px) {
-  .content {
-    display: inline-block;
-  }
-}
-
-.card-image {
-  /* text-align: center; */
-  flex: 0 0 200px;
-}
-
-.card-image img {
-  margin-bottom: 1rem;
-  max-width: 100%;
-  height: auto;
-}
-
-img {
-  vertical-align: middle;
-  border-style: none;
-}
-
-.card-details {
-  flex: auto;
-  padding: 0 2rem;
-}
-
 .card-name {
   font-size: 1.5rem;
   color: #212529;
   font-weight: bold;
   letter-spacing: -0.025em;
-  margin-top: 0;
+  margin: 0 0 0.3em 0;
 }
 
-.card-name span {
+span {
   font-size: 1rem;
   margin-bottom: 1rem;
-  font-weight: 600;
   color: #adb5bd;
-}
-
-.detail-table {
-  width: 100%;
-  max-width: 100%;
-  margin-bottom: 1rem;
-  background-color: transparent;
-}
-
-tr {
-  display: table-row;
-  vertical-align: inherit;
-  border-color: inherit;
-}
-
-td {
-  padding: 0;
-  border: none;
-  vertical-align: top;
-}
-
-.card-information {
-  font-size: 0.875rem;
-}
-
-dl {
-  margin-top: 0;
-  margin-bottom: 1rem;
-}
-
-@media (min-width: 768px) {
-  .description {
-    width: 10%;
-    display: inline-block;
-  }
-  .value {
-    width: 65%;
-    display: inline-block;
-    vertical-align: top;
-  }
-}
-
-.description {
-  font-weight: 600;
-}
-
-dd {
-  margin-bottom: .5rem;
-  margin-left: 0;
+  display: inline-block;
 }

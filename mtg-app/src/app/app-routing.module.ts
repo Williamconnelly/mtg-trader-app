@@ -60,7 +60,7 @@ const routes: Routes = [
     component: ViewCollectionComponent
   },
   {
-    path: 'card-show',
+    path: 'card-show/:cardId',
     component: CardShowComponent
   },
   {
