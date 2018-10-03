@@ -1,9 +1,9 @@
-<div class="wrapper">
-  <h1 class="card-name">Emrakul, the Promised End</h1>
-  <span>Eldritch Moon</span>
+<div *ngIf="cardShow.length > 0" class="wrapper">
+  <h1 class="card-name">{{cardShow[0].name}}</h1>
+  <span>? Set ?</span>
   <section class="content">
     <div class="card-image">
-      <img src="https://i.imgur.com/4EpqDjI.jpg" alt="test-img">
+      <img src="{{cardShow[0].url}}" alt="{{cardShow[0].name}}">
     </div>
   </section>
 </div>
