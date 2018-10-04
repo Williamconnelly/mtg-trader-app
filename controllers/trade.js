@@ -21,7 +21,8 @@ router.get("/gathering/want", verifyToken, (req, res) => {
           {model: db.user, required: true, attributes: {exclude: ['password','createdAt','updatedAt']}, 
           where: {
             [op.not]: {id: req.user.id}
-          }}
+          }},
+          {model: db.set, attributes: {exclude: ['id','createdAt','updatedAt']}}
         ]}
       ]}
     ]
@@ -29,9 +30,12 @@ router.get("/gathering/want", verifyToken, (req, res) => {
     tradePartners = {};
     for (wishCard in result) {
       let currentUserId = result[wishCard]['card.printings.users.id']
+      let currentUsername = result[wishCard]['card.printings.users.username']
       tradePartners.hasOwnProperty(currentUserId) ?
       tradePartners[currentUserId].cards.push(result[wishCard]) :
       tradePartners[currentUserId] = {
+        username: currentUsername,
+        userId: currentUserId,
         cards: [result[wishCard]]
       }
     }
