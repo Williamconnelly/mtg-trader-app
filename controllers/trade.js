@@ -8,37 +8,39 @@ const verifyToken = require("../middleware/verifyToken");
 require('dotenv').config();
 
 router.get("/gathering/want", verifyToken, (req, res) => {
-  // db.collection.findAll({
-  //   attributes: {exclude: ['id','createdAt','updatedAt']},
-  //   where: {
-  //     [op.not]: {userId: req.user.id}
-  //   }, 
-  //   include: [{model: db.user, attributes: ['id','username','email'], include: [
-  //     {model: db.card, attributes: {exclude: ['createdAt','updatedAt']}, include: [
-  //       {model: db.wishlist, where: {
-  //         userId: req.user.id,
-  //       },
-  //       required: true
-  //     }
-  //     ]}
-  //   ]}]
   // Thy damnation sleepth not
   db.wishlist.findAll({
     raw: true,
+    attributes: {exclude: ['id','createdAt','updatedAt']},
     where: {
       userId: req.user.id
     }, include: [
-      {model: db.card, required: true, include: [
-        {model: db.cardsSets, as: 'printings', include: [
-          {model: db.user, required: true, where: {
+      {model: db.card, required: true, attributes: {exclude: ['createdAt','updatedAt']}, include: [
+        {model: db.cardsSets, as: 'printings', required: true, attributes: {exclude: ['cardId',
+        'createdAt','updatedAt']}, include: [
+          {model: db.user, required: true, attributes: {exclude: ['password','createdAt','updatedAt']}, 
+          where: {
             [op.not]: {id: req.user.id}
           }}
-        ], required: true}
+        ]}
       ]}
     ]
   }).then(result => {
-    res.json(result);
+    tradePartners = {};
+    for (wishCard in result) {
+      let currentUserId = result[wishCard]['card.printings.users.id']
+      tradePartners.hasOwnProperty(currentUserId) ?
+      tradePartners[currentUserId].cards.push(result[wishCard]) :
+      tradePartners[currentUserId] = {
+        cards: [result[wishCard]]
+      }
+    }
+    const newArray = Object.values(tradePartners).sort((a,b) => {
+      return a.cards.length - b.cards.length}
+    ).reverse();
+    res.send(newArray);
   })
+
   // let tradePartners = {};
   // // Find the user's wishlist
   // db.wishlist.findAll({
