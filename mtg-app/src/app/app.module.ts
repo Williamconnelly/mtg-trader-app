@@ -22,6 +22,7 @@ import { ViewCollectionComponent } from './view-collection/view-collection.compo
 import { GatheringAquireComponent } from './gathering-aquire/gathering-aquire.component';
 import { HomeComponent } from './home/home.component';
 import { GatheringTableComponent } from './gathering-table/gathering-table.component';
+import { CardShowComponent } from './card-show/card-show.component';
 
 @NgModule({
   declarations: [
@@ -36,7 +37,8 @@ import { GatheringTableComponent } from './gathering-table/gathering-table.compo
     HomeComponent,
     EditCollectionComponent,
     ViewCollectionComponent,
-    GatheringTableComponent
+    GatheringTableComponent,
+    CardShowComponent
   ],
   imports: [
     BrowserModule,

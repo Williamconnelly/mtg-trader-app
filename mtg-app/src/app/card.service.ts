@@ -37,6 +37,9 @@ export class CardService {
   findCardByName(name) {
     return this.http.post<any>("http://localhost:3000/card/name",{name:name});
   }
+  findCardById(id) {
+    return this.http.get<any>(`http://localhost:3000/card/${id}`);
+  }
   scryfallFindCardByName(name) {
     let removeSpaces = "";
     for (let i=0; i<name.length; i++) {

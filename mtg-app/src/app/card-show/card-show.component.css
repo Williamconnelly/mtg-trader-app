@@ -1,0 +1,27 @@
+.wrapper {
+  width: 100%;
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+  box-sizing: border-box;
+  max-width: 1344px;
+  padding-top: 2rem;
+  padding-bottom: 4rem;
+  background: #fff;
+}
+
+.card-name {
+  font-size: 1.5rem;
+  color: #212529;
+  font-weight: bold;
+  letter-spacing: -0.025em;
+  margin: 0 0 0.3em 0;
+}
+
+span {
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  color: #adb5bd;
+  display: inline-block;
+}
