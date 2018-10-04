@@ -8,7 +8,7 @@ const verifyToken = require("../middleware/verifyToken");
 require('dotenv').config();
 
 router.get("/gathering/want", verifyToken, (req, res) => {
-  // Thy damnation sleepth not
+  // Find the wishlist of the logged user
   db.wishlist.findAll({
     raw: true,
     attributes: {exclude: ['id','createdAt','updatedAt']},
@@ -18,16 +18,34 @@ router.get("/gathering/want", verifyToken, (req, res) => {
       {model: db.card, required: true, attributes: {exclude: ['createdAt','updatedAt']}, include: [
         {model: db.cardsSets, as: 'printings', required: true, attributes: {exclude: ['cardId',
         'createdAt','updatedAt']}, include: [
+          {model: db.set, attributes: {exclude: ['createdAt','updatedAt']}},
           {model: db.user, required: true, attributes: {exclude: ['password','createdAt','updatedAt']}, 
-          where: {
-            [op.not]: {id: req.user.id}
-          }},
-          {model: db.set, attributes: {exclude: ['id','createdAt','updatedAt']}}
+            through: {where: {trade_copies: {[op.gt]: 0}}}, where: {[op.not]: {id: req.user.id}}}
         ]}
       ]}
     ]
   }).then(result => {
+    // Parter Container
     tradePartners = {};
+    // For each card in the wishlist, format the data into different user objects
+    for (wishCard in result) {
+      let currentUserId = result[wishCard]['card.printings.users.id'];
+      let currentUsername = result[wishCard]['card.printings.users.username'];
+      // If the user already exists AND the printing matches OR has no pref
+      if (tradePartners.hasOwnProperty(currentUserId) && 
+      (result[wishCard].pref_printing === result[wishCard]['card.printings.id'] || 
+      result[wishCard].pref_printing === null)) {
+        tradePartners[currentUserId].cards.push(result[wishCard])
+      // If the user does not exist AND the printing matches OR has no pref
+      } else if (result[wishCard].pref_printing === result[wishCard]['card.printings.id'] || 
+      result[wishCard].pref_printing === null) {
+        tradePartners[currentUserId] = {
+          username: currentUsername,
+          userId: currentUserId,
+          cards: [result[wishCard]]
+        }
+      }
+    }
     // for (wishCard in result) {
     //   let currentUserId = result[wishCard]['card.printings.users.id'];
     //   let currentUsername = result[wishCard]['card.printings.users.username'];
@@ -39,28 +57,9 @@ router.get("/gathering/want", verifyToken, (req, res) => {
     //     cards: [result[wishCard]]
     //   }
     // }
-    for (wishCard in result) {
-      let currentUserId = result[wishCard]['card.printings.users.id'];
-      let currentUsername = result[wishCard]['card.printings.users.username'];
-      if (tradePartners.hasOwnProperty(currentUserId)) {
-        if (result[wishCard].pref_printing === result[wishCard]['card.printings.id'] || 
-        result[wishCard].pref_printing === null) {
-            tradePartners[currentUserId].cards.push(result[wishCard])
-          }
-      } else {
-        if (result[wishCard].pref_printing === result[wishCard]['card.printings.id'] || 
-        result[wishCard].pref_printing === null) {
-          tradePartners[currentUserId] = {
-            username: currentUsername,
-            userId: currentUserId,
-            cards: [result[wishCard]]
-          }
-        }
-      }
-    }
     const newArray = Object.values(tradePartners).sort((a,b) => {
-      return a.cards.length - b.cards.length}
-    ).reverse();
+      return b.cards.length - a.cards.length}
+    );
     res.send(newArray);
   })
 
