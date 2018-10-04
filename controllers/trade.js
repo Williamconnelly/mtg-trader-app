@@ -8,85 +8,116 @@ const verifyToken = require("../middleware/verifyToken");
 require('dotenv').config();
 
 router.get("/gathering/want", verifyToken, (req, res) => {
-  let tradePartners = {};
-  // Find the user's wishlist
+  // db.collection.findAll({
+  //   attributes: {exclude: ['id','createdAt','updatedAt']},
+  //   where: {
+  //     [op.not]: {userId: req.user.id}
+  //   }, 
+  //   include: [{model: db.user, attributes: ['id','username','email'], include: [
+  //     {model: db.card, attributes: {exclude: ['createdAt','updatedAt']}, include: [
+  //       {model: db.wishlist, where: {
+  //         userId: req.user.id,
+  //       },
+  //       required: true
+  //     }
+  //     ]}
+  //   ]}]
+  // Thy damnation sleepth not
   db.wishlist.findAll({
+    raw: true,
     where: {
       userId: req.user.id
-    }, include: [db.card]
-  }).then(userWishlist => {
-    // For each of the CARDS on their wishlist, find matching partners
-    for (card in userWishlist) {
-      let currentCard = userWishlist[card].dataValues;
-      let partnerSearch;
-      if (currentCard.pref_printing !== null) {
-        partnerSearch = db.cardsSets.findAll({
-          where: {
-            id: currentCard.pref_printing
-          }, include: [{model: db.user, where: {
-            id: {[op.not]: req.user.id}},
-            required: true},
-            {model: db.set}]
-        })
-      } else {
-        partnerSearch = db.cardsSets.findAll({
-          where: {
-            cardId: currentCard.card.id
-          }, include: [{model: db.user, where: {
-            id: {[op.not]: req.user.id}}, 
-            required: true}, 
-            {model:db.set}]
-        });
-      }
-      Sequelize.Promise.props(partnerSearch).then(printings => {
-        for (printing in printings) {
-          let currentPrinting = printings[printing].dataValues;
-          for (user in printings[printing].dataValues.users) {
-            let currentUser = currentPrinting.users[user].dataValues;
-            db.collection.findOne({
-              raw: true,
-              where: {
-                userId: currentUser.id,
-                cardsSetId: currentPrinting.id,
-                trade_copies: {
-                  [op.gt]: 0
-                }
-              }
-            }).then(ownedPrinting => {
-              // Check if the user already exists as a trade partner
-              tradePartners.hasOwnProperty(currentUser.id) ? 
-              // If they do, add the card to their cards list
-              tradePartners[currentUser.id].cards.push({
-                cardId: currentCard.id,
-                cardName: currentCard.card.name,
-                setId: currentPrinting.set.id,
-                setTitle: currentPrinting.set.title,
-                trade_copies: ownedPrinting.trade_copies
-              }) : 
-              // If they don't, add the user and their new card
-              tradePartners[currentUser.id] = {
-                userId: currentUser.id,
-                userName: currentUser.username,
-                cards: [{
-                  cardId: currentCard.id,
-                  cardName: currentCard.card.name,
-                  setId: currentPrinting.set.id,
-                  setTitle: currentPrinting.set.title,
-                  trade_copies: ownedPrinting.trade_copies
-                }]
-              }
-            })
-          }
-        }
-      })
-    }
-    setTimeout(() => {
-      const newArray = Object.values(tradePartners).sort((a,b) => {
-        return a.cards.length - b.cards.length}
-      ).reverse();
-      res.send(newArray);
-    }, 1000)
+    }, include: [
+      {model: db.card, required: true, include: [
+        {model: db.cardsSets, as: 'printings', include: [
+          {model: db.user, required: true, where: {
+            [op.not]: {id: req.user.id}
+          }}
+        ], required: true}
+      ]}
+    ]
+  }).then(result => {
+    res.json(result);
   })
+  // let tradePartners = {};
+  // // Find the user's wishlist
+  // db.wishlist.findAll({
+  //   where: {
+  //     userId: req.user.id
+  //   }, include: [db.card]
+  // }).then(userWishlist => {
+  //   // For each of the CARDS on their wishlist, find matching partners
+  //   for (card in userWishlist) {
+  //     let currentCard = userWishlist[card].dataValues;
+  //     let partnerSearch;
+  //     if (currentCard.pref_printing !== null) {
+  //       partnerSearch = db.cardsSets.findAll({
+  //         where: {
+  //           id: currentCard.pref_printing
+  //         }, include: [{model: db.user, where: {
+  //           id: {[op.not]: req.user.id}},
+  //           required: true},
+  //           {model: db.set}]
+  //       })
+  //     } else {
+  //       partnerSearch = db.cardsSets.findAll({
+  //         where: {
+  //           cardId: currentCard.card.id
+  //         }, include: [{model: db.user, where: {
+  //           id: {[op.not]: req.user.id}}, 
+  //           required: true}, 
+  //           {model:db.set}]
+  //       });
+  //     }
+  //     Sequelize.Promise.props(partnerSearch).then(printings => {
+  //       for (printing in printings) {
+  //         let currentPrinting = printings[printing].dataValues;
+  //         for (user in printings[printing].dataValues.users) {
+  //           let currentUser = currentPrinting.users[user].dataValues;
+  //           db.collection.findOne({
+  //             raw: true,
+  //             where: {
+  //               userId: currentUser.id,
+  //               cardsSetId: currentPrinting.id,
+  //               trade_copies: {
+  //                 [op.gt]: 0
+  //               }
+  //             }
+  //           }).then(ownedPrinting => {
+  //             // Check if the user already exists as a trade partner
+  //             tradePartners.hasOwnProperty(currentUser.id) ? 
+  //             // If they do, add the card to their cards list
+  //             tradePartners[currentUser.id].cards.push({
+  //               cardId: currentCard.id,
+  //               cardName: currentCard.card.name,
+  //               setId: currentPrinting.set.id,
+  //               setTitle: currentPrinting.set.title,
+  //               trade_copies: ownedPrinting.trade_copies
+  //             }) : 
+  //             // If they don't, add the user and their new card
+  //             tradePartners[currentUser.id] = {
+  //               userId: currentUser.id,
+  //               userName: currentUser.username,
+  //               cards: [{
+  //                 cardId: currentCard.id,
+  //                 cardName: currentCard.card.name,
+  //                 setId: currentPrinting.set.id,
+  //                 setTitle: currentPrinting.set.title,
+  //                 trade_copies: ownedPrinting.trade_copies
+  //               }]
+  //             }
+  //           })
+  //         }
+  //       }
+  //     })
+  //   }
+  //   setTimeout(() => {
+  //     const newArray = Object.values(tradePartners).sort((a,b) => {
+  //       return a.cards.length - b.cards.length}
+  //     ).reverse();
+  //     res.send(newArray);
+  //   }, 1000)
+  // })
 })
 
 // Find trade partners based on user tradelist

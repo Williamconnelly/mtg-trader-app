@@ -23,6 +23,7 @@ module.exports = (sequelize, DataTypes) => {
     models.card.belongsToMany(models.set, {through: "cardsSets"});
     models.card.belongsToMany(models.user, {through: "wishlist"});
     models.card.hasMany(models.cardsSets, {as: "printings"});
+    models.card.hasMany(models.wishlist);
   };
   return card;
 };
