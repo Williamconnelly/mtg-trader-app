@@ -19,7 +19,7 @@
   <mat-accordion *ngFor="let partner of Otherdata">
     <mat-expansion-panel>
       <mat-expansion-panel-header>
-        {{ partner.userName }} ({{ partner.cards.length }} Match<span *ngIf="partner.cards.length > 1">es</span>)
+        {{ partner.username }} ({{ partner.cards.length }} Match<span *ngIf="partner.cards.length > 1">es</span>)
       </mat-expansion-panel-header>
       <!-- <h3>Matched Cards:</h3> -->
       <!-- <p *ngFor="let card of partner.cards">{{ card.cardName }} - {{ card.number_wanted }} wanted</p> -->
