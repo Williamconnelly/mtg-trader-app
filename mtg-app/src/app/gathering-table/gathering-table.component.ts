@@ -18,8 +18,6 @@ export class GatheringTableComponent implements OnInit {
   ngOnInit() {
     this.dataSource = this.data;
     this.dataSource2 = this.Otherdata;
-    console.log('this');
-    console.log(this.dataSource);
   }
 
 }

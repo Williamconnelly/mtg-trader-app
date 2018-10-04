@@ -28,15 +28,34 @@ router.get("/gathering/want", verifyToken, (req, res) => {
     ]
   }).then(result => {
     tradePartners = {};
+    // for (wishCard in result) {
+    //   let currentUserId = result[wishCard]['card.printings.users.id'];
+    //   let currentUsername = result[wishCard]['card.printings.users.username'];
+    //   tradePartners.hasOwnProperty(currentUserId) ?
+    //   tradePartners[currentUserId].cards.push(result[wishCard]) :
+    //   tradePartners[currentUserId] = {
+    //     username: currentUsername,
+    //     userId: currentUserId,
+    //     cards: [result[wishCard]]
+    //   }
+    // }
     for (wishCard in result) {
-      let currentUserId = result[wishCard]['card.printings.users.id']
-      let currentUsername = result[wishCard]['card.printings.users.username']
-      tradePartners.hasOwnProperty(currentUserId) ?
-      tradePartners[currentUserId].cards.push(result[wishCard]) :
-      tradePartners[currentUserId] = {
-        username: currentUsername,
-        userId: currentUserId,
-        cards: [result[wishCard]]
+      let currentUserId = result[wishCard]['card.printings.users.id'];
+      let currentUsername = result[wishCard]['card.printings.users.username'];
+      if (tradePartners.hasOwnProperty(currentUserId)) {
+        if (result[wishCard].pref_printing === result[wishCard]['card.printings.id'] || 
+        result[wishCard].pref_printing === null) {
+            tradePartners[currentUserId].cards.push(result[wishCard])
+          }
+      } else {
+        if (result[wishCard].pref_printing === result[wishCard]['card.printings.id'] || 
+        result[wishCard].pref_printing === null) {
+          tradePartners[currentUserId] = {
+            username: currentUsername,
+            userId: currentUserId,
+            cards: [result[wishCard]]
+          }
+        }
       }
     }
     const newArray = Object.values(tradePartners).sort((a,b) => {
