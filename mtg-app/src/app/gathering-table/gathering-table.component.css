@@ -10,3 +10,7 @@ a {
 a:hover {
   color: #1b68cc;
 }
+
+.mat-row:hover {
+  background-color: rgba(0,0,0,.04);
+}
