@@ -20,17 +20,18 @@ export class CardShowComponent implements OnInit {
   }
   getCardById(id) {
     this.card.findCardById(id).subscribe(card => {
-      console.log(card);
       if (!card.hasOwnProperty('message')) {
         this.cardShow.push(card);
         // TEMPORARY
         for (let i = 0; i < this.cardShow.length; i++) {
-          this.card.scryfallFindCardByName(this.cardShow[i].name).subscribe(scryfallData => {
+          console.log(this.cardShow[i]);
+          this.card.scryfallFindCardByName(this.cardShow[i].card.name).subscribe(scryfallData => {
             console.log(scryfallData);
-            this.cardShow[i]['url'] = scryfallData['image_uris']['small'];
+            this.cardShow[i]['url'] = scryfallData['image_uris']['normal'];
           });
         }
       }
+      this.cardShow[0].card.newtext = this.cardShow[0].card.text.replace(/\n/g, '\n\n');
       console.log(this.cardShow);
     });
   }

@@ -1,9 +1,18 @@
 <div *ngIf="cardShow.length > 0" class="wrapper">
-  <h1 class="card-name">{{cardShow[0].name}}</h1>
-  <span>? Set ?</span>
-  <section class="content">
-    <div class="card-image">
+  <h1 class="card-name">{{cardShow[0].card.name}}</h1>
+  <span class="card-set">{{ cardShow[0].set.title }} ({{ cardShow[0].set.code }})</span>
+  <div class="flex-container">
+    <div class="flex-item">
       <img src="{{cardShow[0].url}}" alt="{{cardShow[0].name}}">
+      <div class="details">
+        <ul>
+          <li><span class="label">Card Type: </span>{{ cardShow[0].card.type }}</li>
+          <li><span class="label">Converted Mana Cost: </span>{{ cardShow[0].card.cmc }}</li>
+          <li *ngIf="cardShow[0].card.power !== null"><span class="label">Power/Toughness: </span>{{ cardShow[0].card.power }}/{{ cardShow[0].card.toughness }}</li>
+          <li *ngIf="cardShow[0].card.loyalty !== null"><span class="label">Loyalty: </span>{{ cardShow[0].card.loyalty }}</li>
+          <li><pre>{{ cardShow[0].card.newtext }}</pre></li>
+        </ul>
+      </div>
     </div>
-  </section>
+  </div>
 </div>

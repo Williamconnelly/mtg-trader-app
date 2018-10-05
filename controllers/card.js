@@ -20,12 +20,17 @@ router.post("/name", (req, res) => {
   })
 })
 
-// Finds a specific card by ID
+// Find a card printing by ID
 router.get("/:id", (req, res) => {
-  db.card.find({
+  db.cardsSets.findOne({
+    attributes: {exclude: ['createdAt','updatedAt']},
     where: {
       id: req.params.id
-    }
+    },
+    include: [
+      {model: db.card, attributes: {exclude: ['createdAt','updatedAt']}},
+      {model: db.set, attributes: {exclude: ['createdAt','updatedAt']}}
+    ]
   }).then(card => {
     res.json(card);
   })
