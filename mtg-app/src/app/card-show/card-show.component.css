@@ -42,6 +42,10 @@ ul {
   list-style: none;
 }
 
+li {
+  margin: 1em 0;
+}
+
 pre {
   white-space: pre-wrap;
   white-space: -moz-pre-wrap;
@@ -68,4 +72,21 @@ pre {
 .flex-item img {
   flex-grow:0;
   flex-shrink:0;
+}
+
+@media screen and (max-width: 576px) {
+  .wrapper {
+    text-align: center;
+  }
+  .flex-item {
+    display: inline-block;
+  }
+  :host .details {
+    width: 80%;
+    text-align: left;
+    margin: 0 auto;
+  }
+  ul {
+    padding: 0;
+  }
 }
