@@ -16,7 +16,11 @@ export class ViewCollectionComponent implements OnInit {
 
   ngOnInit() {
     this._route.params.subscribe((params: Params) => {
-      console.log("params['userId']: " + params['userId']);
+      if (params != undefined) {
+        console.log("params['userId']: " + params['userId']);
+      } else {
+        console.log("params is undefined");
+      }
       if (params['userId'] === undefined) {
         this.searchBool = true;
       } else {
