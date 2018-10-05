@@ -9,24 +9,32 @@ import { ActivatedRoute, Router, Params } from '@angular/router';
 })
 export class ViewListComponent implements OnInit {
   cardArray = [];
-  searchBool = false;
-  viewWishlistSearch = 1;
 
   constructor(private card: CardService, private _route: ActivatedRoute) { }
 
   ngOnInit() {
     this._route.params.subscribe((params: Params) => {
-      console.log("params['userId']: " + params['userId']);
       if (params['userId'] === undefined) {
-        this.searchBool = true;
+        // If no params are given, set the id to undefined. getWishlistById() will get currently logged
+        // in user's wishlist
+        console.log("params is undefined");
+        this.getWishlistById(undefined);
       } else {
+        console.log("params['userId']: " + params['userId']);
         this.getWishlistById(params['userId']);
       }
     });
   }
 
-  getWishlistById(viewWishlistSearch) {
-    this.card.getWishlistById(viewWishlistSearch).subscribe(wishlist => {
+  getWishlistById(id) {
+    let observable;
+    // If id is undefined, get the currently logged in user's wishlist
+    if (id === undefined) {
+      observable = this.card.getLoggedInWishlist();
+    } else {
+      observable = this.card.getWishlistById(id);
+    }
+    observable.subscribe(wishlist => {
       console.log(wishlist);
       if (!wishlist.hasOwnProperty('message')) {
         for (let i=0; i<wishlist.length; i++) {

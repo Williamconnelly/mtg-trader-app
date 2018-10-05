@@ -41,14 +41,6 @@ export class CardService {
     return this.http.get<any>(`http://localhost:3000/card/${id}`);
   }
   scryfallFindCardByName(name) {
-    let removeSpaces = "";
-    for (let i=0; i<name.length; i++) {
-      if (name[i] !== " ") {
-        removeSpaces += name[i];
-      } else {
-        removeSpaces += "+";
-      }
-    }
-    return this.http.get<any>("https://api.scryfall.com/cards/named?fuzzy=" + removeSpaces);
+    return this.http.get<any>("https://api.scryfall.com/cards/named?fuzzy=" + name.replace(" ", "+"));
   }
 }
