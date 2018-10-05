@@ -9,28 +9,32 @@ import { ActivatedRoute, Router, Params } from '@angular/router';
 })
 export class ViewCollectionComponent implements OnInit {
   cardArray = [];
-  searchBool = false;
-  viewCollectionSearch = 1;
 
   constructor(private card : CardService, private _route: ActivatedRoute) { }
 
   ngOnInit() {
     this._route.params.subscribe((params: Params) => {
-      if (params != undefined) {
-        console.log("params['userId']: " + params['userId']);
-      } else {
-        console.log("params is undefined");
-      }
       if (params['userId'] === undefined) {
-        this.searchBool = true;
+        console.log("params is undefined");
+        // If no params are given, set the id to undefined. getCollectionById() will get currently logged
+        // in user's collection
+        this.getCollectionById(undefined);
       } else {
+        console.log("params['userId']: " + params['userId']);
         this.getCollectionById(params['userId']);
       }
     });
   }
 
   getCollectionById(id) {
-    this.card.getCollectionById(id).subscribe(collection => {
+    let observable;
+    // If id is undefined, get the currently logged in user's collection
+    if (id === undefined) {
+      observable = this.card.getLoggedInCollection()
+    } else {
+      observable = this.card.getCollectionById(id);
+    }
+    observable.subscribe(collection => {
       console.log(collection);
       if (!collection.hasOwnProperty('message')) {
         this.cardArray = collection;
