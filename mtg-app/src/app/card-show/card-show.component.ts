@@ -27,10 +27,11 @@ export class CardShowComponent implements OnInit {
           console.log(this.cardShow[i]);
           this.card.scryfallFindCardByName(this.cardShow[i].card.name).subscribe(scryfallData => {
             console.log(scryfallData);
-            this.cardShow[i]['url'] = scryfallData['image_uris']['small'];
+            this.cardShow[i]['url'] = scryfallData['image_uris']['normal'];
           });
         }
       }
+      this.cardShow[0].card.newtext = this.cardShow[0].card.text.replace(/\n/g, '\n\n');
       console.log(this.cardShow);
     });
   }
