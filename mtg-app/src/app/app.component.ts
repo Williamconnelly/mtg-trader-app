@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { AuthService } from './auth.service';
 
 @Component({
   selector: 'app-root',
@@ -9,5 +8,5 @@ import { AuthService } from './auth.service';
 export class AppComponent {
   title = 'mtg-app';
 
-  constructor(private _authService: AuthService) { }
+  constructor() { }
 }

@@ -1,16 +1,4 @@
-<nav>
-  <ul>
-    <li><a routerLink="/">Home</a></li>
-    <li><a *ngIf="!_authService.loggedIn()" routerLink="/signup">Signup</a></li>
-    <li><a *ngIf="!_authService.loggedIn()" routerLink="/login">Login</a></li>
-    <li><a *ngIf="_authService.loggedIn()" routerLink="/gathering">Gathering</a></li>
-    <li><a *ngIf="_authService.loggedIn()" routerLink="/view-collection">ViewCollection</a></li>
-    <!-- <li><a *ngIf="_authService.loggedIn()" routerLink="/edit-collection">EditCollection</a></li> -->
-    <li><a *ngIf="_authService.loggedIn()" routerLink="/view-list">ViewList</a></li>
-    <!-- <li><a *ngIf="_authService.loggedIn()" routerLink="/edit-list">EditList</a></li> -->
-    <li><a *ngIf="_authService.loggedIn()" (click)="_authService.logoutUser()">Logout</a></li>
-  </ul>
-</nav>
+<app-navbar></app-navbar>
 <div class="site-wrapper">
   <router-outlet></router-outlet>
 </div>

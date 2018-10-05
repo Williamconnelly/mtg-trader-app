@@ -14,7 +14,7 @@ import { Token } from '@angular/compiler';
 import { GatheringComponent } from './gathering/gathering.component';
 import { GatheringService } from './gathering.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatExpansionModule, MatInputModule, MatTabsModule, MatTableModule } from '@angular/material';
+import { MatExpansionModule, MatInputModule, MatTabsModule, MatTableModule} from '@angular/material';
 import { EditListComponent } from './edit-list/edit-list.component';
 import { ViewListComponent } from './view-list/view-list.component';
 import { EditCollectionComponent } from './edit-collection/edit-collection.component';
@@ -23,6 +23,7 @@ import { GatheringAquireComponent } from './gathering-aquire/gathering-aquire.co
 import { HomeComponent } from './home/home.component';
 import { GatheringTableComponent } from './gathering-table/gathering-table.component';
 import { CardShowComponent } from './card-show/card-show.component';
+import { NavbarComponent } from './navbar/navbar.component';
 
 @NgModule({
   declarations: [
@@ -38,7 +39,8 @@ import { CardShowComponent } from './card-show/card-show.component';
     EditCollectionComponent,
     ViewCollectionComponent,
     GatheringTableComponent,
-    CardShowComponent
+    CardShowComponent,
+    NavbarComponent
   ],
   imports: [
     BrowserModule,
