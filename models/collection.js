@@ -9,7 +9,9 @@ module.exports = (sequelize, DataTypes) => {
     cardsSetId: DataTypes.INTEGER,
     userId: DataTypes.INTEGER,
     owned_copies: DataTypes.INTEGER,
-    trade_copies: DataTypes.INTEGER
+    trade_copies: DataTypes.INTEGER,
+    card_condition: DataTypes.INTEGER,
+    foil: DataTypes.BOOLEAN
   }, {});
   collection.associate = function(models) {
     // associations can be defined here
