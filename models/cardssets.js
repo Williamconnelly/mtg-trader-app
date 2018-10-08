@@ -7,7 +7,11 @@ module.exports = (sequelize, DataTypes) => {
       autoIncrement: true
     },
     cardId: DataTypes.INTEGER,
-    setId: DataTypes.INTEGER
+    setId: DataTypes.INTEGER,
+    img_url: DataTypes.STRING,
+    can_be_foil: DataTypes.BOOLEAN,
+    collection_number: DataTypes.INTEGER,
+    scryfall_id: DataTypes.INTEGER
   }, {});
   cardsSets.associate = function(models) {
     // associations can be defined here
