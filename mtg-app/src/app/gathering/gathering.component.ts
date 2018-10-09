@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { GatheringService } from '../gathering.service';
 import { Observable, Observer} from 'rxjs';
+import { AuthService} from '../auth.service';
 
 @Component({
   selector: 'app-gathering',
@@ -12,7 +13,7 @@ export class GatheringComponent implements OnInit {
   // asyncTabs: Observable<any>;
   gathering = [];
   provide = [];
-  constructor(private _gatheringService: GatheringService) {
+  constructor(private _gatheringService: GatheringService, private _authService: AuthService) {
 //     this.asyncTabs = Observable.create((observer: Observer<any>) => {
 //       setTimeout(() => {
 //         observer.next([
@@ -24,15 +25,17 @@ export class GatheringComponent implements OnInit {
   ngOnInit() {
     this._gatheringService.getGatheringWant().subscribe(
       res => {
-        console.log(res);
-        this.gathering = res;
-        console.log(this.gathering);
+        if (res.hasOwnProperty('error')) {
+          this._authService.logoutUser();
+        } else {
+          this.gathering = res;
+          console.log(this.gathering);
+        }
       },
       err => console.log(err)
     );
     this._gatheringService.getGatheringProvide().subscribe(
       res => {
-        console.log(res);
         this.provide = res;
         console.log(this.provide);
       },

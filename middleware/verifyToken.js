@@ -14,7 +14,15 @@ const verifyToken = (req, res, next) => {
       res.status(401).send("Unauthorized Request");
     }
     // Verify the token with the jwt secret key
-    let payload = jwt.verify(token, process.env.JWT_SECRET)
+    let errorCatch = jwt.verify(token, process.env.JWT_SECRET, function(err, decoded) {
+      if (err) {
+        console.log("THERE IS A FUCKING ERROR");
+        res.send({
+          error: "FUCK THIS SHIT"
+        })
+      }
+    });
+    let payload = jwt.verify(token, process.env.JWT_SECRET);
     // If the verification doesn't return anything, return Unauthorized
     if (!payload) {
       res.status(401).send("Unauthorized Request");

@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
     setId: DataTypes.INTEGER,
     img_url: DataTypes.STRING,
     can_be_foil: DataTypes.BOOLEAN,
-    collection_number: DataTypes.INTEGER,
+    collector_number: DataTypes.INTEGER,
     scryfall_id: DataTypes.INTEGER
   }, {});
   cardsSets.associate = function(models) {
