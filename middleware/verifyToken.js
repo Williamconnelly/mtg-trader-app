@@ -16,9 +16,8 @@ const verifyToken = (req, res, next) => {
     // Verify the token with the jwt secret key
     let errorCatch = jwt.verify(token, process.env.JWT_SECRET, function(err, decoded) {
       if (err) {
-        console.log("THERE IS A FUCKING ERROR");
         res.send({
-          error: "FUCK THIS SHIT"
+          error: "Token has expired"
         })
       }
     });

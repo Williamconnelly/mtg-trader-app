@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CardService } from '../card.service';
 import { ActivatedRoute, Router, Params } from '@angular/router';
+import { AuthService} from '../auth.service';
 
 @Component({
   selector: 'app-view-collection',
@@ -10,7 +11,7 @@ import { ActivatedRoute, Router, Params } from '@angular/router';
 export class ViewCollectionComponent implements OnInit {
   cardArray = [];
 
-  constructor(private card : CardService, private _route: ActivatedRoute) { }
+  constructor(private card : CardService, private _route: ActivatedRoute, private _authService: AuthService) { }
 
   ngOnInit() {
     this._route.params.subscribe((params: Params) => {
@@ -36,6 +37,10 @@ export class ViewCollectionComponent implements OnInit {
     }
     observable.subscribe(collection => {
       console.log(collection);
+      // TEMP LOGOUT CATCH
+      if (collection.hasOwnProperty('error')) {
+        this._authService.logoutUser();
+      }
       if (!collection.hasOwnProperty('message')) {
         this.cardArray = collection;
         for (let i=0; i<this.cardArray.length; i++) {
