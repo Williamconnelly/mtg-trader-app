@@ -11,12 +11,12 @@ import { AuthService} from '../auth.service';
 export class ViewCollectionComponent implements OnInit {
   cardArray = [];
 
-  constructor(private card : CardService, private _route: ActivatedRoute, private _authService: AuthService) { }
+  constructor(private card: CardService, private _route: ActivatedRoute, private _authService: AuthService) { }
 
   ngOnInit() {
     this._route.params.subscribe((params: Params) => {
       if (params['userId'] === undefined) {
-        console.log("params is undefined");
+        console.log('params is undefined');
         // If no params are given, set the id to undefined. getCollectionById() will get currently logged
         // in user's collection
         this.getCollectionById(undefined);
@@ -31,7 +31,7 @@ export class ViewCollectionComponent implements OnInit {
     let observable;
     // If id is undefined, get the currently logged in user's collection
     if (id === undefined) {
-      observable = this.card.getLoggedInCollection()
+      observable = this.card.getLoggedInCollection();
     } else {
       observable = this.card.getCollectionById(id);
     }
@@ -43,10 +43,10 @@ export class ViewCollectionComponent implements OnInit {
       }
       if (!collection.hasOwnProperty('message')) {
         this.cardArray = collection;
-        for (let i=0; i<this.cardArray.length; i++) {
+        for (let i = 0; i < this.cardArray.length; i++) {
           this.card.scryfallFindCardByName(this.cardArray[i].card.name).subscribe(scryfallData => {
             console.log(scryfallData);
-            this.cardArray[i]['url'] = scryfallData['image_uris']['small']
+            this.cardArray[i]['url'] = scryfallData['image_uris']['small'];
           });
         }
       }

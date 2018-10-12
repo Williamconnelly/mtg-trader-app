@@ -42,10 +42,10 @@ export class ViewListComponent implements OnInit {
         this._authService.logoutUser();
       }
       if (!wishlist.hasOwnProperty('message')) {
-        for (let i=0; i<wishlist.length; i++) {
+        for (let i = 0; i < wishlist.length; i++) {
           this.card.scryfallFindCardByName(wishlist[i].name).subscribe(scryfallData => {
             console.log(scryfallData);
-            wishlist[i]['url'] = scryfallData['image_uris']['small']
+            wishlist[i]['url'] = scryfallData['image_uris']['small'];
           });
         }
         this.cardArray = wishlist;
