@@ -228,6 +228,11 @@ router.get("/wishlist/:id", (req, res) => {
     } else {
       res.json({message:'error'});
     }
+  }).catch(err => {
+    res.json({
+      error: true,
+      message: "Could not find wishlist"
+    });
   })
 })
 
@@ -248,6 +253,11 @@ router.post("/wishlist", (req, res) => {
         number_wanted: req.body.number_wanted,
         pref_printing: req.body.pref_printing
       }})
+    }).catch(err => {
+      res.json({
+        error: true,
+        message: "Could not add to wishlist"
+      });
     })
   })
 })
