@@ -50,6 +50,11 @@ router.get("/gathering/want", verifyToken, (req, res) => {
       return b.cards.length - a.cards.length}
     );
     res.send(newArray);
+  }).catch(err => {
+    res.json({
+      error: true,
+      message: "Could not complete Gathering: Aquire"
+    });
   })
 })
 
@@ -94,6 +99,11 @@ router.get("/gathering/provide", verifyToken, (req, res) => {
       return b.cards.length - a.cards.length}
     );
     res.send(newArray);
+  }).catch(err => {
+    res.json({
+      error: true,
+      message: "Could not complete Gathering: Provide"
+    });
   })
 })
 
