@@ -21,7 +21,7 @@ export class ViewCollectionComponent implements OnInit {
         // in user's collection
         this.getCollectionById(undefined);
       } else {
-        console.log("params['userId']: " + params['userId']);
+        console.log('params["userId"]: ' + params['userId']);
         this.getCollectionById(params['userId']);
       }
     });
