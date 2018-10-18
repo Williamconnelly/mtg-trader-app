@@ -15,7 +15,7 @@
         <div class="card-printing">
           <select [(ngModel)]="card.wishlist.pref_printing" name="" id="">
             <option value="none">No Pref</option>
-            <option *ngFor="let printing of card.printings" [ngValue]="printing.id">{{ printing.set.code }}</option>
+            <option *ngFor="let printing of card.cardPrintings" [ngValue]="printing.id">{{ printing.set.code }}</option>
           </select>
         </div>
         <label for="" class="desire-display">Desired Copies: </label>
@@ -41,7 +41,7 @@
         <div class="card-printing">
           <select [(ngModel)]="card.preferredPrinting" name="" id="">
             <option value="none">No Pref</option>
-            <option *ngFor="let printing of card.printings; let setIdx = index" [ngValue]="printing.id">{{ printing.set.code }}</option>
+            <option *ngFor="let printing of card.cardPrintings; let setIdx = index" [ngValue]="printing.id">{{ printing.set.code }}</option>
           </select>
         </div>
         <label for="card-desire" class="desire-display">Desired Copies:</label>

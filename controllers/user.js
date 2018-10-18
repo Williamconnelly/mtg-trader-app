@@ -16,12 +16,12 @@ router.post("/collection/batch", verifyToken, (req, res) => {
       }
     }).then(user => {
       for (let i=0; i<req.body.cards.length; i++) {
-        db.cardsSets.find({
+        db.printings.find({
           where: {
-            id: req.body.cards[i]["printingInput"]["cardsSets"]["id"]
+            id: req.body.cards[i]["printingInput"]["printings"]["id"]
           }
         }).then(cardPrinting => {
-          user.addCardsSets(cardPrinting, {through: {
+          user.addPrintings(cardPrinting, {through: {
             owned_copies: req.body.cards[i]["copies"],
             trade_copies: req.body.cards[i]["tradeCopies"]
           }})
@@ -52,7 +52,7 @@ router.put("/collection/batch", verifyToken, (req, res) => {
           collection.destroy();
         } else {
           collection.update({
-            cardsSetId: req.body.printings[i].newPrintingId,
+            printingId: req.body.printings[i].newPrintingId,
             owned_copies: req.body.printings[i]['collection']['owned_copies'],
             trade_copies: req.body.printings[i]['collection']['trade_copies']
           });
@@ -69,19 +69,19 @@ router.get("/collection/loggedin", verifyToken, (req, res) => {
     where: {
       id: req.user.id
     }, include:  [{
-      model: db.cardsSets,
+      model: db.printings,
       include: [{
         model:db.card,
         include: [{
-            model: db.cardsSets,
-            as: 'printings',
+            model: db.printings,
+            as: 'cardPrintings',
             include: [db.set]
           }]
         },
         db.set]
     }]
   }).then(user => {
-    res.json(user['cardsSets']);
+    res.json(user['printings']);
   })
 })
 
@@ -92,12 +92,12 @@ router.get("/collection/:id", (req, res) => {
       // TODO: Get at User differently
       id: req.params.id
     }, include: [{
-      model: db.cardsSets,
+      model: db.printings,
       include: [db.card, db.set]
     }]
   }).then(user => {
-    if (user != null && user.hasOwnProperty('cardsSets')) {
-      res.json(user['cardsSets']);
+    if (user != null && user.hasOwnProperty('printings')) {
+      res.json(user['printings']);
     } else {
       res.json({message:'error'});
     }
@@ -112,12 +112,12 @@ router.post("/collection", (req, res) => {
       id: req.body.userId
     } 
   }).then(user => {
-    db.cardsSets.find({
+    db.printings.find({
       where: {
         id: req.body.printingId
       }
     }).then(cardPrinting => {
-      user.addCardsSets(cardPrinting, {through: {
+      user.addPrintings(cardPrinting, {through: {
         owned_copies: req.body.owned_copies,
         trade_copies: req.body.trade_copies
       }});
@@ -196,8 +196,8 @@ router.get("/wishlist/loggedin", verifyToken, (req, res) => {
     }, include:  [{
       model: db.card,
       include: [{
-            model: db.cardsSets,
-            as: 'printings',
+            model: db.printings,
+            as: 'cardPrintings',
             include: [db.set]
         }]
     }]
@@ -217,8 +217,8 @@ router.get("/wishlist/:id", (req, res) => {
     }, include: [{
       model: db.card,
       include: [{
-        model: db.cardsSets,
-        as: 'printings',
+        model: db.printings,
+        as: 'cardPrintings',
         include: [db.set]
       }]
     }]
