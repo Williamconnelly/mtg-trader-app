@@ -1,7 +1,7 @@
 'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('cardsSets', {
+    return queryInterface.createTable('printings', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -14,6 +14,21 @@ module.exports = {
       setId: {
         type: Sequelize.INTEGER
       },
+      rarity: {
+        type: Sequelize.STRING
+      },
+      img_url: {
+        type: Sequelize.STRING
+      },
+      can_be_foil: {
+        type: Sequelize.BOOLEAN
+      },
+      scryfall_url: {
+        type: Sequelize.STRING
+      },
+      backside_img_url: {
+        type: Sequelize.STRING
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
@@ -25,6 +40,6 @@ module.exports = {
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('cardsSets');
+    return queryInterface.dropTable('printings');
   }
 };

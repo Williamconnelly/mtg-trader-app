@@ -20,6 +20,12 @@ module.exports = {
       trade_copies: {
         type: Sequelize.INTEGER
       },
+      card_condition: {
+        type: Sequelize.INTEGER
+      },
+      foil: {
+        type: Sequelize.BOOLEAN
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

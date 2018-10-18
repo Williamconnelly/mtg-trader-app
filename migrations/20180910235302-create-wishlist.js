@@ -20,6 +20,9 @@ module.exports = {
       pref_printing: {
         type: Sequelize.INTEGER
       },
+      pref_foil: {
+        type: Sequelize.BOOLEAN
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

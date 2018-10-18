@@ -9,7 +9,8 @@ module.exports = (sequelize, DataTypes) => {
     cardId: DataTypes.INTEGER,
     userId: DataTypes.INTEGER,
     number_wanted: DataTypes.INTEGER,
-    pref_printing: DataTypes.INTEGER
+    pref_printing: DataTypes.INTEGER,
+    pref_foil: DataTypes.BOOLEAN
   }, {});
   wishlist.associate = function(models) {
     // associations can be defined here

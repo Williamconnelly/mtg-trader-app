@@ -12,7 +12,6 @@ module.exports = (sequelize, DataTypes) => {
     supertypes: DataTypes.ARRAY(DataTypes.STRING),
     types: DataTypes.ARRAY(DataTypes.STRING),
     subtypes: DataTypes.ARRAY(DataTypes.STRING),
-    rarity: DataTypes.STRING,
     text: DataTypes.STRING(660),
     power: DataTypes.STRING,
     toughness: DataTypes.STRING,
@@ -20,9 +19,11 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   card.associate = function(models) {
     // associations can be defined here
-    models.card.belongsToMany(models.set, {through: "cardsSets"});
+    models.card.belongsToMany(models.set, {through: "printings"});
     models.card.belongsToMany(models.user, {through: "wishlist"});
-    models.card.hasMany(models.cardsSets, {as: "printings"});
+    // Adding
+    models.card.hasMany(models.printings, {as: "cardPrintings"});
+    //
     models.card.hasMany(models.wishlist);
   };
   return card;

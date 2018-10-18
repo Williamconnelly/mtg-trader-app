@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   set.associate = function(models) {
     // associations can be defined here
-    models.set.belongsToMany(models.card, {through: "cardsSets"});
+    models.set.belongsToMany(models.card, {through: "printings"});
   };
   return set;
 };
