@@ -1,5 +1,5 @@
 'use strict';
-const bcrypt = require("bcrypt");
+
 module.exports = (sequelize, DataTypes) => {
   var user = sequelize.define('user', {
     username: { type: DataTypes.STRING,
@@ -38,7 +38,7 @@ module.exports = (sequelize, DataTypes) => {
   user.associate = function(models) {
     // associations can be defined here
     models.user.belongsToMany(models.card, {through: "wishlist"});
-    models.user.belongsToMany(models.cardsSets, {through: "collection"})
+    models.user.belongsToMany(models.printings, {through: "collection"})
   };
   // This checks the entered password against the database hashed password
   user.prototype.validPassword = passwordTyped => bcrypt.compareSync(passwordTyped, this.password);

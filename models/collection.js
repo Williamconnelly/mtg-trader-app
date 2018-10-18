@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true,
       autoIncrement: true
     },
-    cardsSetId: DataTypes.INTEGER,
+    printingId: DataTypes.INTEGER,
     userId: DataTypes.INTEGER,
     owned_copies: DataTypes.INTEGER,
     trade_copies: DataTypes.INTEGER,
@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   collection.associate = function(models) {
     // associations can be defined here
-    models.collection.belongsTo(models.cardsSets);
+    models.collection.belongsTo(models.printings);
     models.collection.belongsTo(models.user);
   };
   return collection;

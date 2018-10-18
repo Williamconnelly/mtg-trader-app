@@ -41,9 +41,6 @@ module.exports = {
       subtypes: {
         type: Sequelize.ARRAY(Sequelize.STRING)
       },
-      rarity: {
-        type: Sequelize.STRING
-      },
       text: {
         type: Sequelize.STRING(660)
       },
