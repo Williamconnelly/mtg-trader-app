@@ -14,7 +14,7 @@
         <label for="card-set" class="set-display">Card Set: </label>
         <div class="card-set">
           <select [(ngModel)]="printing.newPrintingId" name="card-set" id="">
-            <option *ngFor="let subPrinting of printing.card.printings" [ngValue]="subPrinting.id">{{ subPrinting.set.code }}</option>
+            <option *ngFor="let subPrinting of printing.card.cardPrintings" [ngValue]="subPrinting.id">{{ subPrinting.set.code }}</option>
           </select>
         </div>
         <label for="card-owned" class="owned-display">Owned: </label>

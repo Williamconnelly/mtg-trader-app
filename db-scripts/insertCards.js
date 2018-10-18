@@ -840,7 +840,7 @@ const fs = require('fs');
 //   ]
 // }};
 
-dataSet = [];
+var dataSet = [];
 
 const cardFields = ["layout","name","names","manaCost","cmc","colors","colorIdentity",
 "type","supertypes","types","subtypes","text","power","toughness","loyalty"]
