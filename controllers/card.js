@@ -11,8 +11,8 @@ router.post("/name", (req, res) => {
     where: {
       name: req.body.name
     }, include: [{
-      model: db.cardsSets,
-      as: 'printings',
+      model: db.printings,
+      as: 'cardPrintings',
       include: [db.set]
     }, db.set]
   }).then(card => {
@@ -22,7 +22,7 @@ router.post("/name", (req, res) => {
 
 // Find a card printing by ID
 router.get("/:id", (req, res) => {
-  db.cardsSets.findOne({
+  db.printings.findOne({
     attributes: {exclude: ['createdAt','updatedAt']},
     where: {
       id: req.params.id

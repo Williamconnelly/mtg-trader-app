@@ -54,9 +54,9 @@ const fs = require('fs');
 //   } 
 // }
 
-setTimeout(() => {
-  fs.writeFileSync("dbSplitCards.json", JSON.stringify(container));
-}, 10000);
+// setTimeout(() => {
+//   fs.writeFileSync("dbSplitCards.json", JSON.stringify(container));
+// }, 10000);
 
 var splitData = JSON.parse(fs.readFileSync("dbSplitCards.json", "utf8"));
 
