@@ -9,6 +9,7 @@ import { ActivatedRoute, Router, Params } from '@angular/router';
 })
 export class CardShowComponent implements OnInit {
   cardShow = {};
+  changeFace = false;
 
   constructor(private card: CardService, private _route: ActivatedRoute) { }
 
@@ -25,8 +26,12 @@ export class CardShowComponent implements OnInit {
       }
       this.cardShow.card.newtext = this.cardShow.card.text.replace(/\n/g, '\n\n');
       this.cardShow.newImg = this.cardShow.img_url.replace(/(cards\/small)/gm, 'cards/normal');
+      if (this.cardShow.backside_img_url !== null) {
+        this.cardShow.newImgBack = this.cardShow.backside_img_url.replace(/(cards\/small)/gm, 'cards/normal');
+      }
       console.log(this.cardShow);
     });
   }
+
 
 }

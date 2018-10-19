@@ -90,4 +90,17 @@ pre {
   ul {
     padding: 0;
   }
+  .img-box {
+    display: inline;
+  }
+}
+
+.prompt {
+  font-style: italic;
+  font-size: 0.7em;
+}
+
+.img-box {
+  text-align: center;
+  height: 100%;
 }

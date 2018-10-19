@@ -3,7 +3,13 @@
   <span class="card-set">{{ cardShow.set.title }} ({{ cardShow.set.code }})</span>
   <div class="flex-container">
     <div class="flex-item">
-      <img src="{{cardShow.newImg}}" alt="{{cardShow.name}}">
+      <div class="img-box" *ngIf="cardShow.backside_img_url !== null; else templateName" (mouseover)="changeFace=true" (mouseout)="changeFace=false">
+        <img [hidden]="changeFace" src="{{cardShow.newImg}}" alt="{{cardShow.name}}">
+        <img [hidden]="!changeFace" src="{{cardShow.newImgBack}}" alt="{{cardShow.name}}">
+        <br />
+        <span class="prompt">Hover/Click to see Card-back</span>
+      </div>
+      <ng-template #templateName><img src="{{cardShow.newImg}}" alt="{{cardShow.name}}"></ng-template>
       <div class="details">
         <ul>
           <li><span class="label">Rarity: </span>{{ cardShow.rarity }}</li>
