@@ -43,12 +43,6 @@ export class ViewCollectionComponent implements OnInit {
       }
       if (!collection.hasOwnProperty('message')) {
         this.cardArray = collection;
-        for (let i = 0; i < this.cardArray.length; i++) {
-          this.card.scryfallFindCardByName(this.cardArray[i].card.name).subscribe(scryfallData => {
-            console.log(scryfallData);
-            this.cardArray[i]['url'] = scryfallData['image_uris']['small'];
-          });
-        }
       }
     });
   }

@@ -19,15 +19,11 @@ export class EditListComponent implements OnInit {
     this.card.getLoggedInWishlist().subscribe(wishlist => {
       console.log(wishlist);
       for (let i=0; i<wishlist.length; i++) {
-        wishlist[i]["url"] = "";
+        wishlist[i]["url"] = wishlist[i].cardPrintings[0].img_url;
         if (wishlist[i]["wishlist"]["pref_printing"] === null) {
           wishlist[i]["wishlist"]["pref_printing"] = "none";
         }
         wishlist[i]["markedForDeletion"] = false;
-        this.card.scryfallFindCardByName(wishlist[i]["name"]).subscribe(scryfallData =>{
-          // console.log(scryfallData);
-          wishlist[i]["url"] = scryfallData["image_uris"]["small"];
-        });
       }
       this.editArray = wishlist;
     })
@@ -44,23 +40,15 @@ export class EditListComponent implements OnInit {
   submitCardSearch() {
     console.log("Searching for " + this.cardSearch);
     let obs = this.card.findCardByName(this.cardSearch);
-    let scryObs = this.card.scryfallFindCardByName(this.cardSearch);
     this.cardSearch = "";
     obs.subscribe(cardResult => {
       console.log("Database Card Result")
       console.log(cardResult);
       if (cardResult != null) {
-        cardResult["url"] = "";
+        cardResult["url"] = cardResult.cardPrintings[0].img_url;
         cardResult["preferredPrinting"] = "none";
         cardResult["desiredCopies"] = 1;
-        scryObs.subscribe(scryfallResult => {
-          console.log("Scryfall Result:")
-          console.log(scryfallResult);
-          if (scryfallResult.hasOwnProperty("image_uris")) {
-            cardResult["url"] = scryfallResult["image_uris"]["small"];
-          }
-          this.cardArray.push(cardResult);
-        })
+        this.cardArray.push(cardResult);
       }
     });
   }
