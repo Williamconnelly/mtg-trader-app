@@ -34,11 +34,15 @@ router.get("/gathering/want", verifyToken, (req, res) => {
       // If the user already exists AND the printing matches OR has no pref
       if (tradePartners.hasOwnProperty(currentUserId) && 
       (result[wishCard].pref_printing === result[wishCard]['card.cardPrintings.id'] || 
-      result[wishCard].pref_printing === null)) {
+      result[wishCard].pref_printing === null) && 
+      (result[wishCard]['card.cardPrintings.users.collection.foil'] === true && result[wishCard]['pref_foil'] === true || 
+      result[wishCard]['card.cardPrintings.users.collection.foil'] === false && result[wishCard]['pref_foil'] === false)) {
         tradePartners[currentUserId].cards.push(result[wishCard])
       // If the user does not exist AND the printing matches OR has no pref
-      } else if (result[wishCard].pref_printing === result[wishCard]['card.cardPrintings.id'] || 
-      result[wishCard].pref_printing === null) {
+      } else if ((result[wishCard].pref_printing === result[wishCard]['card.cardPrintings.id'] || 
+      result[wishCard].pref_printing === null) && 
+      (result[wishCard]['card.cardPrintings.users.collection.foil'] === true && result[wishCard]['pref_foil'] === true || 
+      result[wishCard]['card.cardPrintings.users.collection.foil'] === false && result[wishCard]['pref_foil'] === false)) {
         tradePartners[currentUserId] = {
           username: currentUsername,
           userId: currentUserId,
@@ -53,7 +57,7 @@ router.get("/gathering/want", verifyToken, (req, res) => {
   }).catch(err => {
     res.json({
       error: true,
-      message: "Could not complete Gathering: Aquire"
+      message: "Could not complete Gathering: Acquire"
     });
   })
 })
@@ -61,7 +65,7 @@ router.get("/gathering/want", verifyToken, (req, res) => {
 router.get("/gathering/provide", verifyToken, (req, res) => {
   db.collection.findAll({
     raw: true,
-    attributes: ['userId','owned_copies','trade_copies'],
+    attributes: ['userId','owned_copies','trade_copies','foil','card_condition'],
     where: {
       userId: req.user.id,
       trade_copies: {
@@ -69,7 +73,7 @@ router.get("/gathering/provide", verifyToken, (req, res) => {
       }
     },
     include: [
-      {model: db.printings, attributes: {exclude: ['createdAt','updatedAt','setId']}, include: [
+      {model: db.printings, attributes: {exclude: ['createdAt','updatedAt','setId','can_be_foil']}, include: [
         {model: db.card, attributes: {exclude: ['createdAt','updatedAt']}, include: [
           {model: db.user, required: true, where: {id: {[op.not]: req.user.id}}, 
           attributes: ['email','username']}
@@ -84,10 +88,14 @@ router.get("/gathering/provide", verifyToken, (req, res) => {
       let currentUsername = result[userCard]['printing.card.users.username'];
       if (tradePartners.hasOwnProperty(currentUserId) &&
       (result[userCard]['printing.id'] === result[userCard]['printing.card.users.wishlist.pref_printing'] ||
-      result[userCard]['printing.card.users.wishlist.pref_printing'] === null)) {
+      result[userCard]['printing.card.users.wishlist.pref_printing'] === null) && 
+      (result[userCard]['printing.card.users.wishlist.pref_foil'] === true && result[userCard]['foil'] === true || 
+      result[userCard]['printing.card.users.wishlist.pref_foil'] === false && result[userCard]['foil'] === false)) {
         tradePartners[currentUserId].cards.push(result[userCard]);
-      } else if (result[userCard]['printing.id'] === result[userCard]['printing.card.users.wishlist.pref_printing'] ||
-      result[userCard]['printing.card.users.wishlist.pref_printing'] === null) {
+      } else if ((result[userCard]['printing.id'] === result[userCard]['printing.card.users.wishlist.pref_printing'] ||
+      result[userCard]['printing.card.users.wishlist.pref_printing'] === null) && 
+      (result[userCard]['printing.card.users.wishlist.pref_foil'] === true && result[userCard]['foil'] === true || 
+      result[userCard]['printing.card.users.wishlist.pref_foil'] === false && result[userCard]['foil'] === false)) {
         tradePartners[currentUserId] = {
           username: currentUsername,
           userId: currentUserId,

@@ -1,16 +1,17 @@
-<div *ngIf="cardShow.length > 0" class="wrapper">
-  <h1 class="card-name">{{cardShow[0].card.name}}</h1>
-  <span class="card-set">{{ cardShow[0].set.title }} ({{ cardShow[0].set.code }})</span>
+<div *ngIf="cardShow.hasOwnProperty('card')" class="wrapper">
+  <h1 class="card-name">{{cardShow.card.name}}</h1>
+  <span class="card-set">{{ cardShow.set.title }} ({{ cardShow.set.code }})</span>
   <div class="flex-container">
     <div class="flex-item">
-      <img src="{{cardShow[0].url}}" alt="{{cardShow[0].name}}">
+      <img src="{{cardShow.newImg}}" alt="{{cardShow.name}}">
       <div class="details">
         <ul>
-          <li><span class="label">Card Type: </span>{{ cardShow[0].card.type }}</li>
-          <li><span class="label">Converted Mana Cost: </span>{{ cardShow[0].card.cmc }}</li>
-          <li *ngIf="cardShow[0].card.power !== null"><span class="label">Power/Toughness: </span>{{ cardShow[0].card.power }}/{{ cardShow[0].card.toughness }}</li>
-          <li *ngIf="cardShow[0].card.loyalty !== null"><span class="label">Loyalty: </span>{{ cardShow[0].card.loyalty }}</li>
-          <li><pre>{{ cardShow[0].card.newtext }}</pre></li>
+          <li><span class="label">Rarity: </span>{{ cardShow.rarity }}</li>
+          <li><span class="label">Card Type: </span>{{ cardShow.card.type }}</li>
+          <li><span class="label">Converted Mana Cost: </span>{{ cardShow.card.cmc }}</li>
+          <li *ngIf="cardShow.card.power !== null"><span class="label">Power/Toughness: </span>{{ cardShow.card.power }}/{{ cardShow.card.toughness }}</li>
+          <li *ngIf="cardShow.card.loyalty !== null"><span class="label">Loyalty: </span>{{ cardShow.card.loyalty }}</li>
+          <li><pre>{{ cardShow.card.newtext }}</pre></li>
         </ul>
       </div>
     </div>

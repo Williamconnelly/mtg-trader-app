@@ -44,6 +44,7 @@ ul {
 
 li {
   margin: 1em 0;
+  text-transform: capitalize;
 }
 
 pre {

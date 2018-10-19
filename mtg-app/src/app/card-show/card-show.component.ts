@@ -8,7 +8,7 @@ import { ActivatedRoute, Router, Params } from '@angular/router';
   styleUrls: ['./card-show.component.css']
 })
 export class CardShowComponent implements OnInit {
-  cardShow = [];
+  cardShow = {};
 
   constructor(private card: CardService, private _route: ActivatedRoute) { }
 
@@ -21,17 +21,10 @@ export class CardShowComponent implements OnInit {
   getCardById(id) {
     this.card.findCardById(id).subscribe(card => {
       if (!card.hasOwnProperty('message')) {
-        this.cardShow.push(card);
-        // TEMPORARY
-        for (let i = 0; i < this.cardShow.length; i++) {
-          console.log(this.cardShow[i]);
-          this.card.scryfallFindCardByName(this.cardShow[i].card.name).subscribe(scryfallData => {
-            console.log(scryfallData);
-            this.cardShow[i]['url'] = scryfallData['image_uris']['normal'];
-          });
-        }
+        this.cardShow = card;
       }
-      this.cardShow[0].card.newtext = this.cardShow[0].card.text.replace(/\n/g, '\n\n');
+      this.cardShow.card.newtext = this.cardShow.card.text.replace(/\n/g, '\n\n');
+      this.cardShow.newImg = this.cardShow.img_url.replace(/(cards\/small)/gm, 'cards/normal');
       console.log(this.cardShow);
     });
   }
