@@ -9,13 +9,13 @@
   <div>
     <div *ngFor="let card of editArray; let cardIdx = index" class="card-wrapper">
       <div class="card-display">
-        <img *ngIf="card.url.length > 0" src="{{ card.url }}" class="card-image">
+        <img *ngIf="card.wishlist.pref_printing === 'none'" src="{{ card.url }}" class="card-image">
         <p class="card-name">{{ card.name }}</p>
         <label for="" class="printing-display">Preferred Printing: </label>
         <div class="card-printing">
           <select [(ngModel)]="card.wishlist.pref_printing" name="" id="">
             <option value="none">No Pref</option>
-            <option *ngFor="let printing of card.cardPrintings" [ngValue]="printing.id">{{ printing.set.code }}</option>
+            <option *ngFor="let printing of card.cardPrintings" [ngValue]="printing">{{ printing.set.code }}</option>
           </select>
         </div>
         <label for="" class="desire-display">Desired Copies: </label>
@@ -26,6 +26,7 @@
         <div class="card-remove">
           <input type="checkbox" [(ngModel)]="card.markedForDeletion">
         </div>
+        
       </div>
     </div>
   </div>
@@ -35,13 +36,14 @@
   <div>
     <div *ngFor="let card of cardArray; let cardIdx = index" class="card-wrapper">
       <div class="card-display-new">
-        <img *ngIf="card.url.length > 0" src="{{ card.url }}" class="card-image">
+        <img *ngIf="card.preferredPrinting === 'none'" src="{{ card.url }}" class="card-image">
+        <img *ngIf="card.preferredPrinting !== 'none'" src="{{ card.preferredPrinting.img_url }}" class="card-image">
         <p class="card-name">{{ card.name }}</p>
         <label for="card-printing" class="printing-display">Preferred Printing</label>
         <div class="card-printing">
           <select [(ngModel)]="card.preferredPrinting" name="" id="">
             <option value="none">No Pref</option>
-            <option *ngFor="let printing of card.cardPrintings; let setIdx = index" [ngValue]="printing.id">{{ printing.set.code }}</option>
+            <option *ngFor="let printing of card.cardPrintings; let setIdx = index" [ngValue]="printing">{{ printing.set.code }}</option>
           </select>
         </div>
         <label for="card-desire" class="desire-display">Desired Copies:</label>

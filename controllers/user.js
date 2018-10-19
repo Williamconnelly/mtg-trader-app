@@ -18,12 +18,16 @@ router.post("/collection/batch", verifyToken, (req, res) => {
       for (let i=0; i<req.body.cards.length; i++) {
         db.printings.find({
           where: {
-            id: req.body.cards[i]["printingInput"]["printings"]["id"]
+            id: req.body.cards[i]["printingInput"]["id"]
           }
         }).then(cardPrinting => {
+          if (!req.body.cards[i].printingInput.can_be_foil) {
+            req.body.cards[i].foilInput = false;
+          }
           user.addPrintings(cardPrinting, {through: {
             owned_copies: req.body.cards[i]["copies"],
-            trade_copies: req.body.cards[i]["tradeCopies"]
+            trade_copies: req.body.cards[i]["tradeCopies"],
+            foil: req.body.cards[i].foilInput
           }})
         })
       }
@@ -51,10 +55,14 @@ router.put("/collection/batch", verifyToken, (req, res) => {
           console.log("DESTROYED")
           collection.destroy();
         } else {
+          if (!req.body.printings[i].printingInput.can_be_foil) {
+            req.body.printings[i].foilInput = false;
+          }
           collection.update({
-            printingId: req.body.printings[i].newPrintingId,
+            printingId: req.body.printings[i].printingInput.id,
             owned_copies: req.body.printings[i]['collection']['owned_copies'],
-            trade_copies: req.body.printings[i]['collection']['trade_copies']
+            trade_copies: req.body.printings[i]['collection']['trade_copies'],
+            foil: req.body.printings[i].foilInput
           });
         }
       })
@@ -142,6 +150,8 @@ router.post("/wishlist/batch", verifyToken, (req, res) => {
         }).then(card => {
           if (req.body.cards[i]["preferredPrinting"] == "none") {
             req.body.cards[i]["preferredPrinting"] = null;
+          } else {
+            req.body.cards[i].preferredPrinting = req.body.cards[i].preferredPrinting.id
           }
           user.addCard(card, {through: {
             pref_printing: req.body.cards[i]["preferredPrinting"],
@@ -176,6 +186,8 @@ router.put("/wishlist/batch", verifyToken, (req, res) => {
         } else {
           if (req.body.cards[i].pref_printing === "none") {
             req.body.cards[i].pref_printing = null
+          } else {
+            req.body.cards[i].pref_printing = req.body.cards[i].pref_printing.id
           }
           wishlist.update({
             pref_printing: req.body.cards[i]["wishlist"]["pref_printing"],

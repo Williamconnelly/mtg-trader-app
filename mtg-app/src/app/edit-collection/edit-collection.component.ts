@@ -19,14 +19,14 @@ export class EditCollectionComponent implements OnInit {
       console.log("existingCollection:");
       console.log(existingCollection);
       for (let i=0; i<existingCollection.length; i++) {
-        existingCollection[i]["url"] = ""
-        existingCollection[i]["newPrintingId"] = existingCollection[i]['collection']["cardsSetId"];
-        existingCollection[i]["markedForDeletion"] = false;
-        this.card.scryfallFindCardByName(existingCollection[i]['card']['name']).subscribe(scryfallResult => {
-          if (scryfallResult.hasOwnProperty("image_uris")) {
-            existingCollection[i]["url"] = scryfallResult["image_uris"]["small"];
+        for (let x=0; x<existingCollection[i].card.cardPrintings.length; x++) {
+          if (existingCollection[i].card.cardPrintings[x].id === existingCollection[i].id) {
+            existingCollection[i]["printingInput"] = existingCollection[i].card.cardPrintings[x];
+            break;
           }
-        })
+        }
+        existingCollection[i].foilInput = existingCollection[i].collection.foil;
+        existingCollection[i]["markedForDeletion"] = false;
       }
       this.editArray = existingCollection;
     });
@@ -46,18 +46,11 @@ export class EditCollectionComponent implements OnInit {
       console.log("Database Card Result")
       console.log(cardResult);
       if (cardResult != null) {
-        cardResult["url"] = "";
-        cardResult["printingInput"] = cardResult["sets"][0];
+        cardResult["printingInput"] = cardResult["cardPrintings"][0];
         cardResult["copies"] = 1;
         cardResult["tradeCopies"] = 0;
-        scryObs.subscribe(scryfallResult => {
-          console.log("Scryfall Result:")
-          console.log(scryfallResult);
-          if (scryfallResult.hasOwnProperty("image_uris")) {
-            cardResult["url"] = scryfallResult["image_uris"]["small"];
-          }
-          this.cardArray.push(cardResult);
-        })
+        cardResult["foilInput"] = false;
+        this.cardArray.push(cardResult);
       }
     });
   }
