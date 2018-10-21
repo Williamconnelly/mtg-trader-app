@@ -10,8 +10,8 @@ export class GatheringTableComponent implements OnInit {
   @Input() Otherdata;
   dataSource = [];
   dataSource2 = [];
-  displayedColumns: string[] = ['name', 'set', 'foil', 'trade'];
-  displayedColumns2: string[] = ['name', 'wanted', 'printing', 'foilPref'];
+  displayedColumns: string[] = ['acquireName', 'set', 'foil', 'trade'];
+  displayedColumns2: string[] = ['provideName', 'wanted', 'printing', 'foilPref'];
 
   constructor() { }
 
