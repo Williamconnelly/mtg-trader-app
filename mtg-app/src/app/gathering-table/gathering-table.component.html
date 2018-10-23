@@ -1,8 +1,8 @@
-<!-- MATCHED ON AQUIRE -->
+<!-- MATCHED ON ACQUIRE -->
 
 <table *ngIf="data && data.length > 0" mat-table [dataSource]="dataSource">
   <!-- Name Column -->
-  <ng-container matColumnDef="name">
+  <ng-container matColumnDef="acquireName">
     <th mat-header-cell *matHeaderCellDef>Card Name</th>
     <td mat-cell *matCellDef="let card"><a routerLink="/card-show/{{card['card.cardPrintings.id']}}" target="blank">{{card['card.name']}}</a></td>
   </ng-container>
@@ -11,6 +11,15 @@
   <ng-container matColumnDef="set">
       <th mat-header-cell *matHeaderCellDef> Printing </th>
       <td mat-cell *matCellDef="let card"> {{card['card.cardPrintings.set.title']}} </td>
+    </ng-container>
+
+   <!-- Foil Column -->
+   <ng-container matColumnDef="foil">
+      <th mat-header-cell *matHeaderCellDef> Foil </th>
+      <td mat-cell *matCellDef="let card">
+        <p *ngIf="card['card.cardPrintings.users.collection.foil'] === true; else nonFoil">Foil</p>
+        <ng-template #nonFoil>-</ng-template>
+      </td>
     </ng-container>
 
   <!-- Wanted Column -->
@@ -27,7 +36,7 @@
 
 <table *ngIf="Otherdata && Otherdata.length > 0" mat-table [dataSource]="dataSource2">
   <!-- Name Column -->
-  <ng-container matColumnDef="name">
+  <ng-container matColumnDef="provideName">
     <th mat-header-cell *matHeaderCellDef>Card Name</th>
     <td mat-cell *matCellDef="let card"><a routerLink="/card-show/{{card['printing.id']}}" target="blank">{{card['printing.card.name']}}</a></td>
   </ng-container>
@@ -43,9 +52,18 @@
     <th mat-header-cell *matHeaderCellDef> Preferred Printing </th>
     <td mat-cell *matCellDef="let card">
       <p *ngIf="card['printing.card.users.wishlist.pref_printing'] === null; else templateName">None</p>
-      <ng-template #templateName>{{ card['printing.card.users.wishlist.pref_printing'] }}</ng-template>
+      <ng-template #templateName>{{ card['printing.set.title'] }}</ng-template>
     </td>
   </ng-container>
+
+  <!-- Foil Column -->
+  <ng-container matColumnDef="foilPref">
+      <th mat-header-cell *matHeaderCellDef> Foil </th>
+      <td mat-cell *matCellDef="let card">
+        <p *ngIf="card['printing.card.users.wishlist.pref_foil'] === true; else prefFoil">Foil</p>
+        <ng-template #prefFoil>-</ng-template>
+      </td>
+    </ng-container>
 
   <tr mat-header-row *matHeaderRowDef="displayedColumns2"></tr>
   <tr mat-row *matRowDef="let row; columns: displayedColumns2;"></tr>

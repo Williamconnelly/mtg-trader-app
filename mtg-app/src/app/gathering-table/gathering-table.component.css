@@ -14,3 +14,7 @@ a:hover {
 .mat-row:hover {
   background-color: rgba(0,0,0,.04);
 }
+
+.mat-column-foil {
+  width: 20%;
+}
