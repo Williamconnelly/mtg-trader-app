@@ -8,7 +8,7 @@
       <img *ngIf="card.hasOwnProperty('url')" src="{{ card.url }}" alt="">
       <p class="card-name">{{ card.name }}</p>
       <p *ngIf="card.wishlist.pref_printing === null" class="card-set">Preferred: None</p>
-      <div *ngFor="let printing of card.printings" class="card-set">
+      <div *ngFor="let printing of card.cardPrintings" class="card-set">
         <p *ngIf="printing.id === card.wishlist.pref_printing">Preferred: {{ printing.set.title }} ({{ printing.set.code }})</p>
       </div>
       <p class="card-trade">Number Wanted: {{ card.wishlist.number_wanted }}</p>
