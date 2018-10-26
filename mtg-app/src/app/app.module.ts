@@ -24,6 +24,7 @@ import { HomeComponent } from './home/home.component';
 import { GatheringTableComponent } from './gathering-table/gathering-table.component';
 import { CardShowComponent } from './card-show/card-show.component';
 import { NavbarComponent } from './navbar/navbar.component';
+import { EditCardComponent } from './edit-card/edit-card.component';
 
 @NgModule({
   declarations: [
@@ -40,7 +41,8 @@ import { NavbarComponent } from './navbar/navbar.component';
     ViewCollectionComponent,
     GatheringTableComponent,
     CardShowComponent,
-    NavbarComponent
+    NavbarComponent,
+    EditCardComponent
   ],
   imports: [
     BrowserModule,
