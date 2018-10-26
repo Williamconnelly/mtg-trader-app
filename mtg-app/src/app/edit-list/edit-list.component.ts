@@ -22,6 +22,13 @@ export class EditListComponent implements OnInit {
         wishlist[i]["url"] = wishlist[i].cardPrintings[0].img_url;
         if (wishlist[i]["wishlist"]["pref_printing"] === null) {
           wishlist[i]["wishlist"]["pref_printing"] = "none";
+        } else {
+          for (let x=0; x<wishlist[i].cardPrintings.length ; x++) {
+            if (wishlist[i].cardPrintings[x].id === wishlist[i].wishlist.pref_printing) {
+              wishlist[i].wishlist.pref_printing = wishlist[i].cardPrintings[x];
+              break;
+            }
+          }
         }
         wishlist[i]["markedForDeletion"] = false;
       }
@@ -46,6 +53,7 @@ export class EditListComponent implements OnInit {
       console.log(cardResult);
       if (cardResult != null) {
         cardResult["url"] = cardResult.cardPrintings[0].img_url;
+        cardResult["foil"] = false;
         cardResult["preferredPrinting"] = "none";
         cardResult["desiredCopies"] = 1;
         this.cardArray.push(cardResult);

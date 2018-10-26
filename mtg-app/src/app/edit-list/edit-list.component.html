@@ -10,6 +10,7 @@
     <div *ngFor="let card of editArray; let cardIdx = index" class="card-wrapper">
       <div class="card-display">
         <img *ngIf="card.wishlist.pref_printing === 'none'" src="{{ card.url }}" class="card-image">
+        <img *ngIf="card.preferredPrinting !== 'none'" src="{{ card.wishlist.pref_printing.img_url }}" class="card-image">
         <p class="card-name">{{ card.name }}</p>
         <label for="" class="printing-display">Preferred Printing: </label>
         <div class="card-printing">
@@ -26,7 +27,10 @@
         <div class="card-remove">
           <input type="checkbox" [(ngModel)]="card.markedForDeletion">
         </div>
-        
+        <label for="card-foil" class="foil-display" *ngIf="card.wishlist.pref_printing === 'none' || card.wishlist.pref_printing.can_be_foil">Foil</label>
+        <div class="card-foil" *ngIf="card.wishlist.pref_printing === 'none' || card.wishlist.pref_printing.can_be_foil">
+          <input type="checkbox" [(ngModel)]="card.wishlist.pref_foil">
+        </div>
       </div>
     </div>
   </div>
@@ -50,7 +54,11 @@
         <div class="card-desire">
           <input type="number" step="1" [(ngModel)]="card.desiredCopies" name="">
         </div>
-        <!-- <button (click)="logCardArrayAtIndex(cardIdx)">C LOG</button> -->
+        <label for="card-foil" class="foil-display" *ngIf="card.preferredPrinting === 'none' || card.preferredPrinting.can_be_foil">Foil</label>
+        <div class="card-foil" *ngIf="card.preferredPrinting === 'none' || card.preferredPrinting.can_be_foil">
+          <input type="checkbox" [(ngModel)]="card.foil">
+        </div>
+        <button (click)="logCardArrayAtIndex(cardIdx)">C LOG</button>
       </div>
     </div>
   </div>

@@ -151,9 +151,15 @@ router.post("/wishlist/batch", verifyToken, (req, res) => {
           if (req.body.cards[i]["preferredPrinting"] == "none") {
             req.body.cards[i]["preferredPrinting"] = null;
           } else {
+            console.log("i.foil: " + req.body.cards[i].foil)
+            console.log("canbefoil: " + req.body.cards[i].preferredPrinting.can_be_foil);
+            console.log("both: " + req.body.cards[i].foil && req.body.cards[i].preferredPrinting.can_be_foil)
+            req.body.cards[i].foil = req.body.cards[i].foil && req.body.cards[i].preferredPrinting.can_be_foil; 
             req.body.cards[i].preferredPrinting = req.body.cards[i].preferredPrinting.id
+            console.log("preferredPrinting: " + req.body.cards[i].preferredPrinting);
           }
           user.addCard(card, {through: {
+            pref_foil: req.body.cards[i].foil,
             pref_printing: req.body.cards[i]["preferredPrinting"],
             number_wanted: req.body.cards[i]["desiredCopies"]
           }})
@@ -184,14 +190,16 @@ router.put("/wishlist/batch", verifyToken, (req, res) => {
           console.log("DESTROYED")
           wishlist.destroy();
         } else {
-          if (req.body.cards[i].pref_printing === "none") {
-            req.body.cards[i].pref_printing = null
+          if (req.body.cards[i].wishlist.pref_printing === "none") {
+            req.body.cards[i].wishlist.pref_printing = null
           } else {
-            req.body.cards[i].pref_printing = req.body.cards[i].pref_printing.id
+            req.body.cards[i].wishlist.pref_foil = req.body.cards[i].wishlist.pref_foil && req.body.cards[i].wishlist.pref_printing.can_be_foil;
+            req.body.cards[i].wishlist.pref_printing = req.body.cards[i].wishlist.pref_printing.id
           }
           wishlist.update({
             pref_printing: req.body.cards[i]["wishlist"]["pref_printing"],
-            number_wanted: req.body.cards[i]['wishlist']['number_wanted']
+            number_wanted: req.body.cards[i]['wishlist']['number_wanted'],
+            pref_foil: req.body.cards[i].wishlist.pref_foil
           });
         }
       })
