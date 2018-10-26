@@ -20,7 +20,10 @@ module.exports = {
       img_url: {
         type: Sequelize.STRING
       },
-      can_be_foil: {
+      foil_version: {
+        type: Sequelize.BOOLEAN
+      },
+      nonFoil_version: {
         type: Sequelize.BOOLEAN
       },
       scryfall_url: {

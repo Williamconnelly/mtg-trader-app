@@ -8,7 +8,7 @@ import { ActivatedRoute, Router, Params } from '@angular/router';
   styleUrls: ['./card-show.component.css']
 })
 export class CardShowComponent implements OnInit {
-  cardShow = {};
+  cardShow = <any>{};
   changeFace = false;
 
   constructor(private card: CardService, private _route: ActivatedRoute) { }
@@ -24,7 +24,9 @@ export class CardShowComponent implements OnInit {
       if (!card.hasOwnProperty('message')) {
         this.cardShow = card;
       }
-      this.cardShow.card.newtext = this.cardShow.card.text.replace(/\n/g, '\n\n');
+      if (this.cardShow.card.text !== null) {
+        this.cardShow.card.newtext = this.cardShow.card.text.replace(/\n/g, '\n\n');
+      }
       this.cardShow.newImg = this.cardShow.img_url.replace(/(cards\/small)/gm, 'cards/normal');
       if (this.cardShow.backside_img_url !== null) {
         this.cardShow.newImgBack = this.cardShow.backside_img_url.replace(/(cards\/small)/gm, 'cards/normal');
