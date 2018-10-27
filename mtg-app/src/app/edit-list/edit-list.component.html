@@ -44,8 +44,8 @@
         <div class="card-remove">
           <input type="checkbox" [(ngModel)]="card.markedForDeletion">
         </div>
-        <label for="card-foil" class="foil-display" *ngIf="card.wishlist.pref_printing === 'none' || card.wishlist.pref_printing.can_be_foil">Foil</label>
-        <div class="card-foil" *ngIf="card.wishlist.pref_printing === 'none' || card.wishlist.pref_printing.can_be_foil">
+        <label for="card-foil" class="foil-display" *ngIf="card.wishlist.pref_printing === 'none' || (card.wishlist.pref_printing.foil_version && card.wishlist.pref_printing.nonFoil_version)">Foil</label>
+        <div class="card-foil" *ngIf="card.wishlist.pref_printing === 'none' || (card.wishlist.pref_printing.foil_version && card.wishlist.pref_printing.nonFoil_version)">
           <input type="checkbox" [(ngModel)]="card.wishlist.pref_foil">
         </div>
       </div>
@@ -71,8 +71,8 @@
         <div class="card-desire">
           <input type="number" step="1" [(ngModel)]="card.desiredCopies" name="">
         </div>
-        <label for="card-foil" class="foil-display" *ngIf="card.preferredPrinting === 'none' || card.preferredPrinting.can_be_foil">Foil</label>
-        <div class="card-foil" *ngIf="card.preferredPrinting === 'none' || card.preferredPrinting.can_be_foil">
+        <label for="card-foil" class="foil-display" *ngIf="card.preferredPrinting === 'none' || (card.preferredPrinting.foil_version && card.preferredPrinting.nonFoil_version)">Foil</label>
+        <div class="card-foil" *ngIf="card.preferredPrinting === 'none' || (card.preferredPrinting.foil_version && card.preferredPrinting.nonFoil_version)">
           <input type="checkbox" [(ngModel)]="card.foil">
         </div>
         <button (click)="logCardArrayAtIndex(cardIdx)">C LOG</button>
