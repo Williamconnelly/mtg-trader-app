@@ -21,8 +21,10 @@ router.post("/collection/batch", verifyToken, (req, res) => {
             id: req.body.cards[i]["printingInput"]["id"]
           }
         }).then(cardPrinting => {
-          if (!req.body.cards[i].printingInput.can_be_foil) {
-            req.body.cards[i].foilInput = false;
+          if (req.body.cards[i].foilInput) {
+            req.body.cards[i].foilInput = req.body.cards[i].printingInput.foil_version
+          } else {
+            req.body.cards[i].foilInput = !req.body.cards[i].printingInput.nonFoil_version
           }
           user.addPrintings(cardPrinting, {through: {
             owned_copies: req.body.cards[i]["copies"],
@@ -55,8 +57,10 @@ router.put("/collection/batch", verifyToken, (req, res) => {
           console.log("DESTROYED")
           collection.destroy();
         } else {
-          if (!req.body.printings[i].printingInput.can_be_foil) {
-            req.body.printings[i].foilInput = false;
+          if (req.body.printings[i].foilInput) {
+            req.body.printings[i].foilInput = req.body.printings[i].printingInput.foil_version;
+          } else {
+            req.body.printings[i].foilInput = !req.body.printings[i].printingInput.nonFoil_version;
           }
           collection.update({
             printingId: req.body.printings[i].printingInput.id,
@@ -151,10 +155,11 @@ router.post("/wishlist/batch", verifyToken, (req, res) => {
           if (req.body.cards[i]["preferredPrinting"] == "none") {
             req.body.cards[i]["preferredPrinting"] = null;
           } else {
-            console.log("i.foil: " + req.body.cards[i].foil)
-            console.log("canbefoil: " + req.body.cards[i].preferredPrinting.can_be_foil);
-            console.log("both: " + req.body.cards[i].foil && req.body.cards[i].preferredPrinting.can_be_foil)
-            req.body.cards[i].foil = req.body.cards[i].foil && req.body.cards[i].preferredPrinting.can_be_foil; 
+            if (req.body.cards[i].foil) {
+              req.body.cards[i].foil = req.body.cards[i].preferredPrinting.foil_version; 
+            } else {
+              req.body.cards[i].foil = req.body.cards[i].preferredPrinting.nonFoil_version; 
+            }
             req.body.cards[i].preferredPrinting = req.body.cards[i].preferredPrinting.id
             console.log("preferredPrinting: " + req.body.cards[i].preferredPrinting);
           }
@@ -193,7 +198,11 @@ router.put("/wishlist/batch", verifyToken, (req, res) => {
           if (req.body.cards[i].wishlist.pref_printing === "none") {
             req.body.cards[i].wishlist.pref_printing = null
           } else {
-            req.body.cards[i].wishlist.pref_foil = req.body.cards[i].wishlist.pref_foil && req.body.cards[i].wishlist.pref_printing.can_be_foil;
+            if (req.body.cards[i].wishlist.pref_foil) {
+              req.body.cards[i].wishlist.pref_foil = req.body.cards[i].wishlist.pref_printing.foil_version;
+            } else {
+              req.body.cards[i].wishlist.pref_foil = !req.body.cards[i].wishlist.pref_printing.nonFoil_version;
+            }
             req.body.cards[i].wishlist.pref_printing = req.body.cards[i].wishlist.pref_printing.id
           }
           wishlist.update({
