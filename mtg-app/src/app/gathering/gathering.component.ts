@@ -25,7 +25,7 @@ export class GatheringComponent implements OnInit {
   }
 
   ngOnInit() {
-    this._gatheringService.getGatheringWant().subscribe(
+    this._gatheringService.getGatheringAcquire().subscribe(
       res => {
         if (res.hasOwnProperty('error')) {
           this._authService.logoutUser();
@@ -46,8 +46,14 @@ export class GatheringComponent implements OnInit {
   }
   submitCardSearch() {
     console.log(`Searching for ${this.cardSearch}`);
+    this._gatheringService.searchCard(this.cardSearch).subscribe(result => {
+      console.log(result.msg);
+    });
   }
   submitUserSearch() {
     console.log(`Searching for ${this.userSearch}`);
+    this._gatheringService.searchUser(this.userSearch).subscribe(result => {
+      console.log(result.msg);
+    });
   }
 }

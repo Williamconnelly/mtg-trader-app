@@ -73,7 +73,7 @@ router.get("/gathering/provide", verifyToken, (req, res) => {
       }
     },
     include: [
-      {model: db.printings, attributes: {exclude: ['createdAt','updatedAt','setId','can_be_foil']}, include: [
+      {model: db.printings, attributes: {exclude: ['createdAt','updatedAt','setId','foil_version', 'nonFoil_version']}, include: [
         {model: db.card, attributes: {exclude: ['createdAt','updatedAt']}, include: [
           {model: db.user, required: true, where: {id: {[op.not]: req.user.id}}, 
           attributes: ['email','username']}
@@ -113,6 +113,15 @@ router.get("/gathering/provide", verifyToken, (req, res) => {
       message: "Could not complete Gathering: Provide"
     });
   })
+})
+
+router.get("/gathering/card/:name", verifyToken, (req, res) => {
+  console.log(req.params);
+  res.json({msg: `YOU FOUND A CARD NAMED ${req.params.name}!`});
+})
+
+router.get("/gathering/user/:name", verifyToken, (req, res) => {
+  res.json({msg: `YOU FOUND A USER NAMED ${req.params.name}!`});
 })
 
 module.exports = router;
