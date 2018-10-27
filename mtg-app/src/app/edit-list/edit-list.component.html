@@ -7,6 +7,23 @@
   <h1>Wishlist</h1>
   <hr>
   <div>
+    <div *ngFor="let card of editArray">
+      <img *ngIf="card.wishlist.pref_printing === 'none'" src="{{ card.url }}" alt="">
+      <img *ngIf="card.wishlist.pref_printing !== 'none'" src="{{ card.wishlist.pref_printing.img_url }}" alt="">
+      <p>{{ card.name }}</p>
+      <select [(ngModel)]="card.wishlist.pref_printing" name="" id="">
+        <option value="none">No Pref</option>
+        <option *ngFor="let printing of card.cardPrintings" [ngValue]="printing">{{ printing.set.code }}</option>
+      </select>
+      <app-edit-card 
+      [card]="card" 
+      [number_wanted]="card.wishlist.number_wanted"
+      [pref_printing]="card.wishlist.pref_printing"
+      ></app-edit-card>
+    </div>
+  </div>
+  <!-- OLD EDIT LIST -->
+  <!-- <div>
     <div *ngFor="let card of editArray; let cardIdx = index" class="card-wrapper">
       <div class="card-display">
         <img *ngIf="card.wishlist.pref_printing === 'none'" src="{{ card.url }}" class="card-image">
@@ -33,7 +50,7 @@
         </div>
       </div>
     </div>
-  </div>
+  </div> -->
   <hr>
   <h1>New Cards</h1>
   <hr>
