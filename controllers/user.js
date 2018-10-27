@@ -291,4 +291,24 @@ router.post("/wishlist", (req, res) => {
   })
 })
 
+router.put("/wishlist/:id", verifyToken, (req, res) => {
+  db.wishlist.find({
+    where: {
+      id: req.params.id,
+      userId: req.user.id
+    }
+  }).then(wishlist => {
+    if (wishlist !== null) {
+      wishlist.update(req.body).then(update => {
+        res.json({
+          message: "Success",
+          wishlist: update
+        })
+      });
+    } else {
+      res.json({message: "Fail"});
+    }
+  })
+})
+
 module.exports = router;

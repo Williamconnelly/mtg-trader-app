@@ -19,7 +19,10 @@
       [card]="card" 
       [number_wanted]="card.wishlist.number_wanted"
       [pref_printing]="card.wishlist.pref_printing"
+      [pref_foil]="card.wishlist.pref_foil"
       ></app-edit-card>
+      <label for="">Foil:</label>
+      <input type="checkbox" [(ngModel)]="card.wishlist.pref_foil">
     </div>
   </div>
   <!-- OLD EDIT LIST -->

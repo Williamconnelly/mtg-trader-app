@@ -1,4 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { CardService } from '../card.service';
 
 @Component({
   selector: 'app-edit-card',
@@ -8,10 +9,13 @@ import { Component, OnInit, Input } from '@angular/core';
 export class EditCardComponent implements OnInit {
   _number_wanted: number
   ApiCallTimer: any
+  progressClass
 
   @Input() card;
 
   @Input() pref_printing;
+
+  @Input() pref_foil;
 
   @Input() 
   set number_wanted(number_wanted: number) {
@@ -20,15 +24,15 @@ export class EditCardComponent implements OnInit {
 
   get number_wanted(): number { return this._number_wanted }
 
-  constructor() { }
+  constructor(private _card : CardService) { }
 
   ngOnInit() {
-    
+
   }
 
   ngOnChanges(changes) {
     console.log(changes);
-    if (changes.hasOwnProperty('pref_printing') && !changes.pref_printing.firstChange) {
+    if ((changes.hasOwnProperty('pref_printing') && !changes.pref_printing.firstChange) || changes.hasOwnProperty('pref_foil') && !changes.pref_foil.firstChange) {
       this.updateCardBuffer();
     }
   }
@@ -51,10 +55,20 @@ export class EditCardComponent implements OnInit {
     if (this.ApiCallTimer !== undefined) {
       clearTimeout(this.ApiCallTimer);
     }
-    this.ApiCallTimer = setTimeout(this.updateCard, 1500);
+    this.ApiCallTimer = setTimeout(this.updateCard.bind(this), 1500);
+    this.progressClass = "inProgress";
   }
 
   updateCard() {
     console.log("updateCard() has run");
+    this._card.updateWishlistEntry({
+      number_wanted: this._number_wanted,
+      pref_printing: (this.pref_printing === "none") ? null : this.pref_printing.id
+    }, this.card.wishlist.id).subscribe(data => {
+      console.log(data);
+      if (data["message"] === "Success") {
+        this.progressClass = undefined;
+      }
+    })
   }
 }

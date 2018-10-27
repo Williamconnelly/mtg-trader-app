@@ -22,6 +22,9 @@ export class CardService {
   editCardsInWishlist(cards) {
     return this.http.put<any>("http://localhost:3000/user/wishlist/batch", {cards:cards});
   }
+  updateWishlistEntry(updateObject, id) {
+    return this.http.put<any>("http://localhost:3000/user/wishlist/" + id, updateObject);
+  }
   getLoggedInCollection() {
     return this.http.get<any>("http://localhost:3000/user/collection/loggedin");
   }
