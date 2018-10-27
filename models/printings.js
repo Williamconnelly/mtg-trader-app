@@ -10,7 +10,8 @@ module.exports = (sequelize, DataTypes) => {
     setId: DataTypes.INTEGER,
     rarity: DataTypes.STRING,
     img_url: DataTypes.STRING,
-    can_be_foil: DataTypes.BOOLEAN,
+    foil_version: DataTypes.BOOLEAN,
+    nonFoil_version: DataTypes.BOOLEAN,
     scryfall_url: DataTypes.INTEGER,
     backside_img_url: DataTypes.STRING
   }, {});

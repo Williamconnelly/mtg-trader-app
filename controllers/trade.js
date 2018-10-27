@@ -7,7 +7,7 @@ const op = Sequelize.Op;
 const verifyToken = require("../middleware/verifyToken");
 require('dotenv').config();
 
-router.get("/gathering/want", verifyToken, (req, res) => {
+router.get("/gathering/acquire", verifyToken, (req, res) => {
   // Find the wishlist of the logged user
   db.wishlist.findAll({
     raw: true,
