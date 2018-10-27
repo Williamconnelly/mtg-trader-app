@@ -64,6 +64,7 @@ export class EditListComponent implements OnInit {
 
   submitCardsToWishlist() {
     this.card.addCardsToWishlist(this.cardArray).subscribe();
-    this.card.editCardsInWishlist(this.editArray).subscribe();
+    // OLD EDIT LIST
+    // this.card.editCardsInWishlist(this.editArray).subscribe();
   }
 }
