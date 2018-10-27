@@ -7,46 +7,54 @@ import { Component, OnInit, Input } from '@angular/core';
 })
 export class EditCardComponent implements OnInit {
   _number_wanted: number
-  number_wantedTimer: any
+  ApiCallTimer: any
 
-  
   @Input() card;
+
+  @Input() pref_printing;
 
   @Input() 
   set number_wanted(number_wanted: number) {
-    console.log(number_wanted);
     this._number_wanted = number_wanted;
   }
 
   get number_wanted(): number { return this._number_wanted }
 
-
   constructor() { }
 
   ngOnInit() {
+    
+  }
+
+  ngOnChanges(changes) {
+    console.log(changes);
+    if (changes.hasOwnProperty('pref_printing') && !changes.pref_printing.firstChange) {
+      this.updateCardBuffer();
+    }
   }
 
   minusWanted() {
     console.log("minusWanted");
     if (this._number_wanted > 1) {
       this._number_wanted -= 1;
-      if (this.number_wantedTimer !== undefined) {
-        clearTimeout(this.number_wantedTimer);
-      }
-      this.number_wantedTimer = setTimeout(this.number_wantedUpdate, 2000);
+      this.updateCardBuffer();
     }
   }
 
   plusWanted() {
     console.log("plusWanted");
     this._number_wanted++;
-    if (this.number_wantedTimer !== undefined) {
-      clearTimeout(this.number_wantedTimer);
-    }
-    this.number_wantedTimer = setTimeout(this.number_wantedUpdate, 2000);
+    this.updateCardBuffer();
   }
 
-  number_wantedUpdate() {
-    console.log("number_wantedUpdate() has run");
+  updateCardBuffer() {
+    if (this.ApiCallTimer !== undefined) {
+      clearTimeout(this.ApiCallTimer);
+    }
+    this.ApiCallTimer = setTimeout(this.updateCard, 1500);
+  }
+
+  updateCard() {
+    console.log("updateCard() has run");
   }
 }
