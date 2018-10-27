@@ -73,8 +73,8 @@ var findSetByName = (dbCard, id) => {
         cardId: dbCard.id,
         setId: dbSet.id,
         rarity: dataSet[id.toString()].rarity,
-        foil_version: dataSet[id.toString().foil],
-        nonFoil_version: dataSet[id.toString().nonfoil],
+        foil_version: dataSet[id.toString()].foil,
+        nonFoil_version: dataSet[id.toString()].nonfoil,
         scryfall_url: dataSet[id.toString()].uri,
         backside_img_url: null
       }

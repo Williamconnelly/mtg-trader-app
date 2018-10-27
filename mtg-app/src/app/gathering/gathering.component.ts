@@ -9,6 +9,8 @@ import { AuthService} from '../auth.service';
   styleUrls: ['./gathering.component.css']
 })
 export class GatheringComponent implements OnInit {
+  cardSearch = '';
+  userSearch = '';
 
   // asyncTabs: Observable<any>;
   gathering = [];
@@ -41,5 +43,11 @@ export class GatheringComponent implements OnInit {
       },
       err => console.log(err)
     );
+  }
+  submitCardSearch() {
+    console.log(`Searching for ${this.cardSearch}`);
+  }
+  submitUserSearch() {
+    console.log(`Searching for ${this.userSearch}`);
   }
 }
