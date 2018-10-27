@@ -116,8 +116,47 @@ router.get("/gathering/provide", verifyToken, (req, res) => {
 })
 
 router.get("/gathering/card/:name", verifyToken, (req, res) => {
-  console.log(req.params);
-  res.json({msg: `YOU FOUND A CARD NAMED ${req.params.name}!`});
+  db.card.findOne({
+    where: {
+      name: req.params.name
+    }, include: [
+      {model: db.printings, as: 'cardPrintings', include: [
+        {model: db.user, required: true, through: {where: {trade_copies: {[op.gt]:0}}}, where: {[op.not]: {id: req.user.id}}},
+        {model: db.set}
+      ]},
+      {model: db.wishlist, include: [
+        {model: db.user, required: true, where: {[op.not]: {id: req.user.id}}}
+      ]}
+    ]
+  }).then(result => {
+    // Handle Acquire Partners
+    acquirePartners = {};
+    for (card in result.cardPrintings) {
+      for (user in result.cardPrintings[card].users) {
+        let currentUser = result.cardPrintings[card].users[user];
+        currentUser.collection.dataValues['set'] = {
+          code: result.cardPrintings[card].set.code,
+          title: result.cardPrintings[card].set.title
+        };
+        if (acquirePartners.hasOwnProperty(currentUser.id)) {
+          acquirePartners[currentUser.id].cards.push(currentUser.collection)
+        } else {
+          acquirePartners[currentUser.id] = {
+            username: currentUser.username,
+            userId: currentUser.id,
+            cards: [currentUser.collection]
+          }
+        }
+      }
+    }
+    // Handle Provide Partners
+    providePartners = {};
+    for (card in result.wishlists) {
+      let currentUser = result.wishlists[card].user
+      console.log(currentUser);
+    }
+    res.json(result);
+  })
 })
 
 router.get("/gathering/user/:name", verifyToken, (req, res) => {

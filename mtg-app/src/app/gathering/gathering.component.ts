@@ -47,7 +47,7 @@ export class GatheringComponent implements OnInit {
   submitCardSearch() {
     console.log(`Searching for ${this.cardSearch}`);
     this._gatheringService.searchCard(this.cardSearch).subscribe(result => {
-      console.log(result.msg);
+      console.log(result);
     });
   }
   submitUserSearch() {
