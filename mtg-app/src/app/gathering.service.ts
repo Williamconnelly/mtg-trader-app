@@ -7,7 +7,8 @@ import { HttpClient } from '@angular/common/http';
 export class GatheringService {
   private _gatheringWantUrl = 'http://localhost:3000/trade/gathering/acquire';
   private _gatheringProvideUrl = 'http://localhost:3000/trade/gathering/provide';
-  private _gatheringCardURL = `http://localhost:3000/trade/gathering/card/`;
+  private _acquireCardURL = `http://localhost:3000/trade/gathering/acquire/card/`;
+  private _provideCardURL = `http://localhost:3000/trade/gathering/provide/card/`;
   private _gatheringUserURL = `http://localhost:3000/trade/gathering/user/`;
   constructor(private http: HttpClient) { }
 
@@ -17,8 +18,11 @@ export class GatheringService {
   getGatheringProvide() {
     return this.http.get<any>(this._gatheringProvideUrl);
   }
-  searchCard(name) {
-    return this.http.get<any>(`${this._gatheringCardURL}${name}`);
+  searchAcquireCard(name) {
+    return this.http.get<any>(`${this._acquireCardURL}${name}`);
+  }
+  searchProvideAcquireCard(name) {
+    return this.http.get<any>(`${this._provideCardURL}${name}`);
   }
   searchUser(name) {
     return this.http.get<any>(`${this._gatheringUserURL}${name}`);
