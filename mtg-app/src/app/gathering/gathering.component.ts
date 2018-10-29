@@ -11,6 +11,10 @@ import { AuthService} from '../auth.service';
 export class GatheringComponent implements OnInit {
   cardSearch = '';
   userSearch = '';
+  searchBool = {
+    card: false,
+    user: false
+  };
 
   // asyncTabs: Observable<any>;
   gathering = [];
@@ -25,6 +29,33 @@ export class GatheringComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.gather();
+  }
+  submitCardSearch() {
+    console.log(`Searching for ${this.cardSearch}`);
+    this._gatheringService.searchAcquireCard(this.cardSearch).subscribe(result => {
+      console.log(result);
+      this.gathering = result;
+    });
+    this._gatheringService.searchProvideCard(this.cardSearch).subscribe(result => {
+      console.log(result);
+      this.provide = result;
+    });
+    this.searchBool.card = true;
+  }
+  submitUserSearch() {
+    console.log(`Searching for ${this.userSearch}`);
+    this._gatheringService.searchAcquireUser(this.userSearch).subscribe(result => {
+      console.log(result);
+      this.gathering = result;
+    });
+    this._gatheringService.searchProvideUser(this.userSearch).subscribe(result => {
+      console.log(result);
+      this.provide = result;
+    });
+    this.searchBool.user = true;
+  }
+  gather() {
     this._gatheringService.getGatheringAcquire().subscribe(
       res => {
         if (res.hasOwnProperty('error')) {
@@ -44,26 +75,9 @@ export class GatheringComponent implements OnInit {
       err => console.log(err)
     );
   }
-  submitCardSearch() {
-    console.log(`Searching for ${this.cardSearch}`);
-    this._gatheringService.searchAcquireCard(this.cardSearch).subscribe(result => {
-      console.log(result);
-      this.gathering = result;
-    });
-    this._gatheringService.searchProvideCard(this.cardSearch).subscribe(result => {
-      console.log(result);
-      this.provide = result;
-    });
-  }
-  submitUserSearch() {
-    console.log(`Searching for ${this.userSearch}`);
-    this._gatheringService.searchAcquireUser(this.userSearch).subscribe(result => {
-      console.log(result);
-      this.gathering = result;
-    });
-    this._gatheringService.searchProvideUser(this.userSearch).subscribe(result => {
-      console.log(result);
-      this.provide = result;
-    });
+  reset() {
+    this.searchBool.card = this.searchBool.user = false;
+    this.cardSearch = this.userSearch = '';
+    this.gather();
   }
 }
