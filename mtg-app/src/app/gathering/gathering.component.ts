@@ -59,11 +59,11 @@ export class GatheringComponent implements OnInit {
     console.log(`Searching for ${this.userSearch}`);
     this._gatheringService.searchAcquireUser(this.userSearch).subscribe(result => {
       console.log(result);
-      // this.gathering = result;
+      this.gathering = result;
     });
     this._gatheringService.searchProvideUser(this.userSearch).subscribe(result => {
       console.log(result);
-      // this.provide = result;
+      this.provide = result;
     });
   }
 }
