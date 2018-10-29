@@ -14,6 +14,9 @@
       <input type="submit" value="Search" class="search-button">
     </form>
   </div>
+  <div>
+    <button *ngIf="searchBool.card === true || searchBool.user === true" (click)="reset()" class="reset">Reset</button>
+  </div>
   <mat-tab-group>
     <mat-tab label="Acquire"><app-gathering-aquire [data]="gathering" ></app-gathering-aquire></mat-tab>
     <mat-tab label="Provide"><app-gathering-aquire [Otherdata]="provide" ></app-gathering-aquire></mat-tab>
