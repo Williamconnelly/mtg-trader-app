@@ -50,15 +50,20 @@ export class GatheringComponent implements OnInit {
       console.log(result);
       this.gathering = result;
     });
-    this._gatheringService.searchProvideAcquireCard(this.cardSearch).subscribe(result => {
+    this._gatheringService.searchProvideCard(this.cardSearch).subscribe(result => {
       console.log(result);
       this.provide = result;
     });
   }
   submitUserSearch() {
     console.log(`Searching for ${this.userSearch}`);
-    this._gatheringService.searchUser(this.userSearch).subscribe(result => {
-      console.log(result.msg);
+    this._gatheringService.searchAcquireUser(this.userSearch).subscribe(result => {
+      console.log(result);
+      // this.gathering = result;
+    });
+    this._gatheringService.searchProvideUser(this.userSearch).subscribe(result => {
+      console.log(result);
+      // this.provide = result;
     });
   }
 }
