@@ -15,6 +15,8 @@ export class GatheringComponent implements OnInit {
     card: false,
     user: false
   };
+  setOptions = [];
+  setSelection = '';
 
   // asyncTabs: Observable<any>;
   gathering = [];
@@ -36,6 +38,14 @@ export class GatheringComponent implements OnInit {
     this._gatheringService.searchAcquireCard(this.cardSearch).subscribe(result => {
       console.log(result);
       this.gathering = result;
+      for (let user in result) {
+        for (let set in result[user].cards) {
+          if (!this.setOptions.includes(result[user].cards[set]['card.cardPrintings.set.title'])) {
+            this.setOptions.push(result[user].cards[set]['card.cardPrintings.set.title']);
+          }
+        }
+      }
+      console.log(this.setOptions);
     });
     this._gatheringService.searchProvideCard(this.cardSearch).subscribe(result => {
       console.log(result);
@@ -79,5 +89,14 @@ export class GatheringComponent implements OnInit {
     this.searchBool.card = this.searchBool.user = false;
     this.cardSearch = this.userSearch = '';
     this.gather();
+  }
+  refineCardSearch() {
+    console.log('Refined!');
+    console.log(this.setSelection);
+    for (const user in this.gathering) {
+      const refinedCards = this.gathering[user].cards.filter(card => card['card.cardPrintings.set.title'] === this.setSelection);
+      this.gathering[user].cards = refinedCards;
+      this.gathering = this.gathering;
+    }
   }
 }

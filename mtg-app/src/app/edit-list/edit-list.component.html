@@ -15,8 +15,8 @@
         <option value="none">No Pref</option>
         <option *ngFor="let printing of card.cardPrintings" [ngValue]="printing">{{ printing.set.code }}</option>
       </select>
-      <app-edit-card 
-      [card]="card" 
+      <app-edit-card
+      [card]="card"
       [number_wanted]="card.wishlist.number_wanted"
       [pref_printing]="card.wishlist.pref_printing"
       ></app-edit-card>

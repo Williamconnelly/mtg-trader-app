@@ -5,6 +5,7 @@
   font-family: sans-serif;
   border-width: 0;
   margin-left: 1em;
+  display: inline-block;
 }
 
 .search-field, .search-button {
@@ -48,4 +49,5 @@
   height: 2em;
   background-color: #d8d8d8;
   margin-left: 1em;
+  display: inline-block;
 }
