@@ -7,16 +7,28 @@
       <input type="text" [(ngModel)]="cardSearch" name="cardSearch" class="search-field" placeholder="Find Card...">
       <input type="submit" value="Search" class="search-button">
     </form>
+      <button *ngIf="searchBool.card === true" (click)="reset()" class="reset">Reset</button>
   </div>
   <div>
     <form (submit)="submitUserSearch()" class="search-form">
       <input type="text" [(ngModel)]="userSearch" name="userSearch" class="search-field" placeholder="Find User...">
       <input type="submit" value="Search" class="search-button">
     </form>
+    <button *ngIf="searchBool.user === true" (click)="reset()" class="reset">Reset</button>
   </div>
-  <div>
+  <div *ngIf="searchBool.card === true">
+    <p>Results for: {{ cardSearch }}</p>
+    <form (submit)="refineCardSearch()">
+      <select [(ngModel)]="setSelection" name="refine">
+        <option value="all">All</option>
+        <option *ngFor="let set of setOptions" [ngValue]="set">{{ set }}</option>
+      </select>
+      <input type="submit" value="Refine" class="search-button">
+    </form>
+  </div>
+  <!-- <div>
     <button *ngIf="searchBool.card === true || searchBool.user === true" (click)="reset()" class="reset">Reset</button>
-  </div>
+  </div> -->
   <mat-tab-group>
     <mat-tab label="Acquire"><app-gathering-aquire [data]="gathering" ></app-gathering-aquire></mat-tab>
     <mat-tab label="Provide"><app-gathering-aquire [Otherdata]="provide" ></app-gathering-aquire></mat-tab>
