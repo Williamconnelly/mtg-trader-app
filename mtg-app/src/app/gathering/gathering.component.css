@@ -51,3 +51,23 @@
   margin-left: 1em;
   display: inline-block;
 }
+
+select {
+  border-radius: 0;
+  padding: 12px 55px 15px 15px;
+}
+
+.custom-select select {
+  border: none;
+  outline: none;
+  background: transparent;
+  /* -webkit-appearance: none;
+  -moz-appearance: none; */
+  border-radius: 0;
+  margin: 0;
+  display: block;
+  width: 100%;
+  padding: 12px 55px 15px 15px;
+  font-size: 14px;
+  color: #714BB9;
+}

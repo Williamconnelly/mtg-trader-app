@@ -11,17 +11,19 @@ import { AuthService} from '../auth.service';
 export class GatheringComponent implements OnInit {
   cardSearch = '';
   userSearch = '';
-  searchBool = {
+  searchData = {
     card: false,
-    user: false
+    user: false,
+    searchName: ''
   };
   setOptions = [];
+  foilOptions = [];
   setSelection = 'all';
-  testVar = [];
-
-  // asyncTabs: Observable<any>;
+  foilSelection = 'all';
+  preservedCardSearch = [];
   gathering = [];
   provide = [];
+  // asyncTabs: Observable<any>;
   constructor(private _gatheringService: GatheringService, private _authService: AuthService) {
 //     this.asyncTabs = Observable.create((observer: Observer<any>) => {
 //       setTimeout(() => {
@@ -34,38 +36,46 @@ export class GatheringComponent implements OnInit {
   ngOnInit() {
     this.gather();
   }
-  submitCardSearch() {
-    console.log(`Searching for ${this.cardSearch}`);
-    this._gatheringService.searchAcquireCard(this.cardSearch).subscribe(result => {
+  submitCardSearch(cardString) {
+    console.log(`Searching for ${cardString}`);
+    this._gatheringService.searchAcquireCard(cardString).subscribe(result => {
       console.log(result);
-      this.gathering = result;
+      // Update gathering to use the new data and duplicate the data into a separate component variable
+      this.preservedCardSearch = this.gathering = result;
       this.setOptions = [];
+      this.foilOptions = [];
       for (let user in result) {
         for (let set in result[user].cards) {
           if (!this.setOptions.includes(result[user].cards[set]['card.cardPrintings.set.title'])) {
             this.setOptions.push(result[user].cards[set]['card.cardPrintings.set.title']);
           }
+          if (!this.foilOptions.includes(result[user].cards[set]['card.cardPrintings.users.collection.foil'])) {
+            this.foilOptions.push(result[user].cards[set]['card.cardPrintings.users.collection.foil']);
+          }
         }
       }
       console.log(this.setOptions);
+      console.log(this.foilOptions);
     });
     this._gatheringService.searchProvideCard(this.cardSearch).subscribe(result => {
       console.log(result);
       this.provide = result;
     });
-    this.searchBool.card = true;
+    this.searchData.searchName = cardString;
+    this.searchData.card = true;
   }
-  submitUserSearch() {
+  submitUserSearch(userString) {
     console.log(`Searching for ${this.userSearch}`);
-    this._gatheringService.searchAcquireUser(this.userSearch).subscribe(result => {
+    this._gatheringService.searchAcquireUser(userString).subscribe(result => {
       console.log(result);
       this.gathering = result;
     });
-    this._gatheringService.searchProvideUser(this.userSearch).subscribe(result => {
+    this._gatheringService.searchProvideUser(userString).subscribe(result => {
       console.log(result);
       this.provide = result;
     });
-    this.searchBool.user = true;
+    this.searchData.searchName = userString;
+    this.searchData.user = true;
   }
   gather() {
     this._gatheringService.getGatheringAcquire().subscribe(
@@ -88,43 +98,50 @@ export class GatheringComponent implements OnInit {
     );
   }
   reset() {
-    this.searchBool.card = this.searchBool.user = false;
+    this.searchData.card = this.searchData.user = false;
     this.cardSearch = this.userSearch = '';
     this.gather();
   }
   refineCardSearch() {
-    // console.log('Refined!');
-    // console.log(this.setSelection);
-    // for (const user in this.gathering) {
-    //   // const refinedCards = this.gathering[user].cards.filter(card => card['card.cardPrintings.set.title'] === this.setSelection);
-    //   // this.gathering[user].cards = refinedCards;
-    //   for (let card in this.gathering[user].cards) {
-    //     if (this.gathering[user].cards[card]['card.cardPrintings.set.title'] !== this.setSelection) {
-    //       this.gathering[user].cards.splice(this.gathering[user].cards.indexOf(this.gathering[user].cards[card]), 1);
-    //     }
-    //   }
-    //   console.log("BEFORE CUT" + this.gathering[user].username)
-    //   console.log(this.gathering);
-    //   if (this.gathering[user].cards.length < 1) {
-    //     this.gathering.splice(this.gathering.indexOf(this.gathering[user]), 1);
-    //   }
-    // }
-    // console.log("AFTER CUT");
-    // console.log(this.gathering);
-    this.testVar = new Array(this.gathering.length);
-    for (let i = this.gathering.length - 1; i >= 0; i --) {
-      this.testVar[i] = {username: this.gathering[i].username, userId: this.gathering[i].userId};
-      const refinedCards = this.gathering[i].cards.filter(card => card['card.cardPrintings.set.title'] === this.setSelection);
-      this.testVar[i].cards = refinedCards;
-      // for (let o = this.gathering[i].cards.length - 1; o >= 0; o --) {
-      //   if (this.gathering[i].cards[o]['card.cardPrintings.set.title'] !== this.setSelection) {
-      //     console.log(this.gathering[i].cards[o]['card.cardPrintings.set.title']);
-      //     console.log(this.gathering[i].cards.splice(this.gathering[i].cards.indexOf(this.gathering[i].cards[o]), 1));
-      //   }
-      // }
+    if (this.setSelection === 'all') {
+      const refinedData = new Array(this.preservedCardSearch.length);
+      for (let i = this.preservedCardSearch.length - 1; i >= 0; i --) {
+        refinedData[i] = {username: this.preservedCardSearch[i].username, userId: this.preservedCardSearch[i].userId};
+        if (this.foilSelection !== 'all') {
+          const refinedCards = this.preservedCardSearch[i].cards.filter(
+            card => card['card.cardPrintings.users.collection.foil'] === this.foilSelection
+          );
+          refinedData[i].cards = refinedCards;
+          if (refinedData[i].cards.length < 1) {
+            refinedData.splice(refinedData[i], 1);
+          }
+          this.gathering = refinedData;
+        } else {
+          this.gathering = this.preservedCardSearch;
+        }
+      }
+    } else {
+      const refinedData = new Array(this.preservedCardSearch.length);
+      for (let i = this.preservedCardSearch.length - 1; i >= 0; i --) {
+        refinedData[i] = {username: this.preservedCardSearch[i].username, userId: this.preservedCardSearch[i].userId};
+        let refinedCards = [];
+        if (this.foilSelection !== 'all') {
+          refinedCards = this.preservedCardSearch[i].cards.filter(
+            card => card['card.cardPrintings.set.title'] === this.setSelection &&
+            card['card.cardPrintings.users.collection.foil'] === this.foilSelection
+          );
+        } else {
+          refinedCards = this.preservedCardSearch[i].cards.filter(card => card['card.cardPrintings.set.title'] === this.setSelection);
+        }
+        refinedData[i].cards = refinedCards;
+        if (refinedData[i].cards.length < 1) {
+          refinedData.splice(refinedData[i], 1);
+        }
+      }
+      this.gathering = refinedData;
     }
-    this.gathering = this.testVar;
-    // this.gathering = this.gathering;
-    // console.log(this.gathering);
+  }
+  refineByFoil() {
+
   }
 }

@@ -3,26 +3,31 @@
   </ng-container> -->
 
   <div>
-    <form (submit)="submitCardSearch()" class="search-form">
+    <form (submit)="submitCardSearch(cardSearch)" class="search-form">
       <input type="text" [(ngModel)]="cardSearch" name="cardSearch" class="search-field" placeholder="Find Card...">
       <input type="submit" value="Search" class="search-button">
     </form>
-      <button *ngIf="searchBool.card === true" (click)="reset()" class="reset">Reset</button>
+      <button *ngIf="searchData.card === true" (click)="reset()" class="reset">Reset</button>
   </div>
   <div>
-    <form (submit)="submitUserSearch()" class="search-form">
+    <form (submit)="submitUserSearch(userSearch)" class="search-form">
       <input type="text" [(ngModel)]="userSearch" name="userSearch" class="search-field" placeholder="Find User...">
       <input type="submit" value="Search" class="search-button">
     </form>
-    <button *ngIf="searchBool.user === true" (click)="reset()" class="reset">Reset</button>
+    <button *ngIf="searchData.user === true" (click)="reset()" class="reset">Reset</button>
   </div>
-  <div *ngIf="searchBool.card === true">
-    <p>Results for: {{ cardSearch }}</p>
+  <div *ngIf="searchData.card === true">
+    <p>Results for: {{ searchData.searchName }}</p>
     <form (submit)="refineCardSearch()">
-      <select [(ngModel)]="setSelection" name="refine">
+      <select [(ngModel)]="setSelection" name="setRefine">
         <option value="all">All</option>
         <option *ngFor="let set of setOptions" [ngValue]="set">{{ set }}</option>
       </select>
+      <select [(ngModel)]="foilSelection" name="foilRefine">
+          <option value="all">All</option>
+          <option *ngFor="let foil of foilOptions" [ngValue]="foil"><span *ngIf="foil === true else falseFoil">Foil</span>
+            <ng-template #falseFoil>Non-foil</ng-template></option>
+        </select>
       <input type="submit" value="Refine" class="search-button">
     </form>
   </div>

@@ -137,7 +137,7 @@ router.get("/gathering/acquire/card/:name", verifyToken, (req, res) => {
       let userCollection = {
         "card.cardPrintings.set.code": result[card]['printing.set.code'],
         "card.cardPrintings.set.title": result[card]['printing.set.title'],
-        "card.cardPrintings.id": result[card]['printing.card.id'],
+        "card.cardPrintings.id": result[card]['printing.id'],
         "card.name": result[card]['printing.card.name'],
         "card.cardPrintings.users.collection.foil": result[card]['foil'],
         "card.cardPrintings.users.collection.owned_copies": result[card]['owned_copies'],
@@ -236,7 +236,7 @@ router.get("/gathering/acquire/user/:name", verifyToken, (req, res) => {
       let userCollection = {
         "card.cardPrintings.set.code": result[card].printing.set.code,
         "card.cardPrintings.set.title": result[card].printing.set.title,
-        "card.cardPrintings.id": result[card].printing.card.id,
+        "card.cardPrintings.id": result[card].printing.id,
         "card.name": result[card].printing.card.name,
         "card.cardPrintings.users.collection.foil": result[card].foil,
         "card.cardPrintings.users.collection.owned_copies": result[card].owned_copies,
