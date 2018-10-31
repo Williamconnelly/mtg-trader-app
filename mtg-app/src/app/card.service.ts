@@ -25,6 +25,9 @@ export class CardService {
   updateWishlistEntry(updateObject, id) {
     return this.http.put<any>("http://localhost:3000/user/wishlist/" + id, updateObject);
   }
+  deleteWishlistEntry(id) {
+    return this.http.delete<any>("http://localhost:3000/user/wishlist/" + id);
+  }
   getLoggedInCollection() {
     return this.http.get<any>("http://localhost:3000/user/collection/loggedin");
   }

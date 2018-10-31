@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
 import { CardService } from '../card.service';
 
 @Component({
@@ -8,7 +8,7 @@ import { CardService } from '../card.service';
 })
 export class EditCardComponent implements OnInit {
   _number_wanted: number
-  ApiCallTimer: any
+  updateTimer: any
   progressClass
 
   @Input() card;
@@ -23,6 +23,8 @@ export class EditCardComponent implements OnInit {
   }
 
   get number_wanted(): number { return this._number_wanted }
+
+  @Output() updateBufferEmitter = new EventEmitter();
 
   constructor(private _card : CardService) { }
 
@@ -40,7 +42,7 @@ export class EditCardComponent implements OnInit {
   minusWanted() {
     console.log("minusWanted");
     if (this._number_wanted > 1) {
-      this._number_wanted -= 1;
+      this._number_wanted--;
       this.updateCardBuffer();
     }
   }
@@ -52,10 +54,10 @@ export class EditCardComponent implements OnInit {
   }
 
   updateCardBuffer() {
-    if (this.ApiCallTimer !== undefined) {
-      clearTimeout(this.ApiCallTimer);
+    if (this.updateTimer !== undefined) {
+      clearTimeout(this.updateTimer);
     }
-    this.ApiCallTimer = setTimeout(this.updateCard.bind(this), 1500);
+    this.updateTimer = setTimeout(this.updateCard.bind(this), 1500);
     this.progressClass = "inProgress";
   }
 

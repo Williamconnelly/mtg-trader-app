@@ -7,7 +7,7 @@
   <h1>Wishlist</h1>
   <hr>
   <div>
-    <div *ngFor="let card of editArray">
+    <div *ngFor="let card of editArray; let i = index;" style="display:inline-block;padding:5px;">
       <img *ngIf="card.wishlist.pref_printing === 'none'" src="{{ card.url }}" alt="">
       <img *ngIf="card.wishlist.pref_printing !== 'none'" src="{{ card.wishlist.pref_printing.img_url }}" alt="">
       <p>{{ card.name }}</p>
@@ -22,7 +22,8 @@
       [pref_foil]="card.wishlist.pref_foil"
       ></app-edit-card>
       <label for="">Foil:</label>
-      <input type="checkbox" [(ngModel)]="card.wishlist.pref_foil">
+      <input type="checkbox" [(ngModel)]="card.wishlist.pref_foil"><br>
+      <button (click)="deleteWishlistEntry(i)">Delete</button>
     </div>
   </div>
   <!-- OLD EDIT LIST -->

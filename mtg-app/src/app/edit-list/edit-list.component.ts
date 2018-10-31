@@ -41,8 +41,13 @@ export class EditListComponent implements OnInit {
     console.log(this.cardArray[index]);
   }
 
-  removeFromCardArray(index) {
-    this.cardArray.splice(index, 1);
+  deleteWishlistEntry(index) {
+    console.log(index);
+    this.card.deleteWishlistEntry(this.editArray[index].wishlist.id).subscribe(data => {
+      if (data["message"] === "Success") {
+        this.editArray.splice(index, 1);
+      }
+    });
   }
 
   submitCardSearch() {

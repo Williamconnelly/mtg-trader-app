@@ -309,6 +309,22 @@ router.put("/wishlist/:id", verifyToken, (req, res) => {
       res.json({message: "Fail"});
     }
   })
+});
+
+router.delete("/wishlist/:id", verifyToken, (req, res) => {
+  db.wishlist.find({
+    where: {
+      id: req.params.id,
+      userId: req.user.id
+    }
+  }).then(wishlist => {
+    if (wishlist !== null) {
+      wishlist.destroy()
+      res.json({message:"Success"});
+    } else {
+      res.json({message:"Fail"});
+    }
+  })
 })
 
 module.exports = router;
