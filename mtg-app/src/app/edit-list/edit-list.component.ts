@@ -31,7 +31,7 @@ export class EditListComponent implements OnInit {
             }
           }
         }
-        wishlist[i]["markedForDeletion"] = false;
+        wishlist[i]["class"] = "";
       }
       this.editArray = wishlist;
     })
@@ -65,6 +65,23 @@ export class EditListComponent implements OnInit {
         this.cardArray.push(cardResult);
       }
     });
+  }
+
+  childUpdateCardBuffer(index) {
+    this.editArray[index].class = "updateBuffer"
+    console.log(this.editArray[index].class);
+  }
+
+  childUpdateCard(index) {
+    console.log("API UPDATE CALL");
+    console.log(index);
+  }
+
+  childSuccessfulUpdate(index) {
+    this.editArray[index].class = "updateSuccess";
+    setTimeout(() => {
+      this.editArray[index].class = "updateDone"
+    }, 250);
   }
 
   submitCardsToWishlist() {

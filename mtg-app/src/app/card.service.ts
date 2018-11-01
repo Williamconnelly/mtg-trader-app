@@ -7,17 +7,20 @@ import { HttpClient } from '@angular/common/http';
 export class CardService {
 
   constructor(private http : HttpClient) { }
-  addCardsToCollection(cards) {
-    let postObject = {
-      cards: cards
-    };
-    return this.http.post<any>("http://localhost:3000/user/collection/batch", postObject);
-  }
-  addCardsToWishlist(cards) {
-    return this.http.post<any>("http://localhost:3000/user/wishlist/batch", {cards:cards});
+  addCardsToCollection(printings) {
+    return this.http.post<any>("http://localhost:3000/user/collection/batch", {printings:printings});
   }
   editCardsInCollection(printings) {
     return this.http.put<any>("http://localhost:3000/user/collection/batch", {printings:printings});
+  }
+  updateCollectionEntry(updateObject, id) {
+    return this.http.put<any>("http://localhost:3000/user/collection/" + id, updateObject);
+  }
+  deleteCollectionEntry(id) {
+    return this.http.delete<any>("http://localhost:3000/user/collection/" + id);
+  }
+  addCardsToWishlist(cards) {
+    return this.http.post<any>("http://localhost:3000/user/wishlist/batch", {cards:cards});
   }
   editCardsInWishlist(cards) {
     return this.http.put<any>("http://localhost:3000/user/wishlist/batch", {cards:cards});

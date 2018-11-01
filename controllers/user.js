@@ -3,33 +3,34 @@ var db = require("../models");
 var router = express.Router();
 const axios = require("axios");
 const Sequelize = require('sequelize');
+const op = Sequelize.Op;
 const verifyToken = require('../middleware/verifyToken.js')
 require('dotenv').config();
 
-// Add multiple cards to collection
+// Add multiple printings to collection
 router.post("/collection/batch", verifyToken, (req, res) => {
-  console.log("ADDING MULTIPLE CARDS TO COLLECTION");
-  if (req.body.cards.length > 0) {
+  console.log("ADDING MULTIPLE PRINTINGS TO COLLECTION");
+  if (req.body.printings.length > 0) {
     db.user.find({
       where: {
         id: req.user.id
       }
     }).then(user => {
-      for (let i=0; i<req.body.cards.length; i++) {
+      for (let i=0; i<req.body.printings.length; i++) {
         db.printings.find({
           where: {
-            id: req.body.cards[i]["printingInput"]["id"]
+            id: req.body.printings[i]["printingInput"]["id"]
           }
         }).then(cardPrinting => {
-          if (req.body.cards[i].foilInput) {
-            req.body.cards[i].foilInput = req.body.cards[i].printingInput.foil_version
+          if (req.body.printings[i].foilInput) {
+            req.body.printings[i].foilInput = req.body.printings[i].printingInput.foil_version
           } else {
-            req.body.cards[i].foilInput = !req.body.cards[i].printingInput.nonFoil_version
+            req.body.printings[i].foilInput = !req.body.printings[i].printingInput.nonFoil_version
           }
           user.addPrintings(cardPrinting, {through: {
-            owned_copies: req.body.cards[i]["copies"],
-            trade_copies: req.body.cards[i]["tradeCopies"],
-            foil: req.body.cards[i].foilInput
+            owned_copies: req.body.printings[i]["copies"],
+            trade_copies: req.body.printings[i]["tradeCopies"],
+            foil: req.body.printings[i].foilInput
           }})
         })
       }
@@ -42,7 +43,7 @@ router.post("/collection/batch", verifyToken, (req, res) => {
 
 // Update multiple entries in a user's collection
 router.put("/collection/batch", verifyToken, (req, res) => {
-  console.log("UPDATING MULTIPLE CARDS IN COLLECTION");
+  console.log("UPDATING MULTIPLE PRINTINGS IN COLLECTION");
   if (req.body.printings.length > 0) {
     for (let i=0; i<req.body.printings.length; i++) {
       db.collection.find({
@@ -134,6 +135,40 @@ router.post("/collection", (req, res) => {
         trade_copies: req.body.trade_copies
       }});
     })
+  })
+})
+
+router.put("/collection/:id", verifyToken, (req, res) => {
+  db.collection.find({
+    where: {
+      id: req.params.id,
+      userId: req.user.id
+    }
+  }).then(collection => {
+    if (collection !== null) {
+      collection.update(req.body).then(update => {
+        res.json({status:"Success", update:update});
+      });
+    } else {
+      res.json({status:"Fail", message:"Could not find collection with that id"})
+    }
+  })
+})
+
+router.delete("/collection/:id", verifyToken, (req, res) => {
+  db.collection.find({
+    where: {
+      id: req.params.id,
+      userId: req.user.id
+    }
+  }).then(collection => {
+    if (collection !== null) {
+      collection.delete().then(data => {
+        res.json({status:"Success", data:data});
+      });
+    } else {
+      res.json({status:"Fail", message:"Could not find collection with that id"});
+    }
   })
 })
 
@@ -301,12 +336,12 @@ router.put("/wishlist/:id", verifyToken, (req, res) => {
     if (wishlist !== null) {
       wishlist.update(req.body).then(update => {
         res.json({
-          message: "Success",
-          wishlist: update
+          status: "Success",
+          update: update
         })
       });
     } else {
-      res.json({message: "Fail"});
+      res.json({status: "Fail", message:"Could not find wishlist with that id"});
     }
   })
 });
@@ -320,9 +355,9 @@ router.delete("/wishlist/:id", verifyToken, (req, res) => {
   }).then(wishlist => {
     if (wishlist !== null) {
       wishlist.destroy()
-      res.json({message:"Success"});
+      res.json({status:"Success"});
     } else {
-      res.json({message:"Fail"});
+      res.json({status:"Fail", message:"Could not find wishlist with that id"});
     }
   })
 })

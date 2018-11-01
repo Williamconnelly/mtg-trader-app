@@ -1,3 +1,7 @@
-<div class="{{ progressClass }}">
+<div *ngIf="number_wanted !== undefined">
     <span>Number Wanted: </span><button (click)="minusWanted()">-</button><span> {{ number_wanted }} </span><button (click)="plusWanted()">+</button>
+</div>
+<div *ngIf="owned_copies !== undefined">
+    <span>Owned Copies: </span><button (click)="minusOwned()">-</button><span> {{ owned_copies }} </span><button (click)="plusOwned()">+</button><br>
+    <span>For Trade: </span><button (click)="minusTrade()">-</button><span> {{ trade_copies }} </span><button (click)="plusTrade()">+</button>
 </div>

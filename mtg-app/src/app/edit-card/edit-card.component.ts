@@ -7,50 +7,82 @@ import { CardService } from '../card.service';
   styleUrls: ['./edit-card.component.css']
 })
 export class EditCardComponent implements OnInit {
-  _number_wanted: number
   updateTimer: any
-  progressClass
+  dbVersion = {}
 
+  @Input() index;
+  @Input() id;
+  @Input() owned_copies;
+  @Input() trade_copies;
+  @Input() number_wanted;
+  @Input() printing;
+  @Input() foil;
   @Input() card;
 
-  @Input() pref_printing;
-
-  @Input() pref_foil;
-
-  @Input() 
-  set number_wanted(number_wanted: number) {
-    this._number_wanted = number_wanted;
-  }
-
-  get number_wanted(): number { return this._number_wanted }
-
   @Output() updateBufferEmitter = new EventEmitter();
+  @Output() updateEmitter = new EventEmitter();
+  @Output() successfulUpdateEmitter = new EventEmitter();
 
   constructor(private _card : CardService) { }
 
   ngOnInit() {
-
+    if (this.number_wanted !== undefined) {
+      this.dbVersion["number_wanted"] = this.number_wanted;
+      this.dbVersion["pref_foil"] = this.foil;
+      this.dbVersion["pref_printing"] = (this.printing === "none") ? null : this.printing.id;
+    } else {
+      this.dbVersion["owned_copies"] = this.owned_copies;
+      this.dbVersion["trade_copies"] = this.trade_copies;
+      this.dbVersion["foil"] = this.foil;
+      this.dbVersion["printingId"] = this.printing.id;
+    }
   }
 
   ngOnChanges(changes) {
-    console.log(changes);
-    if ((changes.hasOwnProperty('pref_printing') && !changes.pref_printing.firstChange) || changes.hasOwnProperty('pref_foil') && !changes.pref_foil.firstChange) {
+    if ((changes.hasOwnProperty('printing') && !changes.printing.firstChange) || changes.hasOwnProperty('foil') && !changes.foil.firstChange) {
       this.updateCardBuffer();
     }
   }
 
   minusWanted() {
-    console.log("minusWanted");
-    if (this._number_wanted > 1) {
-      this._number_wanted--;
+    if (this.number_wanted > 1) {
+      this.number_wanted--;
       this.updateCardBuffer();
     }
   }
 
   plusWanted() {
-    console.log("plusWanted");
-    this._number_wanted++;
+    this.number_wanted++;
     this.updateCardBuffer();
+  }
+
+  minusOwned() {
+    if (this.owned_copies > 1) {
+      this.owned_copies--;
+      if (this.trade_copies > this.owned_copies) {
+        this.trade_copies = this.owned_copies;
+      }
+      this.updateCardBuffer();
+    }
+  }
+
+  plusOwned() {
+    this.owned_copies++;
+    this.updateCardBuffer();
+  }
+
+  minusTrade() {
+    if (this.trade_copies > 0) {
+      this.trade_copies--;
+      this.updateCardBuffer();
+    }
+  }
+
+  plusTrade() {
+    if (this.trade_copies < this.owned_copies) {
+      this.trade_copies++;
+      this.updateCardBuffer();
+    }
   }
 
   updateCardBuffer() {
@@ -58,19 +90,48 @@ export class EditCardComponent implements OnInit {
       clearTimeout(this.updateTimer);
     }
     this.updateTimer = setTimeout(this.updateCard.bind(this), 1500);
-    this.progressClass = "inProgress";
+    this.updateBufferEmitter.emit(this.index);
   }
+  
 
   updateCard() {
     console.log("updateCard() has run");
-    this._card.updateWishlistEntry({
-      number_wanted: this._number_wanted,
-      pref_printing: (this.pref_printing === "none") ? null : this.pref_printing.id
-    }, this.card.wishlist.id).subscribe(data => {
-      console.log(data);
-      if (data["message"] === "Success") {
-        this.progressClass = undefined;
+    let updateObject = {};
+    if (this.number_wanted !== undefined) {
+      updateObject['number_wanted'] = this.number_wanted;
+      updateObject['pref_foil'] = (this.printing === "none") ? this.foil : (this.foil) ? (this.printing.foil_version) : (this.printing.nonFoil_version)
+      updateObject['pref_printing'] = (this.printing === "none") ? null : this.printing.id
+    } else {
+      updateObject['owned_copies'] = this.owned_copies;
+      updateObject['trade_copies'] = this.trade_copies;
+      updateObject['foil'] = this.foil ? this.printing.foil_version : this.printing.nonFoil_version
+      updateObject['printingId'] = this.printing.id;
+    }
+    for (let key in updateObject) {
+      if (updateObject[key] === this.dbVersion[key]) {
+        delete updateObject[key]
       }
-    })
+    }
+    if (Object.keys(updateObject).length > 0) {
+      let observable = (this.number_wanted !== undefined) ? this._card.updateWishlistEntry(updateObject, this.id) : this._card.updateCollectionEntry(updateObject, this.id)
+      observable.subscribe(data => {
+        console.log(data);
+        if (data["status"] === "Success") {
+          for (let key in this.dbVersion) {
+            this.dbVersion[key] = data["update"][key]
+          }
+          this.successfulUpdateEmitter.emit(this.index);
+        } else {
+          // Unsuccessful API update
+          console.log(data["message"]);
+        }
+      });
+      this.updateEmitter.emit(this.index);
+      console.log(updateObject);
+    } else {
+      console.log("Nothing needs updating");
+      this.successfulUpdateEmitter.emit(this.index);
+    }
   }
+
 }
