@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+import { EditCardComponent } from '../edit-card/edit-card.component';
 import { CardService } from '../card.service';
 import { AuthService } from '../auth.service';
 
@@ -26,7 +27,7 @@ export class EditCollectionComponent implements OnInit {
           }
         }
         existingCollection[i].foilInput = existingCollection[i].collection.foil;
-        existingCollection[i]["markedForDeletion"] = false;
+        existingCollection[i]["class"] = "";
       }
       this.editArray = existingCollection;
     });
@@ -55,11 +56,30 @@ export class EditCollectionComponent implements OnInit {
     });
   }
 
+  childUpdatePrintingBuffer(index) {
+    this.editArray[index].class = "updateBuffer";
+    console.log(this.editArray[index].class);
+  }
+
+  childUpdatePrinting(index) {
+    console.log("API UPDATE CALL");
+    console.log(index);
+  }
+
+  childSuccessfulUpdate(index) {
+    this.editArray[index].class = "updateSuccess";
+    setTimeout(() => {
+      this.editArray[index].class = "updateDone"
+    }, 250);
+  }
+
+  deleteCollectionEntry(index) {
+    console.log(index);
+  }
+
   submitCardsToCollection() {
     let addCards = this.cardArray;
-    let editCards = this.editArray;
     this.cardArray = [];
-    this.card.editCardsInCollection(editCards).subscribe();
     this.card.addCardsToCollection(addCards).subscribe();
   }
 

@@ -31,7 +31,7 @@ export class EditListComponent implements OnInit {
             }
           }
         }
-        wishlist[i]["markedForDeletion"] = false;
+        wishlist[i]["class"] = "";
       }
       this.editArray = wishlist;
     })
@@ -41,8 +41,13 @@ export class EditListComponent implements OnInit {
     console.log(this.cardArray[index]);
   }
 
-  removeFromCardArray(index) {
-    this.cardArray.splice(index, 1);
+  deleteWishlistEntry(index) {
+    console.log(index);
+    this.card.deleteWishlistEntry(this.editArray[index].wishlist.id).subscribe(data => {
+      if (data["message"] === "Success") {
+        this.editArray.splice(index, 1);
+      }
+    });
   }
 
   submitCardSearch() {
@@ -62,8 +67,24 @@ export class EditListComponent implements OnInit {
     });
   }
 
+  childUpdateCardBuffer(index) {
+    this.editArray[index].class = "updateBuffer"
+    console.log(this.editArray[index].class);
+  }
+
+  childUpdateCard(index) {
+    console.log("API UPDATE CALL");
+    console.log(index);
+  }
+
+  childSuccessfulUpdate(index) {
+    this.editArray[index].class = "updateSuccess";
+    setTimeout(() => {
+      this.editArray[index].class = "updateDone"
+    }, 250);
+  }
+
   submitCardsToWishlist() {
     this.card.addCardsToWishlist(this.cardArray).subscribe();
-    this.card.editCardsInWishlist(this.editArray).subscribe();
   }
 }
