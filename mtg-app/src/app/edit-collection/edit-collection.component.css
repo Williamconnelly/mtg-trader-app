@@ -144,7 +144,7 @@
 }
 
 .updateBuffer {
-  background-color: #fc7373;
+  background-color: #fafc7f;
   -webkit-transition: all 0.2s linear;
   -moz-transition: all 0.2s linear;
   -ms-transition: all 0.2s linear;
@@ -154,6 +154,15 @@
 
 .updateSuccess {
   background-color: #539e5a;
+  -webkit-transition: all 0.2s linear;
+  -moz-transition: all 0.2s linear;
+  -ms-transition: all 0.2s linear;
+  -o-transition: all 0.2s linear;
+  transition: all 0.2s linear;
+}
+
+.updateUnsuccessful {
+  background-color: #ff6767;
   -webkit-transition: all 0.2s linear;
   -moz-transition: all 0.2s linear;
   -ms-transition: all 0.2s linear;
