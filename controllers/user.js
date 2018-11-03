@@ -82,8 +82,10 @@ router.get("/collection/loggedin", verifyToken, (req, res) => {
     where: {
       id: req.user.id
     }, include:  [{
-      model: db.printings,
+      model: db.collection,
       include: [{
+        model:db.printings,
+        include: [{
         model:db.card,
         include: [{
             model: db.printings,
@@ -92,11 +94,15 @@ router.get("/collection/loggedin", verifyToken, (req, res) => {
           }]
         },
         db.set]
+      }]
+      
     }]
   }).then(user => {
-    res.json(user['printings']);
+    res.json(user['collections']);
   })
 })
+
+
 
 // Get User's Collection
 router.get("/collection/:id", (req, res) => {

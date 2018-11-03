@@ -42,6 +42,7 @@ module.exports = (sequelize, DataTypes) => {
     models.user.belongsToMany(models.printings, {through: "collection"})
 
     models.user.hasMany(models.wishlist);
+    models.user.hasMany(models.collection);
   };
   // This checks the entered password against the database hashed password
   user.prototype.validPassword = passwordTyped => bcrypt.compareSync(passwordTyped, this.password);
