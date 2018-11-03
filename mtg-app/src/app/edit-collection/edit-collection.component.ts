@@ -52,10 +52,6 @@ export class EditCollectionComponent implements OnInit {
           trade_copies: 0,
           foil: false
         }
-        cardResult["printingInput"] = cardResult["cardPrintings"][0];
-        cardResult["copies"] = 1;
-        cardResult["tradeCopies"] = 0;
-        cardResult["foilInput"] = false;
         this.cardArray.push(cardResult);
       }
     });
@@ -79,11 +75,14 @@ export class EditCollectionComponent implements OnInit {
   }
 
   childUnsuccessfulUpdate(eventObj) {
+    console.log("Unsuccessful update");
+    console.log(eventObj);
     this.collectionArray[eventObj["index"]].class = "updateUnsuccessful"
     window.alert(eventObj["message"]);
   }
 
   deleteCollectionEntry(index) {
+    // TODO: Add "are you sure" delay
     this.card.deleteCollectionEntry(this.collectionArray[index].id).subscribe(data => {
       if (data['status'] === "Success") {
         this.collectionArray.splice(index, 1);
@@ -104,18 +103,9 @@ export class EditCollectionComponent implements OnInit {
         this.cardArray.splice(index, 1);
         this.collectionArray.push(this.prepareForCollectionArray(data["collection"]));
       } else {
+        console.log("Unsuccessful submission");
         window.alert(data["message"]);
       }
     });
-  }
-
-  submitCardsToCollection() {
-    let addCards = this.cardArray;
-    this.cardArray = [];
-    this.card.addCardsToCollection(addCards).subscribe();
-  }
-
-  removeFromCardArray(index) {
-    this.cardArray.splice(index, 1);
   }
 }
