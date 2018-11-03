@@ -10,7 +10,7 @@ import { AuthService } from '../auth.service';
 })
 export class EditCollectionComponent implements OnInit {
   cardSearch = "";
-  editArray = [];
+  collectionArray = [];
   cardArray = [];
 
   constructor(private card : CardService, private _auth : AuthService) { }
@@ -20,22 +20,21 @@ export class EditCollectionComponent implements OnInit {
       console.log("existingCollection:");
       console.log(existingCollection);
       for (let i=0; i<existingCollection.length; i++) {
-        for (let x=0; x<existingCollection[i].card.cardPrintings.length; x++) {
-          if (existingCollection[i].card.cardPrintings[x].id === existingCollection[i].id) {
-            existingCollection[i]["printingInput"] = existingCollection[i].card.cardPrintings[x];
-            break;
-          }
-        }
-        existingCollection[i].foilInput = existingCollection[i].collection.foil;
-        existingCollection[i]["class"] = "";
+        existingCollection[i] = this.prepareForCollectionArray(existingCollection[i]);
       }
-      this.editArray = existingCollection;
+      this.collectionArray = existingCollection;
     });
   }
 
-  buttonTest(value) {
-    console.log("Value: " + value);
-    console.log(this.editArray[value]);
+  prepareForCollectionArray(collectionItem) {
+    for (let i=0; i<collectionItem.printing.card.cardPrintings.length; i++) {
+      if (collectionItem.printing.card.cardPrintings[i].id === collectionItem.printing.id) {
+        collectionItem["printingInput"] = collectionItem.printing.card.cardPrintings[i];
+      }
+    }
+    collectionItem.foilInput = collectionItem.foil;
+    collectionItem["class"] = "";
+    return collectionItem
   }
 
   submitCardSearch() {
@@ -47,6 +46,12 @@ export class EditCollectionComponent implements OnInit {
       console.log("Database Card Result")
       console.log(cardResult);
       if (cardResult != null) {
+        cardResult["collection"] = {
+          printingId: cardResult["cardPrintings"][0],
+          owned_copies: 1,
+          trade_copies: 0,
+          foil: false
+        }
         cardResult["printingInput"] = cardResult["cardPrintings"][0];
         cardResult["copies"] = 1;
         cardResult["tradeCopies"] = 0;
@@ -57,8 +62,8 @@ export class EditCollectionComponent implements OnInit {
   }
 
   childUpdatePrintingBuffer(index) {
-    this.editArray[index].class = "updateBuffer";
-    console.log(this.editArray[index].class);
+    this.collectionArray[index].class = "updateBuffer";
+    console.log(this.collectionArray[index].class);
   }
 
   childUpdatePrinting(index) {
@@ -67,18 +72,41 @@ export class EditCollectionComponent implements OnInit {
   }
 
   childSuccessfulUpdate(index) {
-    this.editArray[index].class = "updateSuccess";
+    this.collectionArray[index].class = "updateSuccess";
     setTimeout(() => {
-      this.editArray[index].class = "updateDone"
+      this.collectionArray[index].class = "updateDone"
     }, 250);
   }
 
+  childUnsuccessfulUpdate(eventObj) {
+    this.collectionArray[eventObj["index"]].class = "updateUnsuccessful"
+    window.alert(eventObj["message"]);
+  }
+
   deleteCollectionEntry(index) {
-    this.card.deleteCollectionEntry(this.editArray[index].collection.id).subscribe(data => {
+    this.card.deleteCollectionEntry(this.collectionArray[index].id).subscribe(data => {
       if (data['status'] === "Success") {
-        this.editArray.splice(index, 1);
+        this.collectionArray.splice(index, 1);
       }
     })
+  }
+
+  submitPrintingToCollection(index) {
+    let collection = {}
+    for (let key in this.cardArray[index].collection) {
+      collection[key] = this.cardArray[index].collection[key];
+    }
+    console.log(collection)
+    collection["foil"] = collection["foil"] ? collection["printingId"].foil_version : !collection["printingId"].nonFoil_version
+    collection["printingId"] = collection["printingId"].id;
+    this.card.addCardToCollection(collection).subscribe(data => {
+      if (data["status"] === "Success") {
+        this.cardArray.splice(index, 1);
+        this.collectionArray.push(this.prepareForCollectionArray(data["collection"]));
+      } else {
+        window.alert(data["message"]);
+      }
+    });
   }
 
   submitCardsToCollection() {

@@ -95,7 +95,6 @@ router.get("/collection/loggedin", verifyToken, (req, res) => {
         },
         db.set]
       }]
-      
     }]
   }).then(user => {
     res.json(user['collections']);
@@ -124,26 +123,44 @@ router.get("/collection/:id", (req, res) => {
 })
 
 // Add to Collection
-router.post("/collection", (req, res) => {
-  db.user.find({
+router.post("/collection", verifyToken, (req, res) => {
+  db.collection.find({
+    // See if there is already a collection entry that matches printing/foil
     where: {
-      // TODO: Get at User differently
-      id: req.body.userId
-    } 
-  }).then(user => {
-    db.printings.find({
-      where: {
-        id: req.body.printingId
-      }
-    }).then(cardPrinting => {
-      user.addPrintings(cardPrinting, {through: {
-        owned_copies: req.body.owned_copies,
-        trade_copies: req.body.trade_copies
-      }});
-    })
+      userId: req.user.id,
+      printingId: req.body.printingId,
+      foil: req.body.foil
+    }
+  }).then(badCollection => {
+    if (badCollection === null) {
+      req.body.userId = req.user.id;
+      db.collection.create(req.body).then(collection =>{
+        db.collection.find({
+          where: {
+            id: collection.id
+          }, include:  [{
+              model:db.printings,
+              include: [{
+              model:db.card,
+              include: [{
+                  model: db.printings,
+                  as: 'cardPrintings',
+                  include: [db.set]
+                }]
+              },
+              db.set]
+            }]
+        }).then(newCollection => {
+          res.json({status:"Success", collection:newCollection});
+        })
+      })
+    } else {
+      res.json({status:"Fail", message:"You already have that in your collection."})
+    }
   })
 })
 
+// Update a collection entry
 router.put("/collection/:id", verifyToken, (req, res) => {
   db.collection.find({
     where: {
@@ -152,9 +169,22 @@ router.put("/collection/:id", verifyToken, (req, res) => {
     }
   }).then(collection => {
     if (collection !== null) {
-      collection.update(req.body).then(update => {
-        res.json({status:"Success", update:update});
-      });
+      db.collection.find({
+        where: {
+          id: {[op.not]:collection.id},
+          userId: req.user.id,
+          printingId: req.body.hasOwnProperty("printingId") ? req.body.printingId : collection.printingId,
+          foil: req.body.hasOwnProperty("foil") ? req.body.foil : collection.foil
+        }
+      }).then(badCollection => {
+        if (badCollection === null) {
+          collection.update(req.body).then(update => {
+            res.json({status:"Success", update:update});
+          });
+        } else {
+          res.json({status:"Fail", message:"You already have that in your collection"})
+        }
+      })
     } else {
       res.json({status:"Fail", message:"Could not find collection with that id"})
     }
@@ -169,7 +199,7 @@ router.delete("/collection/:id", verifyToken, (req, res) => {
     }
   }).then(collection => {
     if (collection !== null) {
-      collection.delete().then(data => {
+      collection.destroy().then(data => {
         res.json({status:"Success", data:data});
       });
     } else {
