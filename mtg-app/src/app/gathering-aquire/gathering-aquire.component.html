@@ -1,4 +1,23 @@
-<div *ngIf="data && data.length > 0" class="gathering-wrapper">
+<div *ngIf="data" class="gathering-wrapper">
+  <div *ngIf=" searchState.card === true" class="filter-options">
+    <p>Results for: {{ searchState.searchName }}</p>
+    <form (submit)="refineCardSearch()">
+      <select [(ngModel)]="setSelection" name="setRefine">
+        <option value="all">All</option>
+        <option *ngFor="let set of refineAcquire.setOptions" [ngValue]="set">{{ set }}</option>
+      </select>
+      <select [(ngModel)]="foilSelection" name="foilRefine">
+          <option value="all">All</option>
+          <option *ngFor="let foil of refineAcquire.foilOptions" [ngValue]="foil"><span *ngIf="foil === true else falseFoil">Foil</span>
+            <ng-template #falseFoil>Non-foil</ng-template></option>
+        </select>
+        <select [(ngModel)]="cardNumberSelection" name="numberRefine">
+          <option value="all">All</option>
+          <option *ngFor="let number of refineAcquire.cardNumberOptions" [ngValue]="number">{{ number }}</option>
+        </select>
+      <input type="submit" value="Refine" class="search-button">
+    </form>
+  </div>
   <mat-accordion *ngFor="let partner of data">
     <mat-expansion-panel>
       <mat-expansion-panel-header>
@@ -15,7 +34,26 @@
   </mat-accordion>
 </div>
 
-<div *ngIf="Otherdata && Otherdata.length > 0">
+<div *ngIf="Otherdata">
+  <div *ngIf=" searchState.card === true" class="filter-options">
+    <p>Results for: {{ searchState.searchName }}</p>
+    <form (submit)="refineCardSearchProvide()">
+      <select [(ngModel)]="setSelection" name="setRefine">
+        <option value="all">All</option>
+        <option *ngFor="let set of refineProvide.setOptions" [ngValue]="set">{{ set }}</option>
+      </select>
+      <select [(ngModel)]="foilSelection" name="foilRefine">
+          <option value="all">All</option>
+          <option *ngFor="let foil of refineProvide.foilOptions" [ngValue]="foil"><span *ngIf="foil === true else falseFoil">Foil</span>
+            <ng-template #falseFoil>Non-foil</ng-template></option>
+        </select>
+        <select [(ngModel)]="cardNumberSelection" name="numberRefine">
+          <option value="all">All</option>
+          <option *ngFor="let number of refineProvide.cardNumberOptions" [ngValue]="number">{{ number }}</option>
+        </select>
+      <input type="submit" value="Refine" class="search-button">
+    </form>
+  </div>
   <mat-accordion *ngFor="let partner of Otherdata">
     <mat-expansion-panel>
       <mat-expansion-panel-header>

@@ -48,3 +48,51 @@
 .user-btn:hover {
   background-color: #d8d8d8;
 }
+
+select {
+  -webkit-appearance: none;
+  -webkit-border-radius: 0px;
+  appearance: none;
+  border-radius: 0px;
+  height:30px;
+  line-height:30px;
+  background:#f4f4f4;
+  margin-left: 1em;
+  margin-right: 1em;
+  padding: 0 1em;
+  display: inline-block;
+}
+
+p {
+  display: inline-block;
+}
+
+form {
+  display: inline-block;
+}
+
+.filter-options {
+
+}
+
+.filter-options p {
+  padding: 1em;
+}
+
+.search-button {
+  margin-left: 0;
+  background-color: #d8d8d8;
+  width: 4em;
+  font-size: inherit;
+  padding: 0.3em 0.4em;
+  -moz-box-sizing: content-box;
+  -webkit-box-sizing: content-box;
+  box-sizing: content-box;
+  border: 1px solid #000000;
+  height: 2em;
+}
+
+.search-button:active, .search-button:focus {
+  background-color: rgb(175, 175, 175);
+  outline: none;
+}

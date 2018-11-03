@@ -1,11 +1,11 @@
-import { Component, OnInit, Input, OnChanges } from '@angular/core';
+import { Component, OnInit, Input} from '@angular/core';
 
 @Component({
   selector: 'app-gathering-table',
   templateUrl: './gathering-table.component.html',
   styleUrls: ['./gathering-table.component.css']
 })
-export class GatheringTableComponent implements OnInit, OnChanges {
+export class GatheringTableComponent implements OnInit {
   @Input() data;
   @Input() Otherdata;
   dataSource = [];
@@ -19,9 +19,4 @@ export class GatheringTableComponent implements OnInit, OnChanges {
     this.dataSource = this.data;
     this.dataSource2 = this.Otherdata;
   }
-  ngOnChanges(changes) {
-    // console.log('CHANGES');
-    // console.log(changes);
-  }
-
 }
