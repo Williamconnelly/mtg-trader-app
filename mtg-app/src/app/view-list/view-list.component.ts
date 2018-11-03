@@ -9,7 +9,7 @@ import { AuthService} from '../auth.service';
   styleUrls: ['./view-list.component.css']
 })
 export class ViewListComponent implements OnInit {
-  cardArray = [];
+  wishlistArray = [];
 
   constructor(private card: CardService, private _route: ActivatedRoute, private _authService: AuthService) { }
 
@@ -43,18 +43,18 @@ export class ViewListComponent implements OnInit {
       }
       if (!wishlist.hasOwnProperty('message')) {
         for (let i = 0; i < wishlist.length; i++) {
-          if (wishlist[i].wishlist.pref_printing === null) {
-            wishlist[i]['url'] = wishlist[i].cardPrintings[0].img_url;
+          if (wishlist[i].pref_printing === null) {
+            wishlist[i]['url'] = wishlist[i].card.cardPrintings[0].img_url;
           } else {
-            for (let x=0; x<wishlist[i].cardPrintings.length; x++) {
-              if (wishlist[i].wishlist.pref_printing === wishlist[i].cardPrintings[x].id) {
-                wishlist[i].url = wishlist[i].cardPrintings[x].img_url;
+            for (let x=0; x<wishlist[i].card.cardPrintings.length; x++) {
+              if (wishlist[i].pref_printing === wishlist[i].card.cardPrintings[x].id) {
+                wishlist[i].url = wishlist[i].card.cardPrintings[x].img_url;
                 break;
               }
             }
           }
         }
-        this.cardArray = wishlist;
+        this.wishlistArray = wishlist;
       }
     });
   }
