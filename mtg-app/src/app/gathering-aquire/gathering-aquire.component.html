@@ -1,6 +1,6 @@
 <div *ngIf="data" class="gathering-wrapper">
-  <div *ngIf=" searchState.card === true" class="filter-options">
-    <p>Results for: {{ searchState.searchName }}</p>
+  <div class="filter-options">
+    <p *ngIf="searchState.card === true || searchState.user === true">Results for: {{ searchState.searchName }}</p>
     <form (submit)="refineCardSearch()">
       <select [(ngModel)]="setSelection" name="setRefine">
         <option value="all">All</option>
@@ -35,8 +35,8 @@
 </div>
 
 <div *ngIf="Otherdata">
-  <div *ngIf=" searchState.card === true" class="filter-options">
-    <p>Results for: {{ searchState.searchName }}</p>
+  <div class="filter-options">
+    <p *ngIf="searchState.card === true || searchState.user === true">Results for: {{ searchState.searchName }}</p>
     <form (submit)="refineCardSearchProvide()">
       <select [(ngModel)]="setSelection" name="setRefine">
         <option value="all">All</option>
