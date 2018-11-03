@@ -10,6 +10,9 @@ export class CardService {
   addCardsToCollection(printings) {
     return this.http.post<any>("http://localhost:3000/user/collection/batch", {printings:printings});
   }
+  addCardToCollection(collectionObject) {
+    return this.http.post<any>("http://localhost:3000/user/collection/", collectionObject);
+  }
   editCardsInCollection(printings) {
     return this.http.put<any>("http://localhost:3000/user/collection/batch", {printings:printings});
   }
@@ -21,6 +24,9 @@ export class CardService {
   }
   addCardsToWishlist(cards) {
     return this.http.post<any>("http://localhost:3000/user/wishlist/batch", {cards:cards});
+  }
+  addCardToWishlist(wishlistObject) {
+    return this.http.post<any>("http://localhost:3000/user/wishlist/", wishlistObject);
   }
   editCardsInWishlist(cards) {
     return this.http.put<any>("http://localhost:3000/user/wishlist/batch", {cards:cards});

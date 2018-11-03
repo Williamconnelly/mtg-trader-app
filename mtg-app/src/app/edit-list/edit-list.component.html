@@ -7,26 +7,30 @@
   <h1>Wishlist</h1>
   <hr>
   <div>
-    <div *ngFor="let card of editArray; let i = index;" style="display:inline-block;padding:5px;" class="{{card.class}}">
-      <img *ngIf="card.wishlist.pref_printing === 'none'" src="{{ card.url }}" alt="">
-      <img *ngIf="card.wishlist.pref_printing !== 'none'" src="{{ card.wishlist.pref_printing.img_url }}" alt="">
-      <p>{{ card.name }}</p>
-      <select [(ngModel)]="card.wishlist.pref_printing" name="" id="">
+    <div *ngFor="let wishlist of wishlistArray; let i = index;" style="display:inline-block;padding:5px;" class="{{wishlist.class}}">
+      <img *ngIf="wishlist.pref_printing === 'none'" src="{{ wishlist.url }}" alt="">
+      <img *ngIf="wishlist.pref_printing !== 'none'" src="{{ wishlist.pref_printing.img_url }}" alt="">
+      <p>{{ wishlist.card.name }}</p>
+      <select [(ngModel)]="wishlist.pref_printing" name="" id="">
         <option value="none">No Pref</option>
-        <option *ngFor="let printing of card.cardPrintings" [ngValue]="printing">{{ printing.set.title }}</option>
+        <option *ngFor="let printing of wishlist.card.cardPrintings" [ngValue]="printing">{{ printing.set.title }}</option>
       </select>
       <app-edit-card 
       [index]="i"
-      [id]="card.wishlist.id"
-      [number_wanted]="card.wishlist.number_wanted"
-      [printing]="card.wishlist.pref_printing"
-      [foil]="card.wishlist.pref_foil"
+      [id]="wishlist.id"
+      [number_wanted]="wishlist.number_wanted"
+      [printing]="wishlist.pref_printing"
+      [foil]="wishlist.pref_foil"
+      [revertIndicator]="wishlist.revertIndicator"
       (updateBufferEmitter)="childUpdateCardBuffer($event)"
       (updateEmitter)="childUpdateCard($event)"
       (successfulUpdateEmitter)="childSuccessfulUpdate($event)"
+      (unsuccessfulUpdateEmitter)="childUnsuccessfulUpdate($event)"
       ></app-edit-card>
-      <label for="">Foil:</label>
-      <input type="checkbox" [(ngModel)]="card.wishlist.pref_foil"><br>
+      <div *ngIf="wishlist.pref_printing === 'none' || (wishlist.pref_printing.foil_version && wishlist.pref_printing.nonFoil_version)">
+        <label for="">Foil:</label>
+        <input type="checkbox" [(ngModel)]="wishlist.pref_foil"><br>
+      </div>
       <button (click)="deleteWishlistEntry(i)">Delete</button>
     </div>
   </div>
@@ -36,27 +40,26 @@
   <div>
     <div *ngFor="let card of cardArray; let cardIdx = index" class="card-wrapper">
       <div class="card-display-new">
-        <img *ngIf="card.preferredPrinting === 'none'" src="{{ card.url }}" class="card-image">
-        <img *ngIf="card.preferredPrinting !== 'none'" src="{{ card.preferredPrinting.img_url }}" class="card-image">
+        <img *ngIf="card.wishlist.pref_printing === 'none'" src="{{ card.url }}" class="card-image">
+        <img *ngIf="card.wishlist.pref_printing !== 'none'" src="{{ card.wishlist.pref_printing.img_url }}" class="card-image">
         <p class="card-name">{{ card.name }}</p>
         <label for="card-printing" class="printing-display">Preferred Printing</label>
         <div class="card-printing">
-          <select [(ngModel)]="card.preferredPrinting" name="" id="">
+          <select [(ngModel)]="card.wishlist.pref_printing" name="" id="">
             <option value="none">No Pref</option>
-            <option *ngFor="let printing of card.cardPrintings; let setIdx = index" [ngValue]="printing">{{ printing.set.code }}</option>
+            <option *ngFor="let printing of card.cardPrintings; let setIdx = index" [ngValue]="printing">{{ printing.set.title }}</option>
           </select>
         </div>
         <label for="card-desire" class="desire-display">Desired Copies:</label>
         <div class="card-desire">
-          <input type="number" step="1" [(ngModel)]="card.desiredCopies" name="">
+          <input type="number" step="1" [(ngModel)]="card.wishlist.number_wanted" name="">
         </div>
-        <label for="card-foil" class="foil-display" *ngIf="card.preferredPrinting === 'none' || (card.preferredPrinting.foil_version && card.preferredPrinting.nonFoil_version)">Foil</label>
-        <div class="card-foil" *ngIf="card.preferredPrinting === 'none' || (card.preferredPrinting.foil_version && card.preferredPrinting.nonFoil_version)">
-          <input type="checkbox" [(ngModel)]="card.foil">
+        <label for="card-foil" class="foil-display" *ngIf="card.wishlist.pref_printing === 'none' || (card.wishlist.pref_printing.foil_version && card.wishlist.pref_printing.nonFoil_version)">Foil</label>
+        <div class="card-foil" *ngIf="card.wishlist.pref_printing === 'none' || (card.wishlist.pref_printing.foil_version && card.wishlist.pref_printing.nonFoil_version)">
+          <input type="checkbox" [(ngModel)]="card.wishlist.pref_foil">
         </div>
-        <button (click)="logCardArrayAtIndex(cardIdx)">C LOG</button>
+        <button (click)="submitCardToWishlist(cardIdx)">Submit</button>
       </div>
     </div>
   </div>
-  <button (click)="submitCardsToWishlist()" class="add-card-button">Submit to Wishlist</button>
 </div>
