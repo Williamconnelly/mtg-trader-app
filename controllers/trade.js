@@ -26,7 +26,7 @@ router.get("/gathering/acquire", verifyToken, (req, res) => {
     ]
   }).then(result => {
     // Parter Container
-    tradePartners = {};
+    let tradePartners = {};
     // For each card in the wishlist, format the data into different user objects
     for (wishCard in result) {
       let currentUserId = result[wishCard]['card.cardPrintings.users.id'];
@@ -73,7 +73,7 @@ router.get("/gathering/provide", verifyToken, (req, res) => {
       }
     },
     include: [
-      {model: db.printings, attributes: {exclude: ['createdAt','updatedAt','setId','can_be_foil']}, include: [
+      {model: db.printings, attributes: {exclude: ['createdAt','updatedAt','setId','foil_version', 'nonFoil_version']}, include: [
         {model: db.card, attributes: {exclude: ['createdAt','updatedAt']}, include: [
           {model: db.user, required: true, where: {id: {[op.not]: req.user.id}}, 
           attributes: ['email','username']}
@@ -82,7 +82,7 @@ router.get("/gathering/provide", verifyToken, (req, res) => {
       ]}
     ]
   }).then(result => {
-    tradePartners = {};
+    let tradePartners = {};
     for (userCard in result) {
       let currentUserId = result[userCard]['printing.card.users.id'];
       let currentUsername = result[userCard]['printing.card.users.username'];
@@ -114,5 +114,199 @@ router.get("/gathering/provide", verifyToken, (req, res) => {
     });
   })
 })
+
+router.get("/gathering/acquire/card/:name", verifyToken, (req, res) => {
+  db.collection.findAll({
+    raw: true,
+    attributes: ['userId','owned_copies','trade_copies','foil','card_condition'],
+    where: {
+      userId: {[op.not]: req.user.id},
+      trade_copies: {[op.gt]:0}
+    }, include: [
+      {model: db.printings, required: true, attributes: {exclude: ['createdAt','updatedAt','setId','foil_version', 'nonFoil_version']}, include: [
+        {model: db.card, required: true, attributes: {exclude: ['createdAt','updatedAt']}, where: {name: req.params.name}},
+        {model: db.set, attributes: ['code','title']}
+      ]},
+      {model: db.user}
+    ]
+  }).then(result => {
+    let acquirePartners = {};
+    for (card in result) {
+      let currentUserId = result[card]['user.id'];
+      let currentUsername = result[card]['user.username'];
+      let userCollection = {
+        "card.cardPrintings.set.code": result[card]['printing.set.code'],
+        "card.cardPrintings.set.title": result[card]['printing.set.title'],
+        "card.cardPrintings.id": result[card]['printing.id'],
+        "card.name": result[card]['printing.card.name'],
+        "card.cardPrintings.users.collection.foil": result[card]['foil'],
+        "card.cardPrintings.users.collection.owned_copies": result[card]['owned_copies'],
+        "card.cardPrintings.users.collection.trade_copies": result[card]['trade_copies']
+      }
+      if (acquirePartners.hasOwnProperty(currentUserId)) {
+        acquirePartners[currentUserId].cards.push(userCollection);
+      } else {
+        acquirePartners[currentUserId] = {
+          username: currentUsername,
+          userId: currentUserId,
+          cards: [userCollection]
+        }
+      }
+    }
+    const acquireArray = Object.values(acquirePartners).sort((a,b) => {
+      return b.cards.length - a.cards.length}
+    );
+    res.send(acquireArray);
+  }).catch(err => {
+    res.json({
+      error: true,
+      message: "Could not find card for ACQUIRE"
+    });
+  })
+})
+
+router.get("/gathering/provide/card/:name", verifyToken, (req, res) => {
+  db.wishlist.findAll({
+    attributes: {exclude: ['createdAt','updatedAt']},
+    where: {
+      userId: {[op.not]: req.user.id}
+    }, include: [
+      {model: db.card, where: {name: req.params.name}, include: [
+        {model: db.set}
+      ]},
+      {model: db.user, required: true, attributes: {exclude: ['password','createdAt','updatedAt']}}
+    ]
+  }).then(result => {
+    let providePartners = {};
+    for (card in result) {
+      let currentUser = result[card].user;
+      let prefInfo = {};
+      if (result[card].pref_printing !== null) {
+        prefInfo.prefId = result[card].pref_printing;
+        for (set in result[card].card.sets) {
+          if (result[card].card.sets[set].printings.id === result[card].pref_printing) {
+            prefInfo.prefTitle = result[card].card.sets[set].title
+          }
+        }
+      } else {
+        prefInfo.prefId = result[card].card.sets[0].printings.id;
+        prefInfo.prefTitle = result[card].card.sets[0].title
+      }
+      let userWishlist = {
+        "printing.id": prefInfo.prefId,
+        "printing.card.name": result[card].card.name,
+        "printing.card.users.wishlist.number_wanted": result[card].number_wanted,
+        "printing.card.users.wishlist.pref_printing": result[card].pref_printing,
+        "printing.set.title": prefInfo.prefTitle,
+        "printing.card.users.wishlist.pref_foil": result[card].pref_foil
+      }
+      if (providePartners.hasOwnProperty(currentUser.id)) {
+        providePartners[currentUser.id].cards.push(userWishlist)
+      } else {
+        providePartners[currentUser.id] = {
+          username: currentUser.username,
+          userId: currentUser.id,
+          cards: [userWishlist]
+        }
+      }
+    }
+    const provideArray = Object.values(providePartners).sort((a,b) => {
+      return b.cards.length - a.cards.length}
+    );
+    res.send(provideArray);
+  })
+})
+
+router.get("/gathering/acquire/user/:name", verifyToken, (req, res) => {
+  db.collection.findAll({
+    attributes: ['userId','owned_copies','trade_copies','foil','card_condition'],
+    where: {
+      trade_copies: {[op.gt]:0}
+    }, include: [
+      {model: db.printings, required: true, attributes: {exclude: ['createdAt','updatedAt','setId','foil_version','nonFoil_version']}, include: [
+        {model: db.card, required: true, attributes: {exclude: ['createdAt','updatedAt']}},
+        {model: db.set, attributes: ['code','title']}
+      ]},
+      {model: db.user, required: true, where: {username: req.params.name}}
+    ]
+  }).then(result => {
+    let acquirePartners = {};
+    for (card in result) {
+      let currentUser = result[card].user;
+      let userCollection = {
+        "card.cardPrintings.set.code": result[card].printing.set.code,
+        "card.cardPrintings.set.title": result[card].printing.set.title,
+        "card.cardPrintings.id": result[card].printing.id,
+        "card.name": result[card].printing.card.name,
+        "card.cardPrintings.users.collection.foil": result[card].foil,
+        "card.cardPrintings.users.collection.owned_copies": result[card].owned_copies,
+        "card.cardPrintings.users.collection.trade_copies": result[card].trade_copies
+      }
+      if (acquirePartners.hasOwnProperty(currentUser.id)) {
+        acquirePartners[currentUser.id].cards.push(userCollection);
+      } else {
+        acquirePartners[currentUser.id] = {
+          username: currentUser.username,
+          userId: currentUser.id,
+          cards: [userCollection]
+        }
+      }
+    }
+    const acquireArray = Object.values(acquirePartners).sort((a,b) => {
+      return b.cards.length - a.cards.length}
+    );
+    res.send(acquireArray);
+  })
+});
+
+router.get("/gathering/provide/user/:name", verifyToken, (req, res) => {
+  db.wishlist.findAll({
+    attributes: {exclude: ['createdAt','updatedAt']},
+    include: [
+      {model: db.card, include: [
+        {model: db.set}
+      ]},
+      {model: db.user, where: {username: req.params.name}, required: true, attributes: {exclude: ['password','createdAt','updatedAt']}}
+    ]
+  }).then(result => {
+    let providePartners = {};
+    for (card in result) {
+      let currentUser = result[card].user;
+      let prefInfo = {};
+      if (result[card].pref_printing !== null) {
+        prefInfo.prefId = result[card].pref_printing;
+        for (set in result[card].card.sets) {
+          if (result[card].card.sets[set].printings.id === result[card].pref_printing) {
+            prefInfo.prefTitle = result[card].card.sets[set].title
+          }
+        }
+      } else {
+        prefInfo.prefId = result[card].card.sets[0].printings.id;
+        prefInfo.prefTitle = result[card].card.sets[0].title
+      }
+      let userWishlist = {
+        "printing.id": prefInfo.prefId,
+        "printing.card.name": result[card].card.name,
+        "printing.card.users.wishlist.number_wanted": result[card].number_wanted,
+        "printing.card.users.wishlist.pref_printing": result[card].pref_printing,
+        "printing.set.title": prefInfo.prefTitle,
+        "printing.card.users.wishlist.pref_foil": result[card].pref_foil
+      }
+      if (providePartners.hasOwnProperty(currentUser.id)) {
+        providePartners[currentUser.id].cards.push(userWishlist)
+      } else {
+        providePartners[currentUser.id] = {
+          username: currentUser.username,
+          userId: currentUser.id,
+          cards: [userWishlist]
+        }
+      }
+    }
+    const provideArray = Object.values(providePartners).sort((a,b) => {
+      return b.cards.length - a.cards.length}
+    );
+    res.send(provideArray);
+  })
+});
 
 module.exports = router;

@@ -5,6 +5,7 @@
   font-family: sans-serif;
   border-width: 0;
   margin-left: 1em;
+  display: inline-block;
 }
 
 .search-field, .search-button {
@@ -32,7 +33,22 @@
   background-color: #d8d8d8;
   width: 4em;
 }
+
 .search-button:active, .search-button:focus {
   background-color: rgb(175, 175, 175);
   outline: none;
+}
+
+.reset {
+  font-size: inherit;
+  padding: 0.3em 0.4em;
+  -moz-box-sizing: content-box;
+  -webkit-box-sizing: content-box;
+  box-sizing: content-box;
+  border: 1px solid #000000;
+  background-color: #fff;
+  height: 2em;
+  background-color: #d8d8d8;
+  margin-left: 1em;
+  display: inline-block;
 }

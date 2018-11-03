@@ -7,22 +7,29 @@ import { HttpClient } from '@angular/common/http';
 export class GatheringService {
   private _gatheringWantUrl = 'http://localhost:3000/trade/gathering/acquire';
   private _gatheringProvideUrl = 'http://localhost:3000/trade/gathering/provide';
-  private _gatheringCardURL = 'http://localhost:3000/trade/gathering/card';
-  private _gatheringUserURL = 'http://localhost:3000/trade/gathering/user';
+  private _acquireCardURL = `http://localhost:3000/trade/gathering/acquire/card/`;
+  private _provideCardURL = `http://localhost:3000/trade/gathering/provide/card/`;
+  private _acquireUserURL = `http://localhost:3000/trade/gathering/acquire/user/`;
+  private _provideUserURL = `http://localhost:3000/trade/gathering/provide/user/`;
   constructor(private http: HttpClient) { }
 
-  getGatheringWant() {
+  getGatheringAcquire() {
     return this.http.get<any>(this._gatheringWantUrl);
   }
-
   getGatheringProvide() {
     return this.http.get<any>(this._gatheringProvideUrl);
   }
-  searchCard() {
-    return this.http.get<any>(this._gatheringCardURL);
+  searchAcquireCard(name) {
+    return this.http.get<any>(`${this._acquireCardURL}${name}`);
   }
-  searchUser() {
-    return this.http.get<any>(this._gatheringUserURL);
+  searchProvideCard(name) {
+    return this.http.get<any>(`${this._provideCardURL}${name}`);
+  }
+  searchAcquireUser(name) {
+    return this.http.get<any>(`${this._acquireUserURL}${name}`);
+  }
+  searchProvideUser(name) {
+    return this.http.get<any>(`${this._provideUserURL}${name}`);
   }
 }
 

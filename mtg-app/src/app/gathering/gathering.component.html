@@ -3,18 +3,52 @@
   </ng-container> -->
 
   <div>
-    <form (submit)="submitCardSearch()" class="search-form">
+    <form (submit)="submitCardSearch(cardSearch)" class="search-form">
       <input type="text" [(ngModel)]="cardSearch" name="cardSearch" class="search-field" placeholder="Find Card...">
       <input type="submit" value="Search" class="search-button">
     </form>
+      <button *ngIf="searchState.card === true" (click)="reset()" class="reset">Reset</button>
   </div>
   <div>
-    <form (submit)="submitUserSearch()" class="search-form">
+    <form (submit)="submitUserSearch(userSearch)" class="search-form">
       <input type="text" [(ngModel)]="userSearch" name="userSearch" class="search-field" placeholder="Find User...">
       <input type="submit" value="Search" class="search-button">
     </form>
+    <button *ngIf="searchState.user === true" (click)="reset()" class="reset">Reset</button>
   </div>
+  <!-- <div *ngIf="searchData.card === true" class="filter-options">
+    <p>Results for: {{ searchData.searchName }}</p>
+    <form (submit)="refineCardSearch()">
+      <select [(ngModel)]="setSelection" name="setRefine">
+        <option value="all">All</option>
+        <option *ngFor="let set of setOptions" [ngValue]="set">{{ set }}</option>
+      </select>
+      <select [(ngModel)]="foilSelection" name="foilRefine">
+          <option value="all">All</option>
+          <option *ngFor="let foil of foilOptions" [ngValue]="foil"><span *ngIf="foil === true else falseFoil">Foil</span>
+            <ng-template #falseFoil>Non-foil</ng-template></option>
+        </select>
+        <select [(ngModel)]="cardNumberSelection" name="numberRefine">
+          <option value="all">All</option>
+          <option *ngFor="let number of cardNumberOptions" [ngValue]="number">{{ number }}</option>
+        </select>
+      <input type="submit" value="Refine" class="search-button">
+    </form>
+  </div> -->
+  <!-- <div>
+    <button *ngIf="searchBool.card === true || searchBool.user === true" (click)="reset()" class="reset">Reset</button>
+  </div> -->
   <mat-tab-group>
-    <mat-tab label="Acquire"><app-gathering-aquire [data]="gathering" ></app-gathering-aquire></mat-tab>
-    <mat-tab label="Provide"><app-gathering-aquire [Otherdata]="provide" ></app-gathering-aquire></mat-tab>
+    <mat-tab label="Acquire">
+      <app-gathering-aquire
+      [data]="acquire" [searchState]="searchState" [refineAcquire]="refineAcquire">
+    </app-gathering-aquire>
+  </mat-tab>
+    <mat-tab label="Provide">
+      <app-gathering-aquire
+      [Otherdata]="provide"
+      [searchState]="searchState"
+      [refineProvide]="refineProvide">
+    </app-gathering-aquire>
+  </mat-tab>
   </mat-tab-group>

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input} from '@angular/core';
 
 @Component({
   selector: 'app-gathering-table',
@@ -19,5 +19,4 @@ export class GatheringTableComponent implements OnInit {
     this.dataSource = this.data;
     this.dataSource2 = this.Otherdata;
   }
-
 }
