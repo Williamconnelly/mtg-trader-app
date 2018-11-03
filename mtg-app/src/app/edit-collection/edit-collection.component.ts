@@ -74,7 +74,11 @@ export class EditCollectionComponent implements OnInit {
   }
 
   deleteCollectionEntry(index) {
-    console.log(index);
+    this.card.deleteCollectionEntry(this.editArray[index].collection.id).subscribe(data => {
+      if (data['status'] === "Success") {
+        this.editArray.splice(index, 1);
+      }
+    })
   }
 
   submitCardsToCollection() {

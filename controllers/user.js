@@ -82,8 +82,10 @@ router.get("/collection/loggedin", verifyToken, (req, res) => {
     where: {
       id: req.user.id
     }, include:  [{
-      model: db.printings,
+      model: db.collection,
       include: [{
+        model:db.printings,
+        include: [{
         model:db.card,
         include: [{
             model: db.printings,
@@ -92,11 +94,15 @@ router.get("/collection/loggedin", verifyToken, (req, res) => {
           }]
         },
         db.set]
+      }]
+      
     }]
   }).then(user => {
-    res.json(user['printings']);
+    res.json(user['collections']);
   })
 })
+
+
 
 // Get User's Collection
 router.get("/collection/:id", (req, res) => {
@@ -257,16 +263,19 @@ router.get("/wishlist/loggedin", verifyToken, (req, res) => {
   db.user.find({
     where: {
       id: req.user.id
-    }, include:  [{
-      model: db.card,
+    }, include: [{
+      model: db.wishlist,
       include: [{
-            model: db.printings,
-            as: 'cardPrintings',
-            include: [db.set]
+        model: db.card,
+        include: [{
+          model: db.printings,
+          as: 'cardPrintings',
+          include: [db.set]
         }]
+      }]
     }]
   }).then(user => {
-    res.json(user['cards']);
+    res.json(user["wishlists"]);
   })
 })
 
@@ -301,31 +310,43 @@ router.get("/wishlist/:id", (req, res) => {
 })
 
 // Add to Wishlist
-router.post("/wishlist", (req, res) => {
-  db.user.find({
+router.post("/wishlist", verifyToken, (req, res) => {
+  db.wishlist.find({
+    // See if there is already a wishlist for this card/printing/foil setting.
     where: {
-      // TODO: Get at User differently
-      id: req.body.userId
+      userId: req.user.id,
+      cardId: req.body.cardId,
+      pref_foil: req.body.pref_foil,
+      pref_printing: req.body.pref_printing
     }
-  }).then(user => {
-    db.card.find({
-      where: {
-        id: req.body.cardId
-      }
-    }).then(card => {
-      user.addCard(card, {through: {
-        number_wanted: req.body.number_wanted,
-        pref_printing: req.body.pref_printing
-      }})
-    }).catch(err => {
-      res.json({
-        error: true,
-        message: "Could not add to wishlist"
-      });
-    })
+  }).then(badWishlist => {
+    console.log(badWishlist);
+    console.log("----------------------")
+    if (badWishlist === null) {
+      console.log("badWishlist is null");
+      req.body.userId = req.user.id;
+      db.wishlist.create(req.body).then(wishlist => {
+        db.wishlist.find({
+          where: wishlist.id,
+          include: [{
+            model: db.card,
+            include: [{
+              model: db.printings,
+              as: 'cardPrintings',
+              include: [db.set]
+            }]
+          }]
+        }).then(newWishlist => {
+          res.json({status:"Success", wishlist:newWishlist});
+        })
+      })
+    } else {
+      res.json({status:"Fail", message:"You already have this on your wishlist"})
+    }
   })
 })
 
+// Update a wishlist entry
 router.put("/wishlist/:id", verifyToken, (req, res) => {
   db.wishlist.find({
     where: {
@@ -334,18 +355,41 @@ router.put("/wishlist/:id", verifyToken, (req, res) => {
     }
   }).then(wishlist => {
     if (wishlist !== null) {
-      wishlist.update(req.body).then(update => {
-        res.json({
-          status: "Success",
-          update: update
-        })
-      });
+      if (req.body.hasOwnProperty("pref_printing") || req.body.hasOwnProperty("pref_foil")) {
+        db.wishlist.find({
+          where: {
+            id: {[op.not]:req.params.id},
+            userId: req.user.id,
+            pref_printing: req.body.hasOwnProperty("pref_printing") ? req.body.pref_printing : wishlist.pref_printing,
+            pref_foil: req.body.hasOwnProperty("pref_foil") ? req.body.pref_foil : wishlist.pref_foil
+          }
+        }).then(badWishlist => {
+          if (badWishlist === null) {
+            wishlist.update(req.body).then(update => {
+              res.json({
+                status: "Success",
+                update: update
+              })
+            })
+          } else {
+            res.json({status:"Fail", message:"You already have that on your wishlist"});
+          }
+        });
+      } else {
+        wishlist.update(req.body).then(update => {
+          res.json({
+            status: "Success",
+            update: update
+          })
+        });
+      }
     } else {
       res.json({status: "Fail", message:"Could not find wishlist with that id"});
     }
   })
 });
 
+// Delete a wishlist entry
 router.delete("/wishlist/:id", verifyToken, (req, res) => {
   db.wishlist.find({
     where: {

@@ -18,10 +18,12 @@ export class EditCardComponent implements OnInit {
   @Input() printing;
   @Input() foil;
   @Input() card;
+  @Input() revertIndicator;
 
   @Output() updateBufferEmitter = new EventEmitter();
   @Output() updateEmitter = new EventEmitter();
   @Output() successfulUpdateEmitter = new EventEmitter();
+  @Output() unsuccessfulUpdateEmitter = new EventEmitter();
 
   constructor(private _card : CardService) { }
 
@@ -39,7 +41,9 @@ export class EditCardComponent implements OnInit {
   }
 
   ngOnChanges(changes) {
-    if ((changes.hasOwnProperty('printing') && !changes.printing.firstChange) || changes.hasOwnProperty('foil') && !changes.foil.firstChange) {
+    // Trigger updateCardBuffer when there are changes to printing or foil but NO changes to revertIndicator
+    if (((changes.hasOwnProperty('printing') && !changes.printing.firstChange) || changes.hasOwnProperty('foil') && !changes.foil.firstChange) && !changes.hasOwnProperty('revertIndicator')) {
+      console.log(changes);
       this.updateCardBuffer();
     }
   }
@@ -99,12 +103,12 @@ export class EditCardComponent implements OnInit {
     let updateObject = {};
     if (this.number_wanted !== undefined) {
       updateObject['number_wanted'] = this.number_wanted;
-      updateObject['pref_foil'] = (this.printing === "none") ? this.foil : (this.foil) ? (this.printing.foil_version) : (this.printing.nonFoil_version)
+      updateObject['pref_foil'] = (this.printing === "none") ? this.foil : (this.foil) ? (this.printing.foil_version) : (!this.printing.nonFoil_version)
       updateObject['pref_printing'] = (this.printing === "none") ? null : this.printing.id
     } else {
       updateObject['owned_copies'] = this.owned_copies;
       updateObject['trade_copies'] = this.trade_copies;
-      updateObject['foil'] = this.foil ? this.printing.foil_version : this.printing.nonFoil_version
+      updateObject['foil'] = this.foil ? this.printing.foil_version : !this.printing.nonFoil_version
       updateObject['printingId'] = this.printing.id;
     }
     for (let key in updateObject) {
@@ -123,7 +127,7 @@ export class EditCardComponent implements OnInit {
           this.successfulUpdateEmitter.emit(this.index);
         } else {
           // Unsuccessful API update
-          console.log(data["message"]);
+          this.unsuccessfulUpdateEmitter.emit({index: this.index, dbVersion:this.dbVersion, message:data["message"]});
         }
       });
       this.updateEmitter.emit(this.index);
