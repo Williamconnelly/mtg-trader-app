@@ -7,50 +7,29 @@
   <h1>Wishlist</h1>
   <hr>
   <div>
-    <div *ngFor="let card of editArray">
+    <div *ngFor="let card of editArray; let i = index;" style="display:inline-block;padding:5px;" class="{{card.class}}">
       <img *ngIf="card.wishlist.pref_printing === 'none'" src="{{ card.url }}" alt="">
       <img *ngIf="card.wishlist.pref_printing !== 'none'" src="{{ card.wishlist.pref_printing.img_url }}" alt="">
       <p>{{ card.name }}</p>
       <select [(ngModel)]="card.wishlist.pref_printing" name="" id="">
         <option value="none">No Pref</option>
-        <option *ngFor="let printing of card.cardPrintings" [ngValue]="printing">{{ printing.set.code }}</option>
+        <option *ngFor="let printing of card.cardPrintings" [ngValue]="printing">{{ printing.set.title }}</option>
       </select>
-      <app-edit-card
-      [card]="card"
+      <app-edit-card 
+      [index]="i"
+      [id]="card.wishlist.id"
       [number_wanted]="card.wishlist.number_wanted"
-      [pref_printing]="card.wishlist.pref_printing"
+      [printing]="card.wishlist.pref_printing"
+      [foil]="card.wishlist.pref_foil"
+      (updateBufferEmitter)="childUpdateCardBuffer($event)"
+      (updateEmitter)="childUpdateCard($event)"
+      (successfulUpdateEmitter)="childSuccessfulUpdate($event)"
       ></app-edit-card>
+      <label for="">Foil:</label>
+      <input type="checkbox" [(ngModel)]="card.wishlist.pref_foil"><br>
+      <button (click)="deleteWishlistEntry(i)">Delete</button>
     </div>
   </div>
-  <!-- OLD EDIT LIST -->
-  <!-- <div>
-    <div *ngFor="let card of editArray; let cardIdx = index" class="card-wrapper">
-      <div class="card-display">
-        <img *ngIf="card.wishlist.pref_printing === 'none'" src="{{ card.url }}" class="card-image">
-        <img *ngIf="card.preferredPrinting !== 'none'" src="{{ card.wishlist.pref_printing.img_url }}" class="card-image">
-        <p class="card-name">{{ card.name }}</p>
-        <label for="" class="printing-display">Preferred Printing: </label>
-        <div class="card-printing">
-          <select [(ngModel)]="card.wishlist.pref_printing" name="" id="">
-            <option value="none">No Pref</option>
-            <option *ngFor="let printing of card.cardPrintings" [ngValue]="printing">{{ printing.set.code }}</option>
-          </select>
-        </div>
-        <label for="" class="desire-display">Desired Copies: </label>
-        <div class="card-desire">
-          <input type="number" step="1" [(ngModel)]="card.wishlist.number_wanted" name="">
-        </div>
-        <label for="" class="remove-display">Remove</label>
-        <div class="card-remove">
-          <input type="checkbox" [(ngModel)]="card.markedForDeletion">
-        </div>
-        <label for="card-foil" class="foil-display" *ngIf="card.wishlist.pref_printing === 'none' || card.wishlist.pref_printing.can_be_foil">Foil</label>
-        <div class="card-foil" *ngIf="card.wishlist.pref_printing === 'none' || card.wishlist.pref_printing.can_be_foil">
-          <input type="checkbox" [(ngModel)]="card.wishlist.pref_foil">
-        </div>
-      </div>
-    </div>
-  </div> -->
   <hr>
   <h1>New Cards</h1>
   <hr>
@@ -71,8 +50,8 @@
         <div class="card-desire">
           <input type="number" step="1" [(ngModel)]="card.desiredCopies" name="">
         </div>
-        <label for="card-foil" class="foil-display" *ngIf="card.preferredPrinting === 'none' || card.preferredPrinting.can_be_foil">Foil</label>
-        <div class="card-foil" *ngIf="card.preferredPrinting === 'none' || card.preferredPrinting.can_be_foil">
+        <label for="card-foil" class="foil-display" *ngIf="card.preferredPrinting === 'none' || (card.preferredPrinting.foil_version && card.preferredPrinting.nonFoil_version)">Foil</label>
+        <div class="card-foil" *ngIf="card.preferredPrinting === 'none' || (card.preferredPrinting.foil_version && card.preferredPrinting.nonFoil_version)">
           <input type="checkbox" [(ngModel)]="card.foil">
         </div>
         <button (click)="logCardArrayAtIndex(cardIdx)">C LOG</button>

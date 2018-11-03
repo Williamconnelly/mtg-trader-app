@@ -7,34 +7,26 @@
   <h1>Collection</h1>
   <hr>
   <div>
-    <div *ngFor="let printing of editArray; let cardIdx = index" class="card-wrapper">
-      <div class="card-display">
-        <img src="{{ printing.printingInput.img_url }}" class="card-image">
-        <p class="card-name">{{ printing.card.name }}</p>
-        <label for="card-set" class="set-display">Card Set: </label>
-        <div class="card-set">
-          <select [(ngModel)]="printing.printingInput" name="card-set" id="">
-            <option *ngFor="let subPrinting of printing.card.cardPrintings" [ngValue]="subPrinting">{{ subPrinting.set.code }}</option>
-          </select>
-        </div>
-        <label for="card-owned" class="owned-display">Owned: </label>
-        <div class="card-owned">
-          <input type="number" step="1" [(ngModel)]="printing.collection.owned_copies" name="card-owned">
-        </div>
-        <label for="card-owned" class="trade-display">For Trade: </label>
-        <div class="card-trade">
-          <input type="number" step="1" [(ngModel)]="printing.collection.trade_copies" name="card-trade">
-        </div>
-        <label for="card-remove" class="remove-display">Remove</label>
-        <div class="card-remove">
-          <input type="checkbox" [(ngModel)]="printing.markedForDeletion" name="card-remove">
-        </div>
-        <label for="card-foil" class="foil-display" *ngIf="printing.printingInput.can_be_foil">Foil</label>
-        <div class="card-foil" *ngIf="printing.printingInput.can_be_foil">
-          <input type="checkbox" [(ngModel)]="printing.foilInput">
-        </div>
-        <!-- <button (click)="buttonTest(cardIdx)">Test</button> -->
-      </div>
+    <div *ngFor="let printing of editArray; let i = index" style="display:inline-block; padding:5px;" class="{{ printing.class }}">
+      <img src="{{ printing.printingInput.img_url }}">
+      <p>{{ printing.card.name }}</p>
+      <select [(ngModel)]="printing.printingInput" name="card-set" id="">
+        <option *ngFor="let subPrinting of printing.card.cardPrintings" [ngValue]="subPrinting">{{ subPrinting.set.title }}</option>
+      </select>
+      <app-edit-card 
+      [index]="i"
+      [id]="printing.collection.id"
+      [owned_copies]="printing.collection.owned_copies"
+      [trade_copies]="printing.collection.trade_copies"
+      [printing]="printing.printingInput"
+      [foil]="printing.collection.foil"
+      (updateBufferEmitter)="childUpdatePrintingBuffer($event)"
+      (updateEmitter)="childUpdatePrinting($event)"
+      (successfulUpdateEmitter)="childSuccessfulUpdate($event)"
+      ></app-edit-card>
+      <label for="">Foil:</label>
+      <input type="checkbox" [(ngModel)]="printing.collection.foil"><br>
+      <button (click)="deleteCollectionEntry(i)">Delete</button>
     </div>
   </div>
   <hr>
@@ -59,8 +51,8 @@
         <div class="card-trade">
           <input type="number" step="1" [(ngModel)]="card.tradeCopies" name="card-trade">
         </div>
-        <label for="card-foil" class="foil-display" *ngIf="card.printingInput.can_be_foil">Foil</label>
-        <div class="card-foil" *ngIf="card.printingInput.can_be_foil">
+        <label for="card-foil" class="foil-display" *ngIf="card.printingInput.foil_version && card.printingInput.nonFoil_version">Foil</label>
+        <div class="card-foil" *ngIf="card.printingInput.foil_version && card.printingInput.nonFoil_version">
           <input type="checkbox" [(ngModel)]="card.foilInput">
         </div>
       </div>

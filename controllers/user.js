@@ -3,31 +3,34 @@ var db = require("../models");
 var router = express.Router();
 const axios = require("axios");
 const Sequelize = require('sequelize');
+const op = Sequelize.Op;
 const verifyToken = require('../middleware/verifyToken.js')
 require('dotenv').config();
 
-// Add multiple cards to collection
+// Add multiple printings to collection
 router.post("/collection/batch", verifyToken, (req, res) => {
-  console.log("ADDING MULTIPLE CARDS TO COLLECTION");
-  if (req.body.cards.length > 0) {
+  console.log("ADDING MULTIPLE PRINTINGS TO COLLECTION");
+  if (req.body.printings.length > 0) {
     db.user.find({
       where: {
         id: req.user.id
       }
     }).then(user => {
-      for (let i=0; i<req.body.cards.length; i++) {
+      for (let i=0; i<req.body.printings.length; i++) {
         db.printings.find({
           where: {
-            id: req.body.cards[i]["printingInput"]["id"]
+            id: req.body.printings[i]["printingInput"]["id"]
           }
         }).then(cardPrinting => {
-          if (!req.body.cards[i].printingInput.can_be_foil) {
-            req.body.cards[i].foilInput = false;
+          if (req.body.printings[i].foilInput) {
+            req.body.printings[i].foilInput = req.body.printings[i].printingInput.foil_version
+          } else {
+            req.body.printings[i].foilInput = !req.body.printings[i].printingInput.nonFoil_version
           }
           user.addPrintings(cardPrinting, {through: {
-            owned_copies: req.body.cards[i]["copies"],
-            trade_copies: req.body.cards[i]["tradeCopies"],
-            foil: req.body.cards[i].foilInput
+            owned_copies: req.body.printings[i]["copies"],
+            trade_copies: req.body.printings[i]["tradeCopies"],
+            foil: req.body.printings[i].foilInput
           }})
         })
       }
@@ -40,7 +43,7 @@ router.post("/collection/batch", verifyToken, (req, res) => {
 
 // Update multiple entries in a user's collection
 router.put("/collection/batch", verifyToken, (req, res) => {
-  console.log("UPDATING MULTIPLE CARDS IN COLLECTION");
+  console.log("UPDATING MULTIPLE PRINTINGS IN COLLECTION");
   if (req.body.printings.length > 0) {
     for (let i=0; i<req.body.printings.length; i++) {
       db.collection.find({
@@ -55,8 +58,10 @@ router.put("/collection/batch", verifyToken, (req, res) => {
           console.log("DESTROYED")
           collection.destroy();
         } else {
-          if (!req.body.printings[i].printingInput.can_be_foil) {
-            req.body.printings[i].foilInput = false;
+          if (req.body.printings[i].foilInput) {
+            req.body.printings[i].foilInput = req.body.printings[i].printingInput.foil_version;
+          } else {
+            req.body.printings[i].foilInput = !req.body.printings[i].printingInput.nonFoil_version;
           }
           collection.update({
             printingId: req.body.printings[i].printingInput.id,
@@ -133,6 +138,40 @@ router.post("/collection", (req, res) => {
   })
 })
 
+router.put("/collection/:id", verifyToken, (req, res) => {
+  db.collection.find({
+    where: {
+      id: req.params.id,
+      userId: req.user.id
+    }
+  }).then(collection => {
+    if (collection !== null) {
+      collection.update(req.body).then(update => {
+        res.json({status:"Success", update:update});
+      });
+    } else {
+      res.json({status:"Fail", message:"Could not find collection with that id"})
+    }
+  })
+})
+
+router.delete("/collection/:id", verifyToken, (req, res) => {
+  db.collection.find({
+    where: {
+      id: req.params.id,
+      userId: req.user.id
+    }
+  }).then(collection => {
+    if (collection !== null) {
+      collection.delete().then(data => {
+        res.json({status:"Success", data:data});
+      });
+    } else {
+      res.json({status:"Fail", message:"Could not find collection with that id"});
+    }
+  })
+})
+
 // Add multiple cards to wishlist
 router.post("/wishlist/batch", verifyToken, (req, res) => {
   console.log("router.post '/wishlist/batch'")
@@ -151,10 +190,11 @@ router.post("/wishlist/batch", verifyToken, (req, res) => {
           if (req.body.cards[i]["preferredPrinting"] == "none") {
             req.body.cards[i]["preferredPrinting"] = null;
           } else {
-            console.log("i.foil: " + req.body.cards[i].foil)
-            console.log("canbefoil: " + req.body.cards[i].preferredPrinting.can_be_foil);
-            console.log("both: " + req.body.cards[i].foil && req.body.cards[i].preferredPrinting.can_be_foil)
-            req.body.cards[i].foil = req.body.cards[i].foil && req.body.cards[i].preferredPrinting.can_be_foil; 
+            if (req.body.cards[i].foil) {
+              req.body.cards[i].foil = req.body.cards[i].preferredPrinting.foil_version; 
+            } else {
+              req.body.cards[i].foil = req.body.cards[i].preferredPrinting.nonFoil_version; 
+            }
             req.body.cards[i].preferredPrinting = req.body.cards[i].preferredPrinting.id
             console.log("preferredPrinting: " + req.body.cards[i].preferredPrinting);
           }
@@ -193,7 +233,11 @@ router.put("/wishlist/batch", verifyToken, (req, res) => {
           if (req.body.cards[i].wishlist.pref_printing === "none") {
             req.body.cards[i].wishlist.pref_printing = null
           } else {
-            req.body.cards[i].wishlist.pref_foil = req.body.cards[i].wishlist.pref_foil && req.body.cards[i].wishlist.pref_printing.can_be_foil;
+            if (req.body.cards[i].wishlist.pref_foil) {
+              req.body.cards[i].wishlist.pref_foil = req.body.cards[i].wishlist.pref_printing.foil_version;
+            } else {
+              req.body.cards[i].wishlist.pref_foil = !req.body.cards[i].wishlist.pref_printing.nonFoil_version;
+            }
             req.body.cards[i].wishlist.pref_printing = req.body.cards[i].wishlist.pref_printing.id
           }
           wishlist.update({
@@ -279,6 +323,42 @@ router.post("/wishlist", (req, res) => {
         message: "Could not add to wishlist"
       });
     })
+  })
+})
+
+router.put("/wishlist/:id", verifyToken, (req, res) => {
+  db.wishlist.find({
+    where: {
+      id: req.params.id,
+      userId: req.user.id
+    }
+  }).then(wishlist => {
+    if (wishlist !== null) {
+      wishlist.update(req.body).then(update => {
+        res.json({
+          status: "Success",
+          update: update
+        })
+      });
+    } else {
+      res.json({status: "Fail", message:"Could not find wishlist with that id"});
+    }
+  })
+});
+
+router.delete("/wishlist/:id", verifyToken, (req, res) => {
+  db.wishlist.find({
+    where: {
+      id: req.params.id,
+      userId: req.user.id
+    }
+  }).then(wishlist => {
+    if (wishlist !== null) {
+      wishlist.destroy()
+      res.json({status:"Success"});
+    } else {
+      res.json({status:"Fail", message:"Could not find wishlist with that id"});
+    }
   })
 })
 
