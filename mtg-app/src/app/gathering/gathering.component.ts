@@ -39,7 +39,6 @@ export class GatheringComponent implements OnInit {
 //       }, 1000);
 //     });
   }
-
   ngOnInit() {
     this.gather();
   }
@@ -52,7 +51,6 @@ export class GatheringComponent implements OnInit {
       this.refineAcquire.foilOptions = [];
       this.refineAcquire.cardNumberOptions = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
       this.buildAcquireOptions(result);
-      console.log(this.refineAcquire);
     });
     this._gatheringService.searchProvideCard(this.cardSearch).subscribe(result => {
       console.log(result);
@@ -61,9 +59,9 @@ export class GatheringComponent implements OnInit {
       this.refineProvide.foilOptions = [];
       this.refineProvide.cardNumberOptions = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
       this.buildProvideOptions(result);
-      console.log(this.refineProvide);
     });
     this.searchState.searchName = cardString;
+    this.searchState.user = false;
     this.searchState.card = true;
   }
   submitUserSearch(userString) {
@@ -79,6 +77,7 @@ export class GatheringComponent implements OnInit {
       this.buildProvideOptions(result);
     });
     this.searchState.searchName = userString;
+    this.searchState.card = false;
     this.searchState.user = true;
   }
   gather() {
@@ -133,7 +132,6 @@ export class GatheringComponent implements OnInit {
         if (data[i].cards[o]['card.cardPrintings.users.collection.trade_copies'] > largestOffer) {
           largestOffer = data[i].cards[o]['card.cardPrintings.users.collection.trade_copies'];
         }
-        console.log(this.refineAcquire);
       }
       if (largestOffer > this.refineAcquire.cardNumberOptions[this.refineAcquire.cardNumberOptions.length - 1]) {
         this.refineAcquire.cardNumberOptions.push(largestOffer);
@@ -159,24 +157,4 @@ export class GatheringComponent implements OnInit {
       }
     }
   }
-
-  // refineCardSearch() {
-  //   const refinedData = new Array(this.preservedCardSearch.length);
-  //   for (let i = this.preservedCardSearch.length - 1; i >= 0; i --) {
-  //     refinedData[i] = {username: this.preservedCardSearch[i].username, userId: this.preservedCardSearch[i].userId};
-  //     const refinedCards = this.preservedCardSearch[i].cards.filter(
-  //       card => (card['card.cardPrintings.set.title'] === this.setSelection ||
-  //               this.setSelection === 'all') &&
-  //               (card['card.cardPrintings.users.collection.foil'] === this.foilSelection ||
-  //               this.foilSelection === 'all') &&
-  //               (card['card.cardPrintings.users.collection.trade_copies'] >= this.cardNumberSelection ||
-  //               this.cardNumberSelection === 'all')
-  //     );
-  //     refinedData[i].cards = refinedCards;
-  //     if (refinedData[i].cards.length < 1) {
-  //       refinedData.splice(refinedData[i], 1);
-  //     }
-  //     this.acquire = refinedData;
-  //   }
-  // }
 }

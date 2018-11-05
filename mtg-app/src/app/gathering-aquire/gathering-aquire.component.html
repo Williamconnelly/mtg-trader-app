@@ -2,15 +2,18 @@
   <div class="filter-options">
     <p *ngIf="searchState.card === true || searchState.user === true">Results for: {{ searchState.searchName }}</p>
     <form (submit)="refineCardSearch()">
+      <label for="setRefine">Set</label>
       <select [(ngModel)]="setSelection" name="setRefine">
         <option value="all">All</option>
         <option *ngFor="let set of refineAcquire.setOptions" [ngValue]="set">{{ set }}</option>
       </select>
+      <label for="foilRefine">Foil</label>
       <select [(ngModel)]="foilSelection" name="foilRefine">
           <option value="all">All</option>
           <option *ngFor="let foil of refineAcquire.foilOptions" [ngValue]="foil"><span *ngIf="foil === true else falseFoil">Foil</span>
             <ng-template #falseFoil>Non-foil</ng-template></option>
         </select>
+        <label for="numberRefine">Number Available</label>
         <select [(ngModel)]="cardNumberSelection" name="numberRefine">
           <option value="all">All</option>
           <option *ngFor="let number of refineAcquire.cardNumberOptions" [ngValue]="number">{{ number }}</option>
@@ -38,15 +41,18 @@
   <div class="filter-options">
     <p *ngIf="searchState.card === true || searchState.user === true">Results for: {{ searchState.searchName }}</p>
     <form (submit)="refineCardSearchProvide()">
+      <label for="setRefine">Set</label>
       <select [(ngModel)]="setSelection" name="setRefine">
         <option value="all">All</option>
         <option *ngFor="let set of refineProvide.setOptions" [ngValue]="set">{{ set }}</option>
       </select>
+      <label for="foilRefine">Foil</label>
       <select [(ngModel)]="foilSelection" name="foilRefine">
           <option value="all">All</option>
           <option *ngFor="let foil of refineProvide.foilOptions" [ngValue]="foil"><span *ngIf="foil === true else falseFoil">Foil</span>
             <ng-template #falseFoil>Non-foil</ng-template></option>
         </select>
+        <label for="numberRefine">Number Wanted</label>
         <select [(ngModel)]="cardNumberSelection" name="numberRefine">
           <option value="all">All</option>
           <option *ngFor="let number of refineProvide.cardNumberOptions" [ngValue]="number">{{ number }}</option>
