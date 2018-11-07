@@ -5,9 +5,9 @@ module.exports = (sequelize, DataTypes) => {
     b_user: DataTypes.INTEGER,
     phase: DataTypes.INTEGER,
     b_accept: DataTypes.BOOLEAN,
-    a_lock: DatTypes.STRING,
+    a_lock: DataTypes.STRING,
     b_lock: DataTypes.STRING,
-    a_submit: DataTypes.STING,
+    a_submit: DataTypes.STRING,
     b_submit: DataTypes.STRING
   }, {});
   trade.associate = function(models) {
