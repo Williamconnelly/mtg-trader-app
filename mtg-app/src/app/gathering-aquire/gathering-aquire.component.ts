@@ -57,7 +57,7 @@ export class GatheringAquireComponent implements OnInit {
                 this.setSelection === 'all') &&
                 (card['printing.card.users.wishlist.pref_foil'] === this.foilSelection ||
                 this.foilSelection === 'all') &&
-                (card['printing.card.users.wishlist.number_wanted'] <= this.cardNumberSelection ||
+                (card['printing.card.users.wishlist.number_wanted'] >= this.cardNumberSelection ||
                 this.cardNumberSelection === 'all')
       );
       refinedData[i].cards = refinedCards;
