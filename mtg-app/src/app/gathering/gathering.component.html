@@ -16,28 +16,6 @@
     </form>
     <button *ngIf="searchState.user === true" (click)="reset()" class="reset">Reset</button>
   </div>
-  <!-- <div *ngIf="searchData.card === true" class="filter-options">
-    <p>Results for: {{ searchData.searchName }}</p>
-    <form (submit)="refineCardSearch()">
-      <select [(ngModel)]="setSelection" name="setRefine">
-        <option value="all">All</option>
-        <option *ngFor="let set of setOptions" [ngValue]="set">{{ set }}</option>
-      </select>
-      <select [(ngModel)]="foilSelection" name="foilRefine">
-          <option value="all">All</option>
-          <option *ngFor="let foil of foilOptions" [ngValue]="foil"><span *ngIf="foil === true else falseFoil">Foil</span>
-            <ng-template #falseFoil>Non-foil</ng-template></option>
-        </select>
-        <select [(ngModel)]="cardNumberSelection" name="numberRefine">
-          <option value="all">All</option>
-          <option *ngFor="let number of cardNumberOptions" [ngValue]="number">{{ number }}</option>
-        </select>
-      <input type="submit" value="Refine" class="search-button">
-    </form>
-  </div> -->
-  <!-- <div>
-    <button *ngIf="searchBool.card === true || searchBool.user === true" (click)="reset()" class="reset">Reset</button>
-  </div> -->
   <mat-tab-group>
     <mat-tab label="Acquire">
       <app-gathering-aquire
