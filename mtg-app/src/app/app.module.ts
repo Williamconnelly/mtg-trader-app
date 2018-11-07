@@ -14,7 +14,7 @@ import { Token } from '@angular/compiler';
 import { GatheringComponent } from './gathering/gathering.component';
 import { GatheringService } from './gathering.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatExpansionModule, MatInputModule, MatTabsModule, MatTableModule} from '@angular/material';
+import { MatExpansionModule, MatInputModule, MatTabsModule, MatTableModule, MatFormFieldModule, MatAutocompleteModule} from '@angular/material';
 import { EditListComponent } from './edit-list/edit-list.component';
 import { ViewListComponent } from './view-list/view-list.component';
 import { EditCollectionComponent } from './edit-collection/edit-collection.component';
@@ -53,7 +53,9 @@ import { EditCardComponent } from './edit-card/edit-card.component';
     MatExpansionModule,
     MatInputModule,
     MatTabsModule,
-    MatTableModule
+    MatTableModule,
+    MatFormFieldModule,
+    MatAutocompleteModule
   ],
   providers: [AuthService, AuthGuard, GatheringService, {
     provide: HTTP_INTERCEPTORS,

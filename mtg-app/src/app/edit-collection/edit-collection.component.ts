@@ -2,6 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { EditCardComponent } from '../edit-card/edit-card.component';
 import { CardService } from '../card.service';
 import { AuthService } from '../auth.service';
+import { AutocompleteService } from '../autocomplete.service';
 
 @Component({
   selector: 'app-edit-collection',
@@ -12,8 +13,10 @@ export class EditCollectionComponent implements OnInit {
   cardSearch = "";
   collectionArray = [];
   cardArray = [];
+  options = [];
 
-  constructor(private card : CardService, private _auth : AuthService) { }
+
+  constructor(private card : CardService, private _auth : AuthService, private _auto : AutocompleteService) { }
 
   ngOnInit() {
     this.card.getLoggedInCollection().subscribe(existingCollection => {
@@ -35,6 +38,11 @@ export class EditCollectionComponent implements OnInit {
     collectionItem.foilInput = collectionItem.foil;
     collectionItem["class"] = "";
     return collectionItem
+  }
+
+  cardSearchChange() {
+    // this.options = this._auto.autocomplete(this.cardSearch);
+    console.log(this._auto);
   }
 
   submitCardSearch() {

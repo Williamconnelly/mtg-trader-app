@@ -10,6 +10,7 @@
       <p class="card-set">{{ collection.printing.set.title }} ({{ collection.printing.set.code }})</p>
       <p class="card-owned">Copies Owned: {{ collection.owned_copies }}</p>
       <p class="card-trade">For trade: {{ collection.trade_copies }}</p>
+      <p class="card-foil">Foil: <span *ngIf="collection.foil">Yes</span><span *ngIf="!collection.foil">No</span></p>
     </div>
   </div>
 </div>

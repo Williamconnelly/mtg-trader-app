@@ -6,11 +6,12 @@
   margin: 1em 0;
   display: grid;
   grid-template-columns: 146px 1fr;
-  grid-template-rows: 3em 4em 1fr 1fr;
+  grid-template-rows: 0.1fr;
   grid-template-areas: "card-image card-name"
                        "card-image card-set"
                        "card-image card-owned"
-                       "card-image card-trade";
+                       "card-image card-trade"
+                       "card-image card-foil";
   width: 20em;
 }
 
@@ -39,10 +40,14 @@
 }
 
 .card-trade {
-  grid-area: card-trade
+  grid-area: card-trade;
 }
 
-.card-name, .card-set, .card-owned, .card-trade {
+.card-foil {
+  grid-area: card-foil;
+}
+
+.card-name, .card-set, .card-owned, .card-trade, .card-foil {
   margin-left: 1em;
 }
 
