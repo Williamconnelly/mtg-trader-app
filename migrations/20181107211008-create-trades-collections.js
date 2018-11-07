@@ -1,36 +1,21 @@
 'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('trades', {
+    return queryInterface.createTable('tradescollections', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      a_user: {
+      collectionId: {
         type: Sequelize.INTEGER
       },
-      b_user: {
+      tradeId: {
         type: Sequelize.INTEGER
       },
-      phase: {
+      copies_offered: {
         type: Sequelize.INTEGER
-      },
-      b_accept: {
-        type: Sequelize.BOOLEAN
-      },
-      a_lock: {
-        type: Sequelize.STRING
-      },
-      b_lock: {
-        type: Sequelize.STRING
-      },
-      a_submit: {
-        type: Sequelize.STRING
-      },
-      b_submit: {
-        type: Sequelize.STRING
       },
       createdAt: {
         allowNull: false,
@@ -43,6 +28,6 @@ module.exports = {
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('trades');
+    return queryInterface.dropTable('tradescollections');
   }
 };
