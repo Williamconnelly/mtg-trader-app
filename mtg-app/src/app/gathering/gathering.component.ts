@@ -157,4 +157,23 @@ export class GatheringComponent implements OnInit {
       }
     }
   }
+  // refineCardSearch() {
+  //   const refinedData = new Array(this.preservedCardSearch.length);
+  //   for (let i = this.preservedCardSearch.length - 1; i >= 0; i --) {
+  //     refinedData[i] = {username: this.preservedCardSearch[i].username, userId: this.preservedCardSearch[i].userId};
+  //     const refinedCards = this.preservedCardSearch[i].cards.filter(
+  //       card => (card['card.cardPrintings.set.title'] === this.setSelection ||
+  //               this.setSelection === 'all') &&
+  //               (card['card.cardPrintings.users.collection.foil'] === this.foilSelection ||
+  //               this.foilSelection === 'all') &&
+  //               (card['card.cardPrintings.users.collection.trade_copies'] >= this.cardNumberSelection ||
+  //               this.cardNumberSelection === 'all')
+  //     );
+  //     refinedData[i].cards = refinedCards;
+  //     if (refinedData[i].cards.length < 1) {
+  //       refinedData.splice(refinedData[i], 1);
+  //     }
+  //     this.acquire = refinedData;
+  //   }
+  // }
 }

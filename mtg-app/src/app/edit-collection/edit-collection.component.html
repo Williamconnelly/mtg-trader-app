@@ -1,8 +1,11 @@
 <div class="editcollection-wrapper">
   <form (submit)="submitCardSearch()" class="add-card-form">
-    <input type="text" [(ngModel)]="cardSearch" name="cardSearch" class="card-search" placeholder="Add Card...">
+    <input type="text" [(ngModel)]="cardSearch" [matAutocomplete]="auto" name="cardSearch" class="card-search" placeholder="Add Card...">
     <input type="submit" value="Search" class="search-button">
   </form>
+  <mat-autocomplete #auto="matAutocomplete">
+    <mat-option *ngFor="let option of options" [value]="option">{{option}}</mat-option>
+  </mat-autocomplete>
   <hr>
   <h1>Collection</h1>
   <hr>

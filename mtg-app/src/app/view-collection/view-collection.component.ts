@@ -9,7 +9,7 @@ import { AuthService} from '../auth.service';
   styleUrls: ['./view-collection.component.css']
 })
 export class ViewCollectionComponent implements OnInit {
-  cardArray = [];
+  collectionArray = [];
 
   constructor(private card: CardService, private _route: ActivatedRoute, private _authService: AuthService) { }
 
@@ -42,7 +42,7 @@ export class ViewCollectionComponent implements OnInit {
         this._authService.logoutUser();
       }
       if (!collection.hasOwnProperty('message')) {
-        this.cardArray = collection;
+        this.collectionArray = collection;
       }
     });
   }

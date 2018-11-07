@@ -3,15 +3,15 @@
   <h1>Wishlist</h1>
   <a routerLink="/edit-list">Edit Wishlist</a>
   <hr>
-  <div *ngFor="let card of cardArray; let cardIdx = index" class="card-wrapper">
+  <div *ngFor="let wishlist of wishlistArray; let cardIdx = index" class="card-wrapper">
     <div class="card-display">
-      <img *ngIf="card.hasOwnProperty('url')" src="{{ card.url }}" alt="">
-      <p class="card-name">{{ card.name }}</p>
-      <p *ngIf="card.wishlist.pref_printing === null" class="card-set">Preferred: None</p>
-      <div *ngFor="let printing of card.cardPrintings" class="card-set">
-        <p *ngIf="printing.id === card.wishlist.pref_printing">Preferred: {{ printing.set.title }} ({{ printing.set.code }})</p>
+      <img *ngIf="wishlist.hasOwnProperty('url')" src="{{ wishlist.url }}" alt="">
+      <p class="card-name">{{ wishlist.name }}</p>
+      <p *ngIf="wishlist.pref_printing === null" class="card-set">Preferred: None</p>
+      <div *ngFor="let printing of wishlist.card.cardPrintings" class="card-set">
+        <p *ngIf="printing.id === wishlist.pref_printing">Preferred: {{ printing.set.title }} ({{ printing.set.code }})</p>
       </div>
-      <p class="card-trade">Number Wanted: {{ card.wishlist.number_wanted }}</p>
+      <p class="card-trade">Number Wanted: {{ wishlist.number_wanted }}</p>
     </div>
   </div>
 </div>
