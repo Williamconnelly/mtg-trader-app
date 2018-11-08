@@ -5,12 +5,12 @@ import { HttpClient } from '@angular/common/http';
   providedIn: 'root'
 })
 export class GatheringService {
-  private _gatheringWantUrl = 'http://localhost:3000/trade/gathering/acquire';
-  private _gatheringProvideUrl = 'http://localhost:3000/trade/gathering/provide';
-  private _acquireCardURL = `http://localhost:3000/trade/gathering/acquire/card/`;
-  private _provideCardURL = `http://localhost:3000/trade/gathering/provide/card/`;
-  private _acquireUserURL = `http://localhost:3000/trade/gathering/acquire/user/`;
-  private _provideUserURL = `http://localhost:3000/trade/gathering/provide/user/`;
+  private _gatheringWantUrl = 'http://localhost:3000/gathering/acquire';
+  private _gatheringProvideUrl = 'http://localhost:3000/gathering/provide';
+  private _acquireCardURL = `http://localhost:3000/gathering/acquire/card/`;
+  private _provideCardURL = `http://localhost:3000/gathering/provide/card/`;
+  private _acquireUserURL = `http://localhost:3000/gathering/acquire/user/`;
+  private _provideUserURL = `http://localhost:3000/gathering/provide/user/`;
   constructor(private http: HttpClient) { }
 
   getGatheringAcquire() {
