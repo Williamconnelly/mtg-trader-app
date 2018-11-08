@@ -13,8 +13,14 @@ import { TokenInterceptorService } from './token-interceptor.service';
 import { Token } from '@angular/compiler';
 import { GatheringComponent } from './gathering/gathering.component';
 import { GatheringService } from './gathering.service';
+import { TradeService} from './trading/trade.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatExpansionModule, MatInputModule, MatTabsModule, MatTableModule, MatFormFieldModule, MatAutocompleteModule} from '@angular/material';
+import { MatExpansionModule,
+         MatInputModule,
+         MatTabsModule,
+         MatTableModule,
+         MatFormFieldModule,
+         MatAutocompleteModule} from '@angular/material';
 import { EditListComponent } from './edit-list/edit-list.component';
 import { ViewListComponent } from './view-list/view-list.component';
 import { EditCollectionComponent } from './edit-collection/edit-collection.component';
@@ -25,6 +31,10 @@ import { GatheringTableComponent } from './gathering-table/gathering-table.compo
 import { CardShowComponent } from './card-show/card-show.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { EditCardComponent } from './edit-card/edit-card.component';
+import { TradeComponent } from './trading/trade/trade.component';
+import { TradeMessageComponent } from './trading/trade-message/trade-message.component';
+import { TradeDisplayComponent } from './trading/trade-display/trade-display.component';
+import { TradeTrayComponent } from './trading/trade-tray/trade-tray.component';
 
 @NgModule({
   declarations: [
@@ -42,7 +52,11 @@ import { EditCardComponent } from './edit-card/edit-card.component';
     GatheringTableComponent,
     CardShowComponent,
     NavbarComponent,
-    EditCardComponent
+    EditCardComponent,
+    TradeComponent,
+    TradeMessageComponent,
+    TradeDisplayComponent,
+    TradeTrayComponent
   ],
   imports: [
     BrowserModule,
@@ -57,7 +71,7 @@ import { EditCardComponent } from './edit-card/edit-card.component';
     MatFormFieldModule,
     MatAutocompleteModule
   ],
-  providers: [AuthService, AuthGuard, GatheringService, {
+  providers: [AuthService, AuthGuard, GatheringService, TradeService, {
     provide: HTTP_INTERCEPTORS,
     useClass: TokenInterceptorService,
     multi: true
