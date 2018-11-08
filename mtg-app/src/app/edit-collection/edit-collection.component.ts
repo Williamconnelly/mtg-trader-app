@@ -1,5 +1,4 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { EditCardComponent } from '../edit-card/edit-card.component';
 import { CardService } from '../card.service';
 import { AuthService } from '../auth.service';
 

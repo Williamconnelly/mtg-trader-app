@@ -109,13 +109,19 @@ router.get("/collection/:id", (req, res) => {
     where: {
       // TODO: Get at User differently
       id: req.params.id
-    }, include: [{
-      model: db.printings,
-      include: [db.card, db.set]
+    }, include:  [{
+      model: db.collection,
+      include: [{
+        model:db.printings,
+        include: [{
+            model:db.card
+          },
+          db.set]
+      }]
     }]
   }).then(user => {
-    if (user != null && user.hasOwnProperty('printings')) {
-      res.json(user['printings']);
+    if (user != null && user.hasOwnProperty('collections')) {
+      res.json(user['collections']);
     } else {
       res.json({message:'error'});
     }
@@ -318,16 +324,19 @@ router.get("/wishlist/:id", (req, res) => {
       // TODO: Get at User differently
       id: req.params.id
     }, include: [{
-      model: db.card,
+      model: db.wishlist,
       include: [{
-        model: db.printings,
-        as: 'cardPrintings',
-        include: [db.set]
+        model: db.card,
+        include: [{
+          model: db.printings,
+          as: 'cardPrintings',
+          include: [db.set]
+        }]
       }]
     }]
   }).then(user => {
-    if (user != null && user.hasOwnProperty('cards')) {
-      res.json(user['cards']);
+    if (user != null && user.hasOwnProperty('wishlists')) {
+      res.json(user['wishlists']);
     } else {
       res.json({message:'error'});
     }
