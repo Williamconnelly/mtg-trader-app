@@ -31,7 +31,10 @@ export class GatheringComponent implements OnInit {
     cardNumberOptions: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
   };
   // asyncTabs: Observable<any>;
-  constructor(private _gatheringService: GatheringService, private _authService: AuthService) {
+  constructor(
+    private _gatheringService: GatheringService,
+    private _authService: AuthService
+  ) {
 //     this.asyncTabs = Observable.create((observer: Observer<any>) => {
 //       setTimeout(() => {
 //         observer.next([
@@ -157,23 +160,4 @@ export class GatheringComponent implements OnInit {
       }
     }
   }
-  // refineCardSearch() {
-  //   const refinedData = new Array(this.preservedCardSearch.length);
-  //   for (let i = this.preservedCardSearch.length - 1; i >= 0; i --) {
-  //     refinedData[i] = {username: this.preservedCardSearch[i].username, userId: this.preservedCardSearch[i].userId};
-  //     const refinedCards = this.preservedCardSearch[i].cards.filter(
-  //       card => (card['card.cardPrintings.set.title'] === this.setSelection ||
-  //               this.setSelection === 'all') &&
-  //               (card['card.cardPrintings.users.collection.foil'] === this.foilSelection ||
-  //               this.foilSelection === 'all') &&
-  //               (card['card.cardPrintings.users.collection.trade_copies'] >= this.cardNumberSelection ||
-  //               this.cardNumberSelection === 'all')
-  //     );
-  //     refinedData[i].cards = refinedCards;
-  //     if (refinedData[i].cards.length < 1) {
-  //       refinedData.splice(refinedData[i], 1);
-  //     }
-  //     this.acquire = refinedData;
-  //   }
-  // }
 }

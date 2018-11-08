@@ -1,4 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { TradeService } from '../trading/trade.service';
 
 @Component({
   selector: 'app-gathering-aquire',
@@ -21,7 +22,7 @@ export class GatheringAquireComponent implements OnInit {
   // @Input() foilOptions;
   // @Input() cardNumberOptions;
 
-  constructor() { }
+  constructor(private _tradeService: TradeService) { }
 
   ngOnInit() {
 
@@ -66,5 +67,11 @@ export class GatheringAquireComponent implements OnInit {
       }
       this.Otherdata = refinedData;
     }
+  }
+  initiateTrade(id) {
+    console.log(`Initiating Trade with User: ${id}`);
+    this._tradeService.initiateTrade(id).subscribe(result => {
+      console.log(result);
+    });
   }
 }

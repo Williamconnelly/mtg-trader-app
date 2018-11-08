@@ -33,6 +33,7 @@
       <app-gathering-table [data]="partner.cards"></app-gathering-table>
       <a routerLink="/view-collection/{{ partner.userId }}" class="user-btn">Collection</a>
       <a routerLink="/view-list/{{ partner.userId }}" class="user-btn">Wishlist</a>
+      <a (click)="initiateTrade(partner.userId)" class="user-btn">Initiate Trade</a>
     </mat-expansion-panel>
   </mat-accordion>
 </div>
@@ -73,6 +74,7 @@
       <app-gathering-table [Otherdata]="partner.cards"></app-gathering-table>
       <a routerLink="/view-collection/{{ partner.userId }}" class="user-btn">Collection</a>
       <a routerLink="/view-list/{{ partner.userId }}" class="user-btn">Wishlist</a>
+      <a (click)="initiateTrade(partner.userId)" class="user-btn">Initiate Trade</a>
     </mat-expansion-panel>
   </mat-accordion>
 </div>
