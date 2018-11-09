@@ -71,4 +71,16 @@ router.get("/initiate/:id", verifyToken, (req, res) => {
   })  
 })
 
+
+router.get("/collection", verifyToken, (req, res) => {
+  db.collection.findAll({
+    where: {
+      userId: req.user.id,
+      trade_copies: {[op.gt]: 0}
+    }
+  }).then(result => {
+    res.send(result);
+  })
+})
+
 module.exports = router;

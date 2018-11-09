@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { TradeService } from '../trade.service';
 
 @Component({
   selector: 'app-trade',
@@ -7,10 +8,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class TradeComponent implements OnInit {
   opened: boolean;
-
-  constructor() { }
+  collection = [];
+  constructor(private _tradeService: TradeService) { }
 
   ngOnInit() {
+    this._tradeService.getCollection().subscribe(result => {
+      this.collection = result;
+      console.log(this.collection);
+    });
   }
 
 }

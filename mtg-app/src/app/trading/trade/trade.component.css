@@ -1,11 +1,15 @@
-.example-container {
-
-}
-
-mat-drawer {
+.mat-drawer {
   width: 22%;
+  padding: 0 1%;
 }
 
-mat-drawer-container {
+.mat-drawer-container {
+  background-color: inherit;
+}
 
+.scroll-box {
+  overflow: auto;
+  width: 80%;
+  height: 40%;
+  margin-top: 1em;
 }

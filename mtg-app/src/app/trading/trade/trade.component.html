@@ -1,21 +1,17 @@
 <mat-drawer-container class="example-container">
-  <mat-drawer #drawer mode="side">
-    <p>Test Stuff</p>
-    <br />
-    <p>Test Stuff</p>
-    <br />
-    <p>Test Stuff</p>
-    <br />
-    <p>Test Stuff</p>
-    <br />
-    <p>Test Stuff</p>
-    <br />
-    <p>Test Stuff</p>
-  </mat-drawer>
+  <!-- Main Content -->
   <mat-drawer-content>
     <button mat-raised-button (click)="drawer.toggle()">Toggle drawer</button>
     <app-trade-display></app-trade-display>
     <app-trade-display></app-trade-display>
     <app-trade-message></app-trade-message>
   </mat-drawer-content>
+  <!-- Drawer Content -->
+  <mat-drawer #drawer mode="side">
+    <div class="scroll-box">
+      <div *ngFor="let card of collection" class="card-row">
+        <p>{{ card.printingId }}</p>
+      </div>
+    </div>
+  </mat-drawer>
 </mat-drawer-container>
