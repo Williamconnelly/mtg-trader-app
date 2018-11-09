@@ -6,6 +6,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./trade.component.css']
 })
 export class TradeComponent implements OnInit {
+  opened: boolean;
 
   constructor() { }
 

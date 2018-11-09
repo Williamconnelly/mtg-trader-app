@@ -20,7 +20,8 @@ import { MatExpansionModule,
          MatTabsModule,
          MatTableModule,
          MatFormFieldModule,
-         MatAutocompleteModule} from '@angular/material';
+         MatAutocompleteModule,
+         MatSidenavModule} from '@angular/material';
 import { EditListComponent } from './edit-list/edit-list.component';
 import { ViewListComponent } from './view-list/view-list.component';
 import { EditCollectionComponent } from './edit-collection/edit-collection.component';
@@ -69,7 +70,8 @@ import { TradeTrayComponent } from './trading/trade-tray/trade-tray.component';
     MatTabsModule,
     MatTableModule,
     MatFormFieldModule,
-    MatAutocompleteModule
+    MatAutocompleteModule,
+    MatSidenavModule
   ],
   providers: [AuthService, AuthGuard, GatheringService, TradeService, {
     provide: HTTP_INTERCEPTORS,

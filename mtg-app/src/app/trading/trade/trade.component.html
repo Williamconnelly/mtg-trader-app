@@ -1,3 +1,21 @@
-<p>
-  trade works!
-</p>
+<mat-drawer-container class="example-container">
+  <mat-drawer #drawer mode="side">
+    <p>Test Stuff</p>
+    <br />
+    <p>Test Stuff</p>
+    <br />
+    <p>Test Stuff</p>
+    <br />
+    <p>Test Stuff</p>
+    <br />
+    <p>Test Stuff</p>
+    <br />
+    <p>Test Stuff</p>
+  </mat-drawer>
+  <mat-drawer-content>
+    <button mat-raised-button (click)="drawer.toggle()">Toggle drawer</button>
+    <app-trade-display></app-trade-display>
+    <app-trade-display></app-trade-display>
+    <app-trade-message></app-trade-message>
+  </mat-drawer-content>
+</mat-drawer-container>
