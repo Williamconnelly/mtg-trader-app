@@ -9,6 +9,7 @@ import { TradeService } from '../trade.service';
 export class TradeComponent implements OnInit {
   opened: boolean;
   collection = [];
+  currentCard: Object = {};
   constructor(private _tradeService: TradeService) { }
 
   ngOnInit() {
@@ -16,6 +17,10 @@ export class TradeComponent implements OnInit {
       this.collection = result;
       console.log(this.collection);
     });
+  }
+  targetCard(card) {
+    this.currentCard = card;
+    console.log(this.currentCard);
   }
 
 }

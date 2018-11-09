@@ -9,9 +9,13 @@
   <!-- Drawer Content -->
   <mat-drawer #drawer mode="side">
     <div class="scroll-box">
-      <div *ngFor="let card of collection" class="card-row">
-        <p>{{ card.printingId }}</p>
+      <div *ngFor="let card of collection" class="card-row" (click)=targetCard(card)>
+        <p>{{ card.printing.card.name }}</p>
+        <p>{{ card.printing.set.title }}<span>Owned: {{ card.owned_copies }}</span></p>
       </div>
+    </div>
+    <div *ngIf="currentCard.hasOwnProperty('id')" class="current-card">
+      <img src="{{currentCard.printing.img_url}}" alt="{{currentCard.printing.card.name}}">
     </div>
   </mat-drawer>
 </mat-drawer-container>

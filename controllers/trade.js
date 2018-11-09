@@ -77,7 +77,11 @@ router.get("/collection", verifyToken, (req, res) => {
     where: {
       userId: req.user.id,
       trade_copies: {[op.gt]: 0}
-    }
+    }, include: [
+      {model: db.printings, include: [
+        {model: db.card}, {model: db.set}
+      ]}
+    ]
   }).then(result => {
     res.send(result);
   })
