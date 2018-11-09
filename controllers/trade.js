@@ -30,6 +30,18 @@ router.get("/pending", verifyToken, (req, res) => {
   })
 })
 
+router.get("/test", verifyToken, (req, res) => {
+ db.user.findOne({
+   where: {
+     id: req.user.id
+   }, include: [
+     {model: db.trade, as: 'initiated_trades'}, {model: db.trade, as: 'received_trades'}
+   ]
+ }).then(result => {
+   res.send(result);
+ })
+})
+
 // Initiates a trade between logged user as a_user and targeted user as b_user. Errors if already existing.
 router.get("/initiate/:id", verifyToken, (req, res) => {
   db.trade.findOrCreate({

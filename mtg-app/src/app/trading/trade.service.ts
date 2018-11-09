@@ -10,4 +10,7 @@ export class TradeService {
   initiateTrade(id) {
     return this.http.get<any>(`${this._initiateTradeURL}${id}`);
   }
+  // initiateTrade(id) {
+  //   return this.http.get<any>('http://localhost:3000/trade/test');
+  // }
 }

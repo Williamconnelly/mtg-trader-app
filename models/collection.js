@@ -17,6 +17,7 @@ module.exports = (sequelize, DataTypes) => {
     // associations can be defined here
     models.collection.belongsTo(models.printings);
     models.collection.belongsTo(models.user);
+    models.collection.belongsToMany(models.trade, {through: "tradescollections"});
   };
   return collection;
 };

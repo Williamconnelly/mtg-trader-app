@@ -12,6 +12,9 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   trade.associate = function(models) {
     // associations can be defined here
+    models.trade.belongsToMany(models.collection, {through: "tradescollections"});
+    models.trade.belongsTo(models.user, {foreignKey: 'a_user', as: 'user_a'});
+    models.trade.belongsTo(models.user, {foreignKey: 'b_user', as: 'user_b'});
   };
   return trade;
 };
