@@ -7,6 +7,19 @@ const op = Sequelize.Op;
 const verifyToken = require("../middleware/verifyToken");
 require('dotenv').config();
 
+// Finds trade
+router.post("/current", verifyToken, (req, res) => {
+  db.trade.findOne({
+    where: {
+      id: req.body.id
+    }, include: [
+      {model: db.collection}
+    ]
+  }).then(currentTrade => {
+    res.send(currentTrade);
+  });
+})
+
 // Finds all trades where the user is either a_user or b_user
 router.get("/list", verifyToken, (req, res) => {
   db.trade.findAll({
@@ -28,18 +41,6 @@ router.get("/pending", verifyToken, (req, res) => {
   }).then(result => {
     res.json(result);
   })
-})
-
-router.get("/test", verifyToken, (req, res) => {
- db.user.findOne({
-   where: {
-     id: req.user.id
-   }, include: [
-     {model: db.trade, as: 'initiated_trades'}, {model: db.trade, as: 'received_trades'}
-   ]
- }).then(result => {
-   res.send(result);
- })
 })
 
 // Initiates a trade between logged user as a_user and targeted user as b_user. Errors if already existing.
@@ -88,7 +89,26 @@ router.get("/collection", verifyToken, (req, res) => {
 })
 
 router.post("/add", verifyToken, (req, res) => {
-  res.json({msg: "Add Route Hit!"});
+  db.tradescollections.findOrCreate({
+    where: {
+      collectionId: req.body.card.id,
+      tradeId: req.body.trade
+    }, defaults: {
+      collectionId: req.body.card.id,
+      tradeId: req.body.trade,
+      copies_offered: 3
+    }
+  }).spread((newTrade, created) => {
+    if (created) {
+      res.send({msg: "Added Card to Trade!"});
+    } else {
+      res.json({
+        error: true,
+        status: 401,
+        message: "You have already added that card to this trade!"
+      });
+    }
+  }) 
 })
 
 module.exports = router;

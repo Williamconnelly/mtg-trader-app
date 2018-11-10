@@ -46,3 +46,11 @@
 .current-card {
   margin-top: 2em;
 }
+
+.target-img {
+  display: block;
+}
+
+.add-button {
+  display: inline-block;
+}

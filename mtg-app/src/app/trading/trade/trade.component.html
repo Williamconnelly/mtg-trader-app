@@ -15,8 +15,8 @@
       </div>
     </div>
     <div *ngIf="currentCard.hasOwnProperty('id')" class="current-card">
-      <img src="{{currentCard.printing.img_url}}" alt="{{currentCard.printing.card.name}}">
-      <button (click)="addCard()">Add to Trade</button>
+      <img class="target-img" src="{{currentCard.printing.img_url}}" alt="{{currentCard.printing.card.name}}">
+      <button (click)="addCard()" class="add-button">Add to Trade</button>
     </div>
   </mat-drawer>
 </mat-drawer-container>

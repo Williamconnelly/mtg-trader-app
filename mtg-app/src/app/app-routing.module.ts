@@ -65,7 +65,7 @@ const routes: Routes = [
     component: CardShowComponent
   },
   {
-    path: 'trade',
+    path: 'trade/:id',
     component: TradeComponent
   },
   {
