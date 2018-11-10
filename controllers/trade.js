@@ -13,7 +13,11 @@ router.post("/current", verifyToken, (req, res) => {
     where: {
       id: req.body.id
     }, include: [
-      {model: db.collection}
+      {model: db.collection, include: [
+        {model: db.printings, include: [
+          {model: db.card}
+        ]}
+      ]}
     ]
   }).then(currentTrade => {
     res.send(currentTrade);

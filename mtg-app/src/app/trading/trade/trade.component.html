@@ -2,8 +2,8 @@
   <!-- Main Content -->
   <mat-drawer-content>
     <button mat-raised-button (click)="drawer.toggle()">Toggle drawer</button>
-    <app-trade-display></app-trade-display>
-    <app-trade-display></app-trade-display>
+    <app-trade-display *ngIf="trade.hasOwnProperty('collections')" [userCards]="userOffers"></app-trade-display>
+    <app-trade-display *ngIf="trade.hasOwnProperty('collections')" [userCards]="partnerOffers"></app-trade-display>
     <app-trade-message></app-trade-message>
   </mat-drawer-content>
   <!-- Drawer Content -->
