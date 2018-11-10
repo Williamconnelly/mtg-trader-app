@@ -87,4 +87,8 @@ router.get("/collection", verifyToken, (req, res) => {
   })
 })
 
+router.post("/add", verifyToken, (req, res) => {
+  res.json({msg: "Add Route Hit!"});
+})
+
 module.exports = router;

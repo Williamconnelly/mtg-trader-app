@@ -10,12 +10,13 @@
   <mat-drawer #drawer mode="side">
     <div class="scroll-box">
       <div *ngFor="let card of collection" class="card-row" (click)=targetCard(card)>
-        <p>{{ card.printing.card.name }}</p>
-        <p>{{ card.printing.set.title }}<span>Owned: {{ card.owned_copies }}</span></p>
+        <p class="row-name">{{ card.printing.card.name }} <span *ngIf="card.foil === true">(f)</span></p>
+        <p class="row-set">{{ card.printing.set.title }}<span class="row-num">Available: {{ card.owned_copies }}</span></p>
       </div>
     </div>
     <div *ngIf="currentCard.hasOwnProperty('id')" class="current-card">
       <img src="{{currentCard.printing.img_url}}" alt="{{currentCard.printing.card.name}}">
+      <button (click)="addCard()">Add to Trade</button>
     </div>
   </mat-drawer>
 </mat-drawer-container>

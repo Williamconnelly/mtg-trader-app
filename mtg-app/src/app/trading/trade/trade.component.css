@@ -15,8 +15,32 @@
   border: 1px solid black;
 }
 
+.scroll-box p {
+  margin: 0;
+}
+
+.row-name {
+  font-weight: bold;
+}
+
+.row-set {
+  font-style: italic;
+}
+
+.row-num {
+  float: right;
+  font-style: normal;
+}
+
 .card-row {
   border-top: 1px solid black;
+  padding: 0.2em;
+  font-size: 0.8em;
+}
+
+.card-row:hover {
+  background-color: #dddddde8;
+  cursor: pointer;
 }
 
 .current-card {

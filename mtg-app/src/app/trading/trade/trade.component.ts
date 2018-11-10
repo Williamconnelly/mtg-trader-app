@@ -22,5 +22,9 @@ export class TradeComponent implements OnInit {
     this.currentCard = card;
     console.log(this.currentCard);
   }
-
+  addCard() {
+    this._tradeService.addToTrade(this.targetCard).subscribe(result => {
+      console.log(result);
+    });
+  }
 }
