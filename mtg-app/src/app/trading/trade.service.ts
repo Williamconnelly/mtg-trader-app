@@ -23,7 +23,7 @@ export class TradeService {
   getCurrentTrade(id: number) {
     return this.http.post<any>(`${this._getTradeURL}`, {id});
   }
-  updateTrade() {
-    return this.http.put<any>(this._updateTradeURL);
+  updateCard(card: object, tradeId: number, offered: number) {
+    return this.http.put<any>(this._updateTradeURL, {card, tradeId, offered});
   }
 }

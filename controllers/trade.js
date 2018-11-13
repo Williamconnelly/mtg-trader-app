@@ -116,7 +116,31 @@ router.post("/add", verifyToken, (req, res) => {
 })
 
 router.put("/update", verifyToken, (req, res) => {
-  res.send({msg: "Update route hit"});
+  if (req.body.offered > 0) {
+    db.tradescollections.update({
+      copies_offered: req.body.offered
+    }, {where: {
+      collectionId: req.body.card.id,
+      tradeId: req.body.trade
+    }})
+  } else {
+    db.tradescollections.findOne({
+      where: {
+        collectionId: req.body.card.id,
+        tradeId: req.body.trade
+      }
+    }).then(currentOffer => {
+      currentOffer.destroy();
+      res.json({msg: "CARD DELETED BECAUSE OF 0 ENTRIES"});
+    });
+  }
+  // db.tradescollections.update({
+	// 	rating: req.body.rating
+	// }, {
+	// 	where: {id: req.params.id}
+	// }).then(function(data) {
+	// 	res.sendStatus(200);
+	// });
 });
 
 module.exports = router;

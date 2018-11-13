@@ -43,6 +43,11 @@ export class TradeComponent implements OnInit {
       this.getOffers(this.trade.collections);
     });
   }
+  updateCard() {
+    this._tradeService.updateCard(this.currentCard, this.trade.id, 3).subscribe(result => {
+      console.log(result);
+    });
+  }
   getOffers(trade) {
     this.userOffers = [];
     this.partnerOffers = [];

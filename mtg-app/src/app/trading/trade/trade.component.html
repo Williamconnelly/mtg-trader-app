@@ -17,7 +17,7 @@
     <div *ngIf="currentCard.hasOwnProperty('id')" class="current-card">
       <img class="target-img" src="{{currentCard.printing.img_url}}" alt="{{currentCard.printing.card.name}}">
       <button *ngIf ="updateBool === false" (click)="addCard()" class="add-button">Add to Trade</button>
-      <button *ngIf ="updateBool === true" (click)="addCard()" class="add-button">Update Offer</button>
+      <button *ngIf ="updateBool === true" (click)="updateCard()" class="add-button">Update Offer</button>
     </div>
   </mat-drawer>
 </mat-drawer-container>

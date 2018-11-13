@@ -9,6 +9,7 @@ const cors = require("cors");
 
 var app = express();
 app.use(bp.json());
+// app.use(express.json());
 app.use(cors());
 
 app.use('/auth', require('./controllers/auth'));
