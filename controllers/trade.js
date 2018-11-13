@@ -115,4 +115,8 @@ router.post("/add", verifyToken, (req, res) => {
   }) 
 })
 
+router.put("/update", verifyToken, (req, res) => {
+  res.send({msg: "Update route hit"});
+});
+
 module.exports = router;

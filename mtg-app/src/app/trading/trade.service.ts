@@ -9,6 +9,7 @@ export class TradeService {
   private _collectionURL = 'http://localhost:3000/trade/collection';
   private _addToTradeURL = 'http://localhost:3000/trade/add';
   private _getTradeURL = `http://localhost:3000/trade/current`;
+  private _updateTradeURL = `http://localhost:3000/trade/update`;
   constructor(private http: HttpClient) { }
   initiateTrade(id) {
     return this.http.get<any>(`${this._initiateTradeURL}${id}`);
@@ -22,7 +23,7 @@ export class TradeService {
   getCurrentTrade(id: number) {
     return this.http.post<any>(`${this._getTradeURL}`, {id});
   }
-  // initiateTrade(id) {
-  //   return this.http.get<any>('http://localhost:3000/trade/test');
-  // }
+  updateTrade() {
+    return this.http.put<any>(this._updateTradeURL);
+  }
 }
