@@ -11,13 +11,29 @@
     <div class="scroll-box">
       <div *ngFor="let card of collection" class="card-row" (click)=targetCard(card)>
         <p class="row-name">{{ card.printing.card.name }} <span *ngIf="card.foil === true">(f)</span></p>
-        <p class="row-set">{{ card.printing.set.title }}<span class="row-num">Available: {{ card.owned_copies }}</span></p>
+        <p class="row-set">{{ card.printing.set.title }}<span class="row-num">Available: {{ card.trade_copies }}</span></p>
       </div>
     </div>
-    <div *ngIf="currentCard.hasOwnProperty('id')" class="current-card">
-      <img class="target-img" src="{{currentCard.printing.img_url}}" alt="{{currentCard.printing.card.name}}">
+    <div *ngIf="currentCard.selection.hasOwnProperty('id')" class="current-card">
+      <img class="target-img" src="{{currentCard.selection.printing.img_url}}" alt="{{currentCard.selection.printing.card.name}}">
+      <!-- <select [(ngModel)]="currentCard.offerNumber" name="offerSelect">
+        <option *ngFor="let i of currentCard.offerArray" [ngValue]="i">{{ i }}</option>
+      </select>
       <button *ngIf ="updateBool === false" (click)="addCard()" class="add-button">Add to Trade</button>
-      <button *ngIf ="updateBool === true" (click)="updateCard()" class="add-button">Update Offer</button>
+      <button *ngIf ="updateBool === true" (click)="updateCard()" class="add-button">Update Offer</button> -->
+      <div *ngIf ="updateBool === false">
+        <select [(ngModel)]="currentCard.offerNumber" name="offerSelect">
+          <option *ngFor="let i of currentCard.offerArray" [ngValue]="i">{{ i }}</option>
+        </select>
+        <button (click)="addCard()" class="add-button">Add to Trade</button>
+      </div>
+      <div *ngIf ="updateBool === true">
+        <select [(ngModel)]="currentCard.offerNumber" name="offerSelect">
+          <option *ngFor="let i of currentCard.offerArray" [ngValue]="i">{{ i }}</option>
+        </select>
+      <button (click)="updateCard()" class="add-button">Update Offer</button>
+      <button (click)="removeCard()">Remove</button>
+      </div>
     </div>
   </mat-drawer>
 </mat-drawer-container>

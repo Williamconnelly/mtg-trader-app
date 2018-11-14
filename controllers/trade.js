@@ -96,11 +96,11 @@ router.post("/add", verifyToken, (req, res) => {
   db.tradescollections.findOrCreate({
     where: {
       collectionId: req.body.card.id,
-      tradeId: req.body.trade
+      tradeId: req.body.tradeId
     }, defaults: {
       collectionId: req.body.card.id,
-      tradeId: req.body.trade,
-      copies_offered: 3
+      tradeId: req.body.tradeId,
+      copies_offered: req.body.offered
     }
   }).spread((newTrade, created) => {
     if (created) {
@@ -121,26 +121,33 @@ router.put("/update", verifyToken, (req, res) => {
       copies_offered: req.body.offered
     }, {where: {
       collectionId: req.body.card.id,
-      tradeId: req.body.trade
-    }})
+      tradeId: req.body.tradeId
+    }}).then(result => {
+      console.log(result);
+      res.send({msg: `Updated!`});
+    })
   } else {
     db.tradescollections.findOne({
       where: {
         collectionId: req.body.card.id,
-        tradeId: req.body.trade
+        tradeId: req.body.tradeId
       }
     }).then(currentOffer => {
       currentOffer.destroy();
       res.json({msg: "CARD DELETED BECAUSE OF 0 ENTRIES"});
     });
   }
-  // db.tradescollections.update({
-	// 	rating: req.body.rating
-	// }, {
-	// 	where: {id: req.params.id}
-	// }).then(function(data) {
-	// 	res.sendStatus(200);
-	// });
 });
+
+router.post("/remove", verifyToken, (req, res) => {
+  db.tradescollections.destroy({
+    where: {
+      collectionId: req.body.card.id,
+      tradeId: req.body.tradeId
+    }
+  }).then(result => {
+    res.send({msg: "Removed"});
+  })
+})
 
 module.exports = router;
