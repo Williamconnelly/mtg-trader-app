@@ -9,7 +9,7 @@
   <!-- Drawer Content -->
   <mat-drawer #drawer mode="side">
     <div class="scroll-box">
-      <div *ngFor="let card of collection" class="card-row" (click)=targetCard(card)>
+      <div *ngFor="let card of collection" class="card-row" (click)=targetCard(card) [class.matched]="card.hasOwnProperty('match')">
         <p class="row-name">{{ card.printing.card.name }} <span *ngIf="card.foil === true">(f)</span></p>
         <p class="row-set">{{ card.printing.set.title }}<span class="row-num">Available: {{ card.trade_copies }}</span></p>
       </div>

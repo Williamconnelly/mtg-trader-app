@@ -11,12 +11,16 @@ export class TradeService {
   private _getTradeURL = `http://localhost:3000/trade/current`;
   private _updateTradeURL = `http://localhost:3000/trade/update`;
   private _removeTradeURL = `http://localhost:3000/trade/remove`;
+  private _comparePartnersURL = `http://localhost:3000/trade/compare`;
   constructor(private http: HttpClient) { }
   initiateTrade(id) {
     return this.http.get<any>(`${this._initiateTradeURL}${id}`);
   }
   getCollection() {
     return this.http.get<any>(this._collectionURL);
+  }
+  comparePartners(partnerId) {
+    return this.http.post(this._comparePartnersURL, {partnerId});
   }
   addToTrade(card: object, tradeId: number, offered: number) {
     return this.http.post<any>(this._addToTradeURL, {card, tradeId, offered});

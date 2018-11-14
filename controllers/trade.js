@@ -76,7 +76,6 @@ router.get("/initiate/:id", verifyToken, (req, res) => {
   })  
 })
 
-
 router.get("/collection", verifyToken, (req, res) => {
   db.collection.findAll({
     where: {
@@ -89,6 +88,59 @@ router.get("/collection", verifyToken, (req, res) => {
     ]
   }).then(result => {
     res.send(result);
+  })
+})
+
+router.post("/compare", verifyToken, (req, res) => {
+  db.collection.findAll({
+    raw: true,
+    attributes: ['userId','owned_copies','trade_copies','foil','card_condition'],
+    where: {
+      userId: req.user.id,
+      trade_copies: {
+        [op.gt]: 0
+      }
+    },
+    include: [
+      {model: db.printings, attributes: {exclude: ['createdAt','updatedAt','setId','foil_version', 'nonFoil_version']}, include: [
+        {model: db.card, attributes: {exclude: ['createdAt','updatedAt']}, include: [
+          {model: db.user, required: true, where: {id: req.body.partnerId}, 
+          attributes: ['email','username']}
+        ]},
+        {model: db.set, attributes: ['code','title']}
+      ]}
+    ]
+  }).then(result => {
+    let tradePartners = {};
+    for (userCard in result) {
+      let currentUserId = result[userCard]['printing.card.users.id'];
+      let currentUsername = result[userCard]['printing.card.users.username'];
+      if (tradePartners.hasOwnProperty(currentUserId) &&
+      (result[userCard]['printing.id'] === result[userCard]['printing.card.users.wishlist.pref_printing'] ||
+      result[userCard]['printing.card.users.wishlist.pref_printing'] === null) && 
+      (result[userCard]['printing.card.users.wishlist.pref_foil'] === true && result[userCard]['foil'] === true || 
+      result[userCard]['printing.card.users.wishlist.pref_foil'] === false && result[userCard]['foil'] === false)) {
+        tradePartners[currentUserId].cards.push(result[userCard]);
+      } else if ((result[userCard]['printing.id'] === result[userCard]['printing.card.users.wishlist.pref_printing'] ||
+      result[userCard]['printing.card.users.wishlist.pref_printing'] === null) && 
+      (result[userCard]['printing.card.users.wishlist.pref_foil'] === true && result[userCard]['foil'] === true || 
+      result[userCard]['printing.card.users.wishlist.pref_foil'] === false && result[userCard]['foil'] === false)) {
+        tradePartners[currentUserId] = {
+          username: currentUsername,
+          userId: currentUserId,
+          cards: [result[userCard]]
+        }
+      }
+    }
+    const newArray = Object.values(tradePartners).sort((a,b) => {
+      return b.cards.length - a.cards.length}
+    );
+    res.send(newArray);
+  }).catch(err => {
+    res.json({
+      error: true,
+      message: "Could not complete Gathering: Provide"
+    });
   })
 })
 

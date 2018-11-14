@@ -20,6 +20,8 @@ export class TradeComponent implements OnInit {
     offerArray: [],
     offerNumber: 1
   };
+  comparison: Object = {};
+
   constructor(private _tradeService: TradeService, private _route: ActivatedRoute) { }
 
   ngOnInit() {
@@ -28,6 +30,7 @@ export class TradeComponent implements OnInit {
       console.log(this.collection);
     });
     this.updateTrade();
+    this.makeComparison();
   }
   targetCard(card) {
     this.updateBool = false;
@@ -63,6 +66,15 @@ export class TradeComponent implements OnInit {
       this.updateBool = false;
     });
   }
+  updateTrade() {
+    this._route.params.subscribe((params: Params) => {
+      this._tradeService.getCurrentTrade(params.id).subscribe(result => {
+        this.trade = result;
+        console.log(this.trade);
+        this.getOffers(this.trade.collections);
+      });
+    });
+  }
   getOffers(trade) {
     this.userOffers = [];
     this.partnerOffers = [];
@@ -73,17 +85,23 @@ export class TradeComponent implements OnInit {
     console.log(this.userOffers);
     console.log(this.partnerOffers);
   }
-  updateTrade() {
-    this._route.params.subscribe((params: Params) => {
-      this._tradeService.getCurrentTrade(params.id).subscribe(result => {
-        this.trade = result;
-        console.log(this.trade);
-        this.getOffers(this.trade.collections);
-      });
-    });
-  }
   toggleCardDisplay() {
     this.displayToggle === false ? this.displayToggle = true : this.displayToggle = false;
     console.log(this.displayToggle);
+  }
+  // Temp Method
+  makeComparison() {
+    this._tradeService.comparePartners(2).subscribe(result => {
+      this.comparison = result;
+      console.log(this.comparison);
+      for (let i = 0; i < this.collection.length; i++) {
+        for (let o = 0; o < this.comparison[0].cards.length; o++) {
+          if (this.collection[i].printingId === this.comparison[0].cards[o]['printing.id']) {
+            this.collection[i].match = true;
+          }
+        }
+      }
+      console.log(this.collection);
+    });
   }
 }

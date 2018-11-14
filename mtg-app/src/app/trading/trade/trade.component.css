@@ -54,3 +54,7 @@
 .add-button {
   display: inline-block;
 }
+
+.matched {
+  color: #129612;
+}
