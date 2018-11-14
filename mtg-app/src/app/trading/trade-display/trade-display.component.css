@@ -1,0 +1,8 @@
+:host {
+  display: block;
+  height: 15em;
+}
+
+.card-display {
+  display: inline-block;
+}

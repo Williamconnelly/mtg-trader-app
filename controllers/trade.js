@@ -7,62 +7,91 @@ const op = Sequelize.Op;
 const verifyToken = require("../middleware/verifyToken");
 require('dotenv').config();
 
-router.get("/gathering/acquire", verifyToken, (req, res) => {
-  // Find the wishlist of the logged user
-  db.wishlist.findAll({
-    raw: true,
-    attributes: {exclude: ['id','createdAt','updatedAt']},
+// Finds trade
+router.post("/current", verifyToken, (req, res) => {
+  db.trade.findOne({
     where: {
-      userId: req.user.id
+      id: req.body.id
     }, include: [
-      {model: db.card, required: true, attributes: {exclude: ['createdAt','updatedAt']}, include: [
-        {model: db.printings, as: 'cardPrintings', required: true, attributes: {exclude: ['cardId',
-        'createdAt','updatedAt']}, include: [
-          {model: db.set, attributes: {exclude: ['createdAt','updatedAt']}},
-          {model: db.user, required: true, attributes: {exclude: ['password','createdAt','updatedAt']}, 
-            through: {where: {trade_copies: {[op.gt]: 0}}}, where: {[op.not]: {id: req.user.id}}}
+      {model: db.collection, include: [
+        {model: db.printings, include: [
+          {model: db.card}
         ]}
       ]}
     ]
-  }).then(result => {
-    // Parter Container
-    let tradePartners = {};
-    // For each card in the wishlist, format the data into different user objects
-    for (wishCard in result) {
-      let currentUserId = result[wishCard]['card.cardPrintings.users.id'];
-      let currentUsername = result[wishCard]['card.cardPrintings.users.username'];
-      // If the user already exists AND the printing matches OR has no pref
-      if (tradePartners.hasOwnProperty(currentUserId) && 
-      (result[wishCard].pref_printing === result[wishCard]['card.cardPrintings.id'] || 
-      result[wishCard].pref_printing === null) && 
-      (result[wishCard]['card.cardPrintings.users.collection.foil'] === true && result[wishCard]['pref_foil'] === true || 
-      result[wishCard]['card.cardPrintings.users.collection.foil'] === false && result[wishCard]['pref_foil'] === false)) {
-        tradePartners[currentUserId].cards.push(result[wishCard])
-      // If the user does not exist AND the printing matches OR has no pref
-      } else if ((result[wishCard].pref_printing === result[wishCard]['card.cardPrintings.id'] || 
-      result[wishCard].pref_printing === null) && 
-      (result[wishCard]['card.cardPrintings.users.collection.foil'] === true && result[wishCard]['pref_foil'] === true || 
-      result[wishCard]['card.cardPrintings.users.collection.foil'] === false && result[wishCard]['pref_foil'] === false)) {
-        tradePartners[currentUserId] = {
-          username: currentUsername,
-          userId: currentUserId,
-          cards: [result[wishCard]]
-        }
-      }
+  }).then(currentTrade => {
+    res.send(currentTrade);
+  });
+})
+
+// Finds all trades where the user is either a_user or b_user
+router.get("/list", verifyToken, (req, res) => {
+  db.trade.findAll({
+    where: {
+      [op.or]: [{a_user: req.user.id}, {b_user: req.user.id}]
     }
-    const newArray = Object.values(tradePartners).sort((a,b) => {
-      return b.cards.length - a.cards.length}
-    );
-    res.send(newArray);
-  }).catch(err => {
-    res.json({
-      error: true,
-      message: "Could not complete Gathering: Acquire"
-    });
+  }).then(result => {
+    res.json(result);
   })
 })
 
-router.get("/gathering/provide", verifyToken, (req, res) => {
+// Finds all trades where the user has been sent a request but has not accepted
+router.get("/pending", verifyToken, (req, res) => {
+  db.trade.findAll({
+    where: {
+      b_user: req.user.id,
+      b_accept: false
+    }
+  }).then(result => {
+    res.json(result);
+  })
+})
+
+// Initiates a trade between logged user as a_user and targeted user as b_user. Errors if already existing.
+router.get("/initiate/:id", verifyToken, (req, res) => {
+  db.trade.findOrCreate({
+    where: {
+      [op.or]: [{a_user: req.user.id, b_user: req.params.id}, {a_user: req.params.id, b_user: req.user.id}]
+    },
+    defaults: {
+      a_user: req.user.id,
+      b_user: req.params.id,
+      phase: 0,
+      b_accept: false,
+      a_lock: null,
+      b_lock: null,
+      a_submit: null,
+      b_submit: null
+    }
+  }).spread((trade, created) => {
+    if (created) {
+      res.json({msg: `TRADE CREATED BETWEEN USER ${req.user.id} AND USER ${req.params.id}`})
+    } else {
+      res.json({
+        error: true,
+        status: 401,
+        message: "A Trade Between Those Two Users Already Exists"
+      });
+    }
+  })  
+})
+
+router.get("/collection", verifyToken, (req, res) => {
+  db.collection.findAll({
+    where: {
+      userId: req.user.id,
+      trade_copies: {[op.gt]: 0}
+    }, include: [
+      {model: db.printings, include: [
+        {model: db.card}, {model: db.set}
+      ]}
+    ]
+  }).then(result => {
+    res.send(result);
+  })
+})
+
+router.post("/compare", verifyToken, (req, res) => {
   db.collection.findAll({
     raw: true,
     attributes: ['userId','owned_copies','trade_copies','foil','card_condition'],
@@ -75,7 +104,7 @@ router.get("/gathering/provide", verifyToken, (req, res) => {
     include: [
       {model: db.printings, attributes: {exclude: ['createdAt','updatedAt','setId','foil_version', 'nonFoil_version']}, include: [
         {model: db.card, attributes: {exclude: ['createdAt','updatedAt']}, include: [
-          {model: db.user, required: true, where: {id: {[op.not]: req.user.id}}, 
+          {model: db.user, required: true, where: {id: req.body.partnerId}, 
           attributes: ['email','username']}
         ]},
         {model: db.set, attributes: ['code','title']}
@@ -115,198 +144,62 @@ router.get("/gathering/provide", verifyToken, (req, res) => {
   })
 })
 
-router.get("/gathering/acquire/card/:name", verifyToken, (req, res) => {
-  db.collection.findAll({
-    raw: true,
-    attributes: ['userId','owned_copies','trade_copies','foil','card_condition'],
+router.post("/add", verifyToken, (req, res) => {
+  db.tradescollections.findOrCreate({
     where: {
-      userId: {[op.not]: req.user.id},
-      trade_copies: {[op.gt]:0}
-    }, include: [
-      {model: db.printings, required: true, attributes: {exclude: ['createdAt','updatedAt','setId','foil_version', 'nonFoil_version']}, include: [
-        {model: db.card, required: true, attributes: {exclude: ['createdAt','updatedAt']}, where: {name: req.params.name}},
-        {model: db.set, attributes: ['code','title']}
-      ]},
-      {model: db.user}
-    ]
-  }).then(result => {
-    let acquirePartners = {};
-    for (card in result) {
-      let currentUserId = result[card]['user.id'];
-      let currentUsername = result[card]['user.username'];
-      let userCollection = {
-        "card.cardPrintings.set.code": result[card]['printing.set.code'],
-        "card.cardPrintings.set.title": result[card]['printing.set.title'],
-        "card.cardPrintings.id": result[card]['printing.id'],
-        "card.name": result[card]['printing.card.name'],
-        "card.cardPrintings.users.collection.foil": result[card]['foil'],
-        "card.cardPrintings.users.collection.owned_copies": result[card]['owned_copies'],
-        "card.cardPrintings.users.collection.trade_copies": result[card]['trade_copies']
-      }
-      if (acquirePartners.hasOwnProperty(currentUserId)) {
-        acquirePartners[currentUserId].cards.push(userCollection);
-      } else {
-        acquirePartners[currentUserId] = {
-          username: currentUsername,
-          userId: currentUserId,
-          cards: [userCollection]
-        }
-      }
+      collectionId: req.body.card.id,
+      tradeId: req.body.tradeId
+    }, defaults: {
+      collectionId: req.body.card.id,
+      tradeId: req.body.tradeId,
+      copies_offered: req.body.offered
     }
-    const acquireArray = Object.values(acquirePartners).sort((a,b) => {
-      return b.cards.length - a.cards.length}
-    );
-    res.send(acquireArray);
-  }).catch(err => {
-    res.json({
-      error: true,
-      message: "Could not find card for ACQUIRE"
+  }).spread((newTrade, created) => {
+    if (created) {
+      res.send({msg: "Added Card to Trade!"});
+    } else {
+      res.json({
+        error: true,
+        status: 401,
+        message: "You have already added that card to this trade!"
+      });
+    }
+  }) 
+})
+
+router.put("/update", verifyToken, (req, res) => {
+  if (req.body.offered > 0) {
+    db.tradescollections.update({
+      copies_offered: req.body.offered
+    }, {where: {
+      collectionId: req.body.card.id,
+      tradeId: req.body.tradeId
+    }}).then(result => {
+      console.log(result);
+      res.send({msg: `Updated!`});
+    })
+  } else {
+    db.tradescollections.findOne({
+      where: {
+        collectionId: req.body.card.id,
+        tradeId: req.body.tradeId
+      }
+    }).then(currentOffer => {
+      currentOffer.destroy();
+      res.json({msg: "CARD DELETED BECAUSE OF 0 ENTRIES"});
     });
-  })
-})
-
-router.get("/gathering/provide/card/:name", verifyToken, (req, res) => {
-  db.wishlist.findAll({
-    attributes: {exclude: ['createdAt','updatedAt']},
-    where: {
-      userId: {[op.not]: req.user.id}
-    }, include: [
-      {model: db.card, where: {name: req.params.name}, include: [
-        {model: db.set}
-      ]},
-      {model: db.user, required: true, attributes: {exclude: ['password','createdAt','updatedAt']}}
-    ]
-  }).then(result => {
-    let providePartners = {};
-    for (card in result) {
-      let currentUser = result[card].user;
-      let prefInfo = {};
-      if (result[card].pref_printing !== null) {
-        prefInfo.prefId = result[card].pref_printing;
-        for (set in result[card].card.sets) {
-          if (result[card].card.sets[set].printings.id === result[card].pref_printing) {
-            prefInfo.prefTitle = result[card].card.sets[set].title
-          }
-        }
-      } else {
-        prefInfo.prefId = result[card].card.sets[0].printings.id;
-        prefInfo.prefTitle = result[card].card.sets[0].title
-      }
-      let userWishlist = {
-        "printing.id": prefInfo.prefId,
-        "printing.card.name": result[card].card.name,
-        "printing.card.users.wishlist.number_wanted": result[card].number_wanted,
-        "printing.card.users.wishlist.pref_printing": result[card].pref_printing,
-        "printing.set.title": prefInfo.prefTitle,
-        "printing.card.users.wishlist.pref_foil": result[card].pref_foil
-      }
-      if (providePartners.hasOwnProperty(currentUser.id)) {
-        providePartners[currentUser.id].cards.push(userWishlist)
-      } else {
-        providePartners[currentUser.id] = {
-          username: currentUser.username,
-          userId: currentUser.id,
-          cards: [userWishlist]
-        }
-      }
-    }
-    const provideArray = Object.values(providePartners).sort((a,b) => {
-      return b.cards.length - a.cards.length}
-    );
-    res.send(provideArray);
-  })
-})
-
-router.get("/gathering/acquire/user/:name", verifyToken, (req, res) => {
-  db.collection.findAll({
-    attributes: ['userId','owned_copies','trade_copies','foil','card_condition'],
-    where: {
-      trade_copies: {[op.gt]:0}
-    }, include: [
-      {model: db.printings, required: true, attributes: {exclude: ['createdAt','updatedAt','setId','foil_version','nonFoil_version']}, include: [
-        {model: db.card, required: true, attributes: {exclude: ['createdAt','updatedAt']}},
-        {model: db.set, attributes: ['code','title']}
-      ]},
-      {model: db.user, required: true, where: {username: req.params.name}}
-    ]
-  }).then(result => {
-    let acquirePartners = {};
-    for (card in result) {
-      let currentUser = result[card].user;
-      let userCollection = {
-        "card.cardPrintings.set.code": result[card].printing.set.code,
-        "card.cardPrintings.set.title": result[card].printing.set.title,
-        "card.cardPrintings.id": result[card].printing.id,
-        "card.name": result[card].printing.card.name,
-        "card.cardPrintings.users.collection.foil": result[card].foil,
-        "card.cardPrintings.users.collection.owned_copies": result[card].owned_copies,
-        "card.cardPrintings.users.collection.trade_copies": result[card].trade_copies
-      }
-      if (acquirePartners.hasOwnProperty(currentUser.id)) {
-        acquirePartners[currentUser.id].cards.push(userCollection);
-      } else {
-        acquirePartners[currentUser.id] = {
-          username: currentUser.username,
-          userId: currentUser.id,
-          cards: [userCollection]
-        }
-      }
-    }
-    const acquireArray = Object.values(acquirePartners).sort((a,b) => {
-      return b.cards.length - a.cards.length}
-    );
-    res.send(acquireArray);
-  })
+  }
 });
 
-router.get("/gathering/provide/user/:name", verifyToken, (req, res) => {
-  db.wishlist.findAll({
-    attributes: {exclude: ['createdAt','updatedAt']},
-    include: [
-      {model: db.card, include: [
-        {model: db.set}
-      ]},
-      {model: db.user, where: {username: req.params.name}, required: true, attributes: {exclude: ['password','createdAt','updatedAt']}}
-    ]
-  }).then(result => {
-    let providePartners = {};
-    for (card in result) {
-      let currentUser = result[card].user;
-      let prefInfo = {};
-      if (result[card].pref_printing !== null) {
-        prefInfo.prefId = result[card].pref_printing;
-        for (set in result[card].card.sets) {
-          if (result[card].card.sets[set].printings.id === result[card].pref_printing) {
-            prefInfo.prefTitle = result[card].card.sets[set].title
-          }
-        }
-      } else {
-        prefInfo.prefId = result[card].card.sets[0].printings.id;
-        prefInfo.prefTitle = result[card].card.sets[0].title
-      }
-      let userWishlist = {
-        "printing.id": prefInfo.prefId,
-        "printing.card.name": result[card].card.name,
-        "printing.card.users.wishlist.number_wanted": result[card].number_wanted,
-        "printing.card.users.wishlist.pref_printing": result[card].pref_printing,
-        "printing.set.title": prefInfo.prefTitle,
-        "printing.card.users.wishlist.pref_foil": result[card].pref_foil
-      }
-      if (providePartners.hasOwnProperty(currentUser.id)) {
-        providePartners[currentUser.id].cards.push(userWishlist)
-      } else {
-        providePartners[currentUser.id] = {
-          username: currentUser.username,
-          userId: currentUser.id,
-          cards: [userWishlist]
-        }
-      }
+router.post("/remove", verifyToken, (req, res) => {
+  db.tradescollections.destroy({
+    where: {
+      collectionId: req.body.card.id,
+      tradeId: req.body.tradeId
     }
-    const provideArray = Object.values(providePartners).sort((a,b) => {
-      return b.cards.length - a.cards.length}
-    );
-    res.send(provideArray);
+  }).then(result => {
+    res.send({msg: "Removed"});
   })
-});
+})
 
 module.exports = router;

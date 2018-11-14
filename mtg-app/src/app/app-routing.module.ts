@@ -10,6 +10,7 @@ import { EditCollectionComponent } from './edit-collection/edit-collection.compo
 import { ViewCollectionComponent } from './view-collection/view-collection.component';
 import { HomeComponent } from './home/home.component';
 import { CardShowComponent } from './card-show/card-show.component';
+import { TradeComponent } from './trading/trade/trade.component';
 
 const routes: Routes = [
   {
@@ -62,6 +63,10 @@ const routes: Routes = [
   {
     path: 'card-show/:cardId',
     component: CardShowComponent
+  },
+  {
+    path: 'trade/:id',
+    component: TradeComponent
   },
   {
     path: '**',

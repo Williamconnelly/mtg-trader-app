@@ -7,6 +7,8 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   tradescollections.associate = function(models) {
     // associations can be defined here
+    models.tradescollections.belongsTo(models.collection);
+    models.tradescollections.belongsTo(models.trade);
   };
   return tradescollections;
 };

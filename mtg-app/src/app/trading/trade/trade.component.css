@@ -1,0 +1,60 @@
+.mat-drawer {
+  width: 22%;
+  padding: 0 1%;
+}
+
+.mat-drawer-container {
+  background-color: inherit;
+}
+
+.scroll-box {
+  overflow: auto;
+  width: 80%;
+  height: 40%;
+  margin-top: 1em;
+  border: 1px solid black;
+}
+
+.scroll-box p {
+  margin: 0;
+}
+
+.row-name {
+  font-weight: bold;
+}
+
+.row-set {
+  font-style: italic;
+}
+
+.row-num {
+  float: right;
+  font-style: normal;
+}
+
+.card-row {
+  border-top: 1px solid black;
+  padding: 0.2em;
+  font-size: 0.8em;
+}
+
+.card-row:hover {
+  background-color: #dddddde8;
+  cursor: pointer;
+}
+
+.current-card {
+  margin-top: 2em;
+}
+
+.target-img {
+  display: block;
+}
+
+.add-button {
+  display: inline-block;
+}
+
+.matched {
+  color: #129612;
+}
