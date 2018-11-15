@@ -177,7 +177,7 @@ router.post("/add", verifyToken, (req, res) => {
           status: "Success",
           msg: "Added Card to Trade!",
           trade: collection
-        })
+        });
       });
       // res.send({
       //   msg: "Added Card to Trade!",
@@ -201,9 +201,33 @@ router.put("/update", verifyToken, (req, res) => {
       collectionId: req.body.card.id,
       tradeId: req.body.tradeId
     }}).then(result => {
-      console.log(result);
-      res.send({msg: `Updated!`});
-    })
+      // console.log(result);
+      // res.send({msg: `Updated!`});
+      db.collection.findOne({
+        where: {
+          id: req.body.card.id
+        }, include: [
+          {model: db.printings, include: [
+            {model: db.card}
+          ]}, 
+          {model: db.tradescollections, as: "tradeEntry", where: {
+            tradeId: req.body.tradeId
+          }}
+        ]
+      }).then(collection => {
+        res.json({
+          status: "Success",
+          msg: "Updated Card in Trade!",
+          trade: collection
+        });
+      })
+    }).catch(err => {
+      res.json({
+        status: "Failure",
+        msg: "Failed to Update Card in Trade",
+        err
+      });
+    }); 
   } else {
     db.tradescollections.findOne({
       where: {
@@ -224,7 +248,17 @@ router.post("/remove", verifyToken, (req, res) => {
       tradeId: req.body.tradeId
     }
   }).then(result => {
-    res.send({msg: "Removed"});
+    res.json({
+      status: "Success",
+      msg: "Removed Card from Trade",
+      cardRemoved: req.body.card.id
+    });
+  }).catch(err => {
+    res.json({
+      status: "Failure",
+      msg: "Failed to Remove Card from Trade",
+      err
+    });
   })
 })
 
