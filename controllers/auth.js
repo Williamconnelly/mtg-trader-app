@@ -5,6 +5,7 @@ const Sequelize = require('sequelize');
 var db = require("../models");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+const verifyToken = require("../middleware/verifyToken");
 
 // Signup
 router.post("/signup", (req, res) => {
@@ -71,6 +72,18 @@ router.post("/login", (req, res) => {
       })
     }
   });
+})
+
+// Get user data for front end storage
+router.get("/getUser", verifyToken, (req, res) => {
+  db.user.findOne({
+    where: {
+      id: req.user.id
+    },
+    attributes: {exlude: ["createdAt", "updatedAt", "password", "email"]}
+  }).then(user => {
+    res.json(user);
+  })
 })
 
 module.exports = router;

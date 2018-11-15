@@ -17,10 +17,15 @@ router.post("/current", verifyToken, (req, res) => {
         {model: db.printings, include: [
           {model: db.card}
         ]}
-      ]}
+      ]},
+      {model: db.user, as:"user_a", attributes: {exclude: ["password", "createdAt", "updatedAt", "email"]}},
+      {model: db.user, as:"user_b", attributes: {exclude: ["password", "createdAt", "updatedAt", "email"]}}
     ]
   }).then(currentTrade => {
-    res.send(currentTrade);
+    res.json({
+      trade:currentTrade,
+      myUser: req.user.id
+    });
   });
 })
 
@@ -156,7 +161,28 @@ router.post("/add", verifyToken, (req, res) => {
     }
   }).spread((newTrade, created) => {
     if (created) {
-      res.send({msg: "Added Card to Trade!"});
+      db.collection.findOne({
+        where: {
+          id: newTrade.collectionId
+        }, include: [
+          {model: db.printings, include: [
+            {model: db.card}
+          ]}, 
+          {model: db.tradescollections, as: "tradeEntry", where: {
+            tradeId: newTrade.tradeId
+          }}
+        ]
+      }).then(collection => {
+        res.json({
+          status: "Success",
+          msg: "Added Card to Trade!",
+          trade: collection
+        })
+      });
+      // res.send({
+      //   msg: "Added Card to Trade!",
+      //   trade: newTrade
+      // });
     } else {
       res.json({
         error: true,
