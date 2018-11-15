@@ -1,3 +1,7 @@
-<p>
-  trade-message works!
-</p>
+<div *ngFor="let message of messages">
+  <p>{{ message }}</p>
+</div>
+<form (submit)="sendMessage()">
+  <input type="text" name="messageInput" [(ngModel)]="messageInput">
+  <input type="submit" value="Send">
+</form>

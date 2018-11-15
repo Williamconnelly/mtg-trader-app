@@ -24,6 +24,9 @@ export class LoginComponent implements OnInit {
           this.errors = res;
         } else {
           localStorage.setItem('token', res.token);
+          this._auth.getUser().subscribe(data => {
+            this._auth.storeUser(data);
+          })
           this._router.navigate(['/']);
         }
       },

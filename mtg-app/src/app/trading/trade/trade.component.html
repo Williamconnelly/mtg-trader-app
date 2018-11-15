@@ -2,19 +2,19 @@
   <!-- Main Content -->
   <mat-drawer-content>
     <button mat-raised-button (click)="drawer.toggle()">Toggle drawer</button>
-    <app-trade-display *ngIf="trade.hasOwnProperty('collections')" [userCards]="userOffers"></app-trade-display>
-    <app-trade-display *ngIf="trade.hasOwnProperty('collections')" [userCards]="partnerOffers"></app-trade-display>
-    <app-trade-message></app-trade-message>
+    <app-trade-display *ngIf="trade && trade.hasOwnProperty('collections')" [userCards]="userOffers" (targetCardEmitter)="targetCardFromOffer($event)"></app-trade-display>
+    <app-trade-display *ngIf="trade && trade.hasOwnProperty('collections')" [userCards]="partnerOffers"></app-trade-display>
+    <app-trade-message [socket]="socket"></app-trade-message>
   </mat-drawer-content>
   <!-- Drawer Content -->
   <mat-drawer #drawer mode="side">
-    <div class="scroll-box">
+    <div class="scroll-box" *ngIf="trade !== undefined && trade.hasOwnProperty('collections')">
       <div *ngFor="let card of collection" class="card-row" (click)=targetCard(card) [class.matched]="card.hasOwnProperty('match')">
         <p class="row-name">{{ card.printing.card.name }} <span *ngIf="card.foil === true">(f)</span></p>
         <p class="row-set">{{ card.printing.set.title }}<span class="row-num">Available: {{ card.trade_copies }}</span></p>
       </div>
     </div>
-    <div *ngIf="currentCard.selection.hasOwnProperty('id')" class="current-card">
+    <div *ngIf="currentCard.selection && currentCard.selection.hasOwnProperty('id')" class="current-card">
       <img class="target-img" src="{{currentCard.selection.printing.img_url}}" alt="{{currentCard.selection.printing.card.name}}">
       <!-- <select [(ngModel)]="currentCard.offerNumber" name="offerSelect">
         <option *ngFor="let i of currentCard.offerArray" [ngValue]="i">{{ i }}</option>

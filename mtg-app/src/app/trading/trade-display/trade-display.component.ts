@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-trade-display',
@@ -7,9 +7,16 @@ import { Component, OnInit, Input } from '@angular/core';
 })
 export class TradeDisplayComponent implements OnInit {
   @Input() userCards;
+
+  @Output() targetCardEmitter = new EventEmitter()
+
   constructor() { }
 
   ngOnInit() {
+  }
+
+  targetCardFromOffer(card) {
+    this.targetCardEmitter.emit(card);
   }
 
 }

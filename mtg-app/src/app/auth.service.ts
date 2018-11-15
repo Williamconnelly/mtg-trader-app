@@ -9,6 +9,8 @@ export class AuthService {
   // Property to store backend API url
   private _registerUrl = 'http://localhost:3000/auth/signup';
   private _loginUrl = 'http://localhost:3000/auth/login';
+  private _getUserUrl = 'http://localhost:3000/auth/getUser';
+  private user;
 
   constructor(private http: HttpClient, private _router: Router) { }
 
@@ -29,6 +31,19 @@ export class AuthService {
   logoutUser() {
     localStorage.removeItem('token');
     this._router.navigate(['/']);
+  }
+  getUser() {
+    return this.http.get<any>(this._getUserUrl);
+  }
+  storeUser(user) {
+    this.user = user;
+  }
+  returnUser() {
+    if (this.user !== undefined) {
+      return {id:this.user.id, username:this.user.username}
+    } else {
+      return false;
+    }
   }
 }
 
