@@ -1,6 +1,11 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
   var tradescollections = sequelize.define('tradescollections', {
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true
+    },
     collectionId: DataTypes.INTEGER,
     tradeId: DataTypes.INTEGER,
     copies_offered: DataTypes.INTEGER

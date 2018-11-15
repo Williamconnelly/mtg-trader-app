@@ -35,6 +35,10 @@ io.on('connection', (socket) => {
     socket.on("joinRoom", function(data) {
         socket.join(data["roomName"]);
     })
+    socket.on("addCard", (data) => {
+        socket.to(data["roomName"]).emit("addCard", data["tradescollectionsId"]);
+    })
+    
 })
 
 var port = process.env.PORT || 3000;

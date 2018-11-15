@@ -16,6 +16,8 @@ export class TradeComponent implements OnInit {
 
 
   socket;
+  roomName;
+
   opened: boolean;
   trade;
   collection = [];
@@ -39,12 +41,16 @@ export class TradeComponent implements OnInit {
 
   ngOnInit() {
     this.socket = this._socket.connect();
-
+    this.socket.on("addCard", this.roomTest.bind(this));
     this._tradeService.getCollection().subscribe(result => {
       this.collection = result;
       console.log("full collection")
       console.log(this.collection);
-
+      this._route.params.subscribe((params: Params) => {
+        this.roomName = "trade" + params.id;
+        this.socket.emit("joinRoom", {roomName:this.roomName});
+        this.socket.on("room", this.roomTest.bind(this));
+      })
       this.updateTrade();
       this.makeComparison();
     });
@@ -52,6 +58,11 @@ export class TradeComponent implements OnInit {
 
   ngOnDestroy() {
     
+  }
+
+  roomTest(data) {
+    console.log("roomTest()");
+    console.log(data);
   }
 
   targetCard(card) {
@@ -84,6 +95,10 @@ export class TradeComponent implements OnInit {
         this.userOffers.push(result["trade"]);
         // this.updateTrade();
         // this.targetCard(this.currentCard.selection);
+        this.socket.emit("addCard", {
+          roomName: this.roomName,
+          tradescollectionsId: result["trade"]["tradescollections"].id
+        })
         this.updateBool = true;
       } else {
         window.alert(result["msg"]);
