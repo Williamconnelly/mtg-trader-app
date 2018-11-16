@@ -32,13 +32,28 @@ io.on('connection', (socket) => {
     console.log('Connected');
     socket.emit("message", "fired");
     socket.on("message", (data)=>{console.log(data)});
+
     socket.on("joinRoom", function(data) {
         socket.join(data["roomName"]);
-    })
+    });
     socket.on("addCard", (data) => {
-        socket.to(data["roomName"]).emit("addCard", data["tradescollectionsId"]);
+        console.log("addCard")
+        socket.to(data["roomName"]).emit("addCard", data['addCard']);
+    });
+    socket.on("updateCard", (data) => {
+        console.log("updateCard")
+        socket.to(data["roomName"]).emit("updateCard", data["updateCard"]);
+    });
+    socket.on("removeCard", (data) => {
+        console.log("removeCard")
+        socket.to(data["roomName"]).emit("removeCard", {
+            collectionId: data["collectionId"]
+        });
+    });
+
+    socket.on("tradeMessage", (data) => {
+        socket.to(data["roomName"]).emit("tradeMessage", data["messageObject"]);
     })
-    
 })
 
 var port = process.env.PORT || 3000;

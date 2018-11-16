@@ -19,7 +19,8 @@ router.post("/current", verifyToken, (req, res) => {
         ]}
       ]},
       {model: db.user, as:"user_a", attributes: {exclude: ["password", "createdAt", "updatedAt", "email"]}},
-      {model: db.user, as:"user_b", attributes: {exclude: ["password", "createdAt", "updatedAt", "email"]}}
+      {model: db.user, as:"user_b", attributes: {exclude: ["password", "createdAt", "updatedAt", "email"]}},
+      {model: db.message, order: ["createdAt", "ASC"]}
     ]
   }).then(currentTrade => {
     res.json({
@@ -259,6 +260,16 @@ router.post("/remove", verifyToken, (req, res) => {
       msg: "Failed to Remove Card from Trade",
       err
     });
+  })
+})
+
+router.post("/message", verifyToken, (req, res) => {
+  db.message.create(req.body).then(message => {
+    if (message != null) {
+      res.json({status:"Success", messageObject: message});
+    } else {
+      res.json({status:"Fail"});
+    }
   })
 })
 

@@ -16,8 +16,15 @@ export class TradeComponent implements OnInit {
   socket;
   roomName;
 
+  listenerArray: Array<any> = [
+    ["addCard", this.socketAddCard],
+    ["updateCard", this.socketUpdateCard],
+    ["removeCard", this.socketRemoveCard]
+  ]
+
   opened: boolean;
   trade;
+  tradeId;
   collection = [];
   userOffers: Array<any> = [];
   partnerOffers: Array<any> = [];
@@ -39,28 +46,27 @@ export class TradeComponent implements OnInit {
 
   ngOnInit() {
     this.socket = this._socket.connect();
-    this.socket.on('addCard', this.roomTest.bind(this));
+    this._route.params.subscribe((params: Params) => {
+      this.tradeId = params.id;
+      this.roomName = 'trade' + params.id;
+      this.socket.emit('joinRoom', {roomName: this.roomName});
+      for (let i=0; i<this.listenerArray.length; i++) {
+        this.socket.on(this.listenerArray[i][0], this.listenerArray[i][1].bind(this))
+      }
+    });
     this._tradeService.getCollection().subscribe(result => {
       this.collection = result;
       console.log('full collection');
       console.log(this.collection);
-      this._route.params.subscribe((params: Params) => {
-        this.roomName = 'trade' + params.id;
-        this.socket.emit('joinRoom', {roomName: this.roomName});
-        this.socket.on('room', this.roomTest.bind(this));
-      });
       this.updateTrade();
       // this.makeComparison();
     });
   }
 
   ngOnDestroy() {
-
-  }
-
-  roomTest(data) {
-    console.log('roomTest()');
-    console.log(data);
+    for (let i=0; i<this.listenerArray.length; i++) {
+      this.socket.removeListener(this.listenerArray[i][0], this.listenerArray[i][1])
+    }
   }
 
   targetCard(card) {
@@ -95,7 +101,7 @@ export class TradeComponent implements OnInit {
         // this.targetCard(this.currentCard.selection);
         this.socket.emit('addCard', {
           roomName: this.roomName,
-          tradescollectionsId: result['trade']['tradescollections'].id
+          addCard: result['trade']
         });
         this.updateBool = true;
       } else {
@@ -111,6 +117,10 @@ export class TradeComponent implements OnInit {
       if (result.status === 'Success') {
         result.trade.tradescollections = result.trade.tradeEntry[0];
         delete result.trade.tradeEntry;
+        this.socket.emit("updateCard", {
+          roomName: this.roomName,
+          updateCard: result['trade']
+        });
         for (let offer in this.userOffers) {
           if (this.userOffers[offer].id === result.trade.id) {
             this.userOffers[offer] = result.trade;
@@ -126,9 +136,13 @@ export class TradeComponent implements OnInit {
       // REMOVE CARD FROM USEROFFERS
       // this.updateTrade();
       if (result['status'] === 'Success') {
-        for (let offer in this.userOffers) {
-          if (this.userOffers[offer].id === result['cardRemoved']) {
-            this.userOffers.splice(offer, 1);
+        this.socket.emit("removeCard", {
+          roomName: this.roomName,
+          collectionId: result["cardRemoved"]
+        })
+        for (let i=0; i < this.userOffers.length; i++) {
+          if (this.userOffers[i].id === result['cardRemoved']) {
+            this.userOffers.splice(i, 1);
           }
         }
         console.log(this.userOffers);
@@ -139,22 +153,48 @@ export class TradeComponent implements OnInit {
   updateTrade() {
     this._route.params.subscribe((params: Params) => {
       this._tradeService.getCurrentTrade(params.id).subscribe(result => {
-        this.trade = result['trade'];
-        if (this.trade.user_a.id === result['myUser']) {
-          this.loggedUser = this.trade.user_a;
+        console.log(result["trade"])
+        if (result["trade"].user_a.id === result['myUser']) {
+          this.loggedUser = result["trade"].user_a;
           this.loggedUser.role = 'user_a';
-          this.partner = this.trade.user_b;
+          this.partner = result["trade"].user_b;
           this.partner.role = 'user_b';
         } else {
-          this.loggedUser = this.trade.user_b;
+          this.loggedUser = result["trade"].user_b;
           this.loggedUser.role = 'user_b';
-          this.partner = this.trade.user_a;
+          this.partner = result["trade"].user_a;
           this.partner.role = 'user_a';
         }
+        this.trade = result['trade'];
         console.log(this.trade);
         this.getOffers(this.trade.collections);
       });
     });
+  }
+  socketAddCard(data) {
+    console.log("socketAddCard");
+    console.log(data);
+    this.partnerOffers.push(data);
+  }
+  socketUpdateCard(data) {
+    console.log("socketUpdateCard");
+    console.log(data);
+    for (let offer in this.partnerOffers) {
+      if (this.partnerOffers[offer].id === data.id) {
+        this.partnerOffers[offer] = data;
+        break;
+      }
+    }
+    console.log(this.partnerOffers);
+  }
+  socketRemoveCard(data) {
+    console.log("socketRemoveCard");
+    console.log(data);
+    for (let i=0; i < this.partnerOffers.length; i++) {
+      if (this.partnerOffers[i].id === data["collectionId"]) {
+        this.partnerOffers.splice(i, 1);
+      }
+    }
   }
   getOffers(trade) {
     this.userOffers = [];
