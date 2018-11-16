@@ -12,6 +12,7 @@ export class TradeService {
   private _updateTradeURL = `http://localhost:3000/trade/update`;
   private _removeTradeURL = `http://localhost:3000/trade/remove`;
   private _comparePartnersURL = `http://localhost:3000/trade/compare`;
+  private _sendMessageURL = 'http://localhost:3000/trade/message'
   constructor(private http: HttpClient) { }
   initiateTrade(id) {
     return this.http.get<any>(`${this._initiateTradeURL}${id}`);
@@ -34,5 +35,9 @@ export class TradeService {
   // POST vs DELETE
   removeCard(card: object, tradeId: number) {
     return this.http.post(this._removeTradeURL, {card, tradeId});
+  }
+
+  sendMessage(messageObject) {
+    return this.http.post<any>(this._sendMessageURL, messageObject);
   }
 }

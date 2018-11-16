@@ -1,5 +1,5 @@
 <div *ngFor="let message of messages">
-  <p>{{ message }}</p>
+  <p><b>{{ usernames[message.userId.toString()] }}:</b> {{ message.content }}</p>
 </div>
 <form (submit)="sendMessage()">
   <input type="text" name="messageInput" [(ngModel)]="messageInput">

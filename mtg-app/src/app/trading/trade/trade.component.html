@@ -4,7 +4,13 @@
     <button mat-raised-button (click)="drawer.toggle()">Toggle drawer</button>
     <app-trade-display *ngIf="trade && trade.hasOwnProperty('collections')" [userCards]="userOffers" (targetCardEmitter)="targetCardFromOffer($event)"></app-trade-display>
     <app-trade-display *ngIf="trade && trade.hasOwnProperty('collections')" [userCards]="partnerOffers"></app-trade-display>
-    <app-trade-message [socket]="socket"></app-trade-message>
+    <app-trade-message *ngIf="trade && trade.hasOwnProperty('messages')"
+    [socket]="socket"
+    [tradeId]="tradeId"
+    [loggedUser]="loggedUser"
+    [partner]="partner"
+    [messages]="trade.messages"
+    ></app-trade-message>
   </mat-drawer-content>
   <!-- Drawer Content -->
   <mat-drawer #drawer mode="side">

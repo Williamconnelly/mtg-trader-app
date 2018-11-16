@@ -15,6 +15,7 @@ module.exports = (sequelize, DataTypes) => {
     models.trade.belongsToMany(models.collection, {through: "tradescollections"});
     models.trade.belongsTo(models.user, {foreignKey: 'a_user', as: 'user_a'});
     models.trade.belongsTo(models.user, {foreignKey: 'b_user', as: 'user_b'});
+    models.trade.hasMany(models.message);
   };
   return trade;
 };

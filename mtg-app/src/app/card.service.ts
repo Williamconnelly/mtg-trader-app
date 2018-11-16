@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpRequest } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -19,8 +19,8 @@ export class CardService {
   updateCollectionEntry(updateObject, id) {
     return this.http.put<any>("http://localhost:3000/user/collection/" + id, updateObject);
   }
-  deleteCollectionEntry(id) {
-    return this.http.delete<any>("http://localhost:3000/user/collection/" + id);
+  deleteCollectionEntry(id, force) {
+    return this.http.put<any>("http://localhost:3000/user/collection/delete/" + id, force);
   }
   addCardsToWishlist(cards) {
     return this.http.post<any>("http://localhost:3000/user/wishlist/batch", {cards:cards});
