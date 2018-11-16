@@ -84,11 +84,20 @@ export class EditCollectionComponent implements OnInit {
     }
   }
 
-  deleteCollectionEntry(index) {
+  deleteCollectionEntry(index, force) {
     // TODO: Add "are you sure" delay
-    this.card.deleteCollectionEntry(this.collectionArray[index].id).subscribe(data => {
-      if (data['status'] === "Success") {
-        this.collectionArray.splice(index, 1);
+    this.card.deleteCollectionEntry(this.collectionArray[index].id, force).subscribe(data => {
+      switch(data["status"]) {
+        case "Success":
+          this.collectionArray.splice(index, 1);
+          break;
+        case "Pending":
+          if (window.confirm(data["message"])) {
+            this.deleteCollectionEntry(index, {force:true});
+          }
+          break;
+        case "Fail":
+          break;
       }
     })
   }

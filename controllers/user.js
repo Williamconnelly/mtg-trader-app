@@ -240,7 +240,7 @@ router.put("/collection/:id", verifyToken, (req, res) => {
   })
 })
 
-router.delete("/collection/:id", verifyToken, (req, res) => {
+router.put("/collection/delete/:id", verifyToken, (req, res) => {
   db.collection.find({
     where: {
       id: req.params.id,
@@ -248,9 +248,31 @@ router.delete("/collection/:id", verifyToken, (req, res) => {
     }
   }).then(collection => {
     if (collection !== null) {
-      collection.destroy().then(data => {
-        res.json({status:"Success", data:data});
-      });
+      db.tradescollections.findAll({
+        where: {
+          collectionId: collection.id
+        }
+      }).then(tradescollections => {
+        if (tradescollections.length > 0) {
+          if (req.body.hasOwnProperty("force")) {
+            for (let i=0; i<tradescollections.length; i++) {
+              tradescollections[i].destroy();
+            }
+            collection.destroy().then(data => {
+              res.json({status:"Success", data:data});
+            });
+          } else {
+            res.json({
+              status:"Pending",
+              message:`Deleting this from your collection will remove it from ${tradescollections.length} trades, are you sure you'd like to delete it?`
+            })
+          }
+        } else {
+          collection.destroy().then(data => {
+            res.json({status:"Success", data:data});
+          });
+        }
+      })
     } else {
       res.json({status:"Fail", message:"Could not find collection with that id"});
     }
