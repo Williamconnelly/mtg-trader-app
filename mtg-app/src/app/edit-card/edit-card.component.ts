@@ -98,7 +98,7 @@ export class EditCardComponent implements OnInit {
   }
   
 
-  updateCard() {
+  updateCard(force) {
     console.log("updateCard() has run");
     let updateObject = {};
     if (this.number_wanted !== undefined) {
@@ -116,18 +116,34 @@ export class EditCardComponent implements OnInit {
         delete updateObject[key]
       }
     }
+    if (force) {
+      updateObject["force"] = true;
+    }
     if (Object.keys(updateObject).length > 0) {
       let observable = (this.number_wanted !== undefined) ? this._card.updateWishlistEntry(updateObject, this.id) : this._card.updateCollectionEntry(updateObject, this.id)
       observable.subscribe(data => {
         console.log(data);
-        if (data["status"] === "Success") {
-          for (let key in this.dbVersion) {
-            this.dbVersion[key] = data["update"][key]
-          }
-          this.successfulUpdateEmitter.emit(this.index);
-        } else {
-          // Unsuccessful API update
-          this.unsuccessfulUpdateEmitter.emit({index: this.index, dbVersion:this.dbVersion, message:data["message"]});
+        switch(data["status"]) {
+          case "Success":
+            for (let key in this.dbVersion) {
+              this.dbVersion[key] = data["update"][key]
+            }
+            this.successfulUpdateEmitter.emit(this.index);
+            break;
+          case "Pending":
+            // Check if they want to make the change while deleting the existing tradescollections, if so
+            // add "force" to the updateObject
+            if (window.confirm(data["message"])) {
+              console.log("window.confirm true")
+              this.updateCard(true);
+            } else {
+              this.unsuccessfulUpdateEmitter.emit({index: this.index, dbVersion: this.dbVersion});  
+            }
+            break;
+          case "Fail":
+            console.log("case fail");
+            this.unsuccessfulUpdateEmitter.emit({index: this.index, dbVersion:this.dbVersion, message:data["message"]});
+            break;
         }
       });
       this.updateEmitter.emit(this.index);

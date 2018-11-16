@@ -168,6 +168,7 @@ router.post("/collection", verifyToken, (req, res) => {
 
 // Update a collection entry
 router.put("/collection/:id", verifyToken, (req, res) => {
+  // Find the collection by id and use header data from token to ensure that they have authority to edit this collection
   db.collection.find({
     where: {
       id: req.params.id,
@@ -175,6 +176,7 @@ router.put("/collection/:id", verifyToken, (req, res) => {
     }
   }).then(collection => {
     if (collection !== null) {
+      // Search for a collection that matches what the update will change the current collection to
       db.collection.find({
         where: {
           id: {[op.not]:collection.id},
@@ -184,9 +186,50 @@ router.put("/collection/:id", verifyToken, (req, res) => {
         }
       }).then(badCollection => {
         if (badCollection === null) {
-          collection.update(req.body).then(update => {
-            res.json({status:"Success", update:update});
-          });
+          // If there is no collection that will have the same printing/foil status as the updated collection item,
+          // check to see if any trades will be impacted.
+          if (
+            req.body.hasOwnProperty("printingId") || 
+            req.body.hasOwnProperty("foil") ||
+            (req.body.hasOwnProperty("trade_copies") && req.body.trade_copies < collection.trade_copies)
+          ) {
+            db.tradescollections.findAll({
+              where: {
+                collectionId: collection.id
+              }
+            }).then(tradescollections => {
+              if (tradescollections.length > 0) {
+                // Check to see if they have agreed to make the changes, and if so, delete existing tradescollections
+                // that use this collection
+                if (req.body.hasOwnProperty("force")) {
+                  for (let i=0; i<tradescollections.length; i++) {
+                    // Try and put socket emit here that tells trade room to remove it.
+                    tradescollections[i].destroy();
+                  }
+                  delete req.body.force;
+                  collection.update(req.body).then(update => {
+                    res.json({status:"Success", update:update});
+                  })
+                } else {
+                  res.json({
+                    status:"Pending",
+                    message: `This card will be removed from ${tradescollections.length} trades, are you sure you want to go through with this update?`,
+                    collection:collection}
+                  );
+                }
+              } else {
+                // No trades found for this collection
+                collection.update(req.body).then(update => {
+                  res.json({status:"Success", update:update});
+                });
+              }
+            })
+          } else {
+            // The update does not have any changes which will alter possible trades
+            collection.update(req.body).then(update => {
+              res.json({status:"Success", update:update});
+            });
+          }
         } else {
           res.json({status:"Fail", message:"You already have that in your collection"})
         }

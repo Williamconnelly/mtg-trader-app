@@ -79,7 +79,9 @@ export class EditCollectionComponent implements OnInit {
     console.log("Unsuccessful update");
     console.log(eventObj);
     this.collectionArray[eventObj["index"]].class = "updateUnsuccessful"
-    window.alert(eventObj["message"]);
+    if (eventObj.hasOwnProperty("message")) {
+      window.alert(eventObj["message"]);
+    }
   }
 
   deleteCollectionEntry(index) {
