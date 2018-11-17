@@ -30,7 +30,6 @@ app.all("*", (req,res,next) => {
 
 io.on('connection', (socket) => {
     console.log('Connected');
-    socket.emit("message", "fired");
     socket.on("message", (data)=>{console.log(data)});
 
     socket.on("joinRoom", function(data) {
