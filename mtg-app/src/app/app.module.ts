@@ -36,6 +36,7 @@ import { TradeComponent } from './trading/trade/trade.component';
 import { TradeMessageComponent } from './trading/trade-message/trade-message.component';
 import { TradeDisplayComponent } from './trading/trade-display/trade-display.component';
 import { TradeTrayComponent } from './trading/trade-tray/trade-tray.component';
+import { ProfileComponent } from './profile/profile.component';
 
 @NgModule({
   declarations: [
@@ -57,7 +58,8 @@ import { TradeTrayComponent } from './trading/trade-tray/trade-tray.component';
     TradeComponent,
     TradeMessageComponent,
     TradeDisplayComponent,
-    TradeTrayComponent
+    TradeTrayComponent,
+    ProfileComponent
   ],
   imports: [
     BrowserModule,
