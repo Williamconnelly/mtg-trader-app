@@ -8,11 +8,16 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 export class TradeDisplayComponent implements OnInit {
   @Input() userCards;
 
-  @Output() targetCardEmitter = new EventEmitter()
+  @Output() targetCardEmitter = new EventEmitter();
 
   constructor() { }
 
   ngOnInit() {
+    $('.your-class').slick({
+      infinite: true,
+      slidesToShow: 3,
+      slidesToScroll: 3
+    });
   }
 
   targetCardFromOffer(card) {
