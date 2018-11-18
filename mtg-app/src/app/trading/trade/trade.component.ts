@@ -97,6 +97,7 @@ export class TradeComponent implements OnInit {
         result['trade']['tradescollections'] = result['trade']['tradeEntry'][0];
         delete result['trade']['tradeEntry'];
         this.userOffers.push(result['trade']);
+        this.trade.collections.push(result['trade']);
         // this.updateTrade();
         // this.targetCard(this.currentCard.selection);
         this.socket.emit('addCard', {
@@ -104,6 +105,7 @@ export class TradeComponent implements OnInit {
           addCard: result['trade']
         });
         this.updateBool = true;
+        console.log(this.updateBool);
       } else {
         window.alert(result['msg']);
       }
@@ -126,6 +128,7 @@ export class TradeComponent implements OnInit {
             this.userOffers[offer] = result.trade;
           }
         }
+        this.trade.collections.push(result['trade']);
         console.log(this.userOffers);
       }
     });
@@ -139,15 +142,21 @@ export class TradeComponent implements OnInit {
         this.socket.emit("removeCard", {
           roomName: this.roomName,
           collectionId: result["cardRemoved"]
-        })
+        });
         for (let i=0; i < this.userOffers.length; i++) {
           if (this.userOffers[i].id === result['cardRemoved']) {
             this.userOffers.splice(i, 1);
           }
         }
+        for (let o = 0; o < this.trade.collections.length; o++) {
+          if (this.trade.collections[o].id === result['cardRemoved']) {
+            this.trade.collections.splice(o, 1);
+          }
+        }
         console.log(this.userOffers);
       }
       this.updateBool = false;
+      console.log(this.updateBool);
     });
   }
   updateTrade() {
