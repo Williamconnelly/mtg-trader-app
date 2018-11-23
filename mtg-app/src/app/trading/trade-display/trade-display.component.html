@@ -1,34 +1,3 @@
-<!-- <div *ngFor="let card of userCards" class="card-display">
-  <img src="{{ card.printing.img_url }}" (click)="targetCardFromOffer(card)" alt="{{ card.printing.card.name }}">
-</div> -->
-
-<!-- <div *ngIf="userCards.length > 0" class="container">
-  <div class="row">
-    <div>
-      <div class="overlay"></div>
-      <div class="slider responsive">
-        <div *ngFor="let card of userCards" class="motherfucker">
-          <img src="{{ card.printing.img_url }}" (click)="targetCardFromOffer(card)" alt="{{ card.printing.card.name }}">
-        </div>
-        <div class="prev">
-          <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
-        </div>
-        <div class="next">
-          <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
-        </div>
-      </div>
-    </div>
-  </div>
-</div> -->
-
-<!-- <div class='container'>
-    <div class='single-item'>
-      <div *ngFor="let card of userCards" class="card-display">
-        <img src="{{ card.printing.img_url }}" (click)="targetCardFromOffer(card)" alt="{{ card.printing.card.name }}" style="">
-      </div>
-    </div>
-  </div> -->
-
 <body>
   <div class="gallery gallery-responsive portfolio_slider {{ role }}">
     <div *ngFor="let card of userCards" (click)="targetCardFromOffer(card)" class="inner">
