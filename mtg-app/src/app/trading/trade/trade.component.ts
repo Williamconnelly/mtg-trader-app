@@ -209,7 +209,6 @@ export class TradeComponent implements OnInit {
     this.userOffers = [];
     this.partnerOffers = [];
     for (let i = 0; i < trade.length; i++) {
-      // TODO: FIND BETTER TARGET FOR CHECKING LOGGED USER ID
       trade[i].userId === this.loggedUser.id ? this.userOffers.push(trade[i]) : this.partnerOffers.push(trade[i]);
     }
     console.log(this.userOffers);
@@ -234,8 +233,12 @@ export class TradeComponent implements OnInit {
       console.log(this.collection);
     });
   }
-  progressTrade(role, action) {
-    this._tradeService.progressTrade(role, action).subscribe(result => {
+  progressTrade(role: string, action: string) {
+    let cardSet = ``;
+    for (const card of this.userOffers) {
+      cardSet += `${card.printingId}`;
+    }
+    this._tradeService.progressTrade(role, action, this.tradeId, cardSet).subscribe(result => {
       console.log(result);
     });
   }

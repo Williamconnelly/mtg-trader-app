@@ -41,7 +41,7 @@ export class TradeService {
   sendMessage(messageObject) {
     return this.http.post<any>(this._sendMessageURL, messageObject);
   }
-  progressTrade(role, action) {
-    return this.http.put<any>(this._progressTradeURL, {role, action});
+  progressTrade(role: string, action: string, tradeId: number, cardSet: string) {
+    return this.http.put<any>(this._progressTradeURL, {role, action, tradeId, cardSet});
   }
 }

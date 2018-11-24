@@ -5,6 +5,7 @@ const axios = require("axios");
 const Sequelize = require('sequelize');
 const op = Sequelize.Op;
 const verifyToken = require("../middleware/verifyToken");
+const bcrypt = require("bcrypt");
 require('dotenv').config();
 
 // Finds trade
@@ -202,8 +203,6 @@ router.put("/update", verifyToken, (req, res) => {
       collectionId: req.body.card.id,
       tradeId: req.body.tradeId
     }}).then(result => {
-      // console.log(result);
-      // res.send({msg: `Updated!`});
       db.collection.findOne({
         where: {
           id: req.body.card.id
@@ -277,11 +276,41 @@ router.put("/progress", verifyToken, (req, res) => {
   switch(req.body.action) {
     // User wants to lock trade
     case("lock"):
-      res.send({msg: "It is locked!"});
+      // Hash string of combined card offers for future LOCK vs SUBMIT comparison
+      const hashCards = bcrypt.hashSync(req.body.cardSet, 12);
+      // Update trade state to new user lock
+      db.trade.update({
+        [`${req.body.role[req.body.role.length - 1]}_lock`]: hashCards},
+        {where: {
+          id: req.body.tradeId
+        }}).then(result => {
+          res.send({msg: `${req.body.role} has locked their trade`});
+        }).catch(err => {
+          res.json({
+            error: true,
+            status: 401,
+            message: `${req.body.role} was unable to lock their trade`
+          });
+        });
       break;
+    // User wants to unlock trade
     case("unlock"):
-      res.send({msg: "It is unlocked!"});
+      // Update trade to unlock user (Set their lock state to NULL)
+      db.trade.update({
+        [`${req.body.role[req.body.role.length - 1]}_lock`]: null},
+        {where: {
+          id: req.body.tradeId
+        }}).then(result => {
+          res.send({msg: `${req.body.role} has unlocked their trade`});
+        }).catch(err => {
+          res.json({
+            error: true,
+            status: 401,
+            message: `${req.body.role} was unable to unlock their trade`
+          });
+        });
       break;
+    // User wants to submit their final trade
     case("submit"):
       res.send({msg: "It is submitted!"});
       break;
@@ -291,3 +320,30 @@ router.put("/progress", verifyToken, (req, res) => {
 });
 
 module.exports = router;
+
+      // db.trade.findOne({
+      //   where: {
+      //     [`${req.body.role[req.body.role.length - 1]}_user`]: 5
+      //   }
+      // }).then(result => {
+      //   res.send(result);
+      // });
+
+// if (req.body.offered > 0) {
+//   db.tradescollections.update({
+//     copies_offered: req.body.offered
+//   }, {where: {
+//     collectionId: req.body.card.id,
+//     tradeId: req.body.tradeId
+//   }}).then(result => {
+//     db.collection.findOne({
+//       where: {
+//         id: req.body.card.id
+//       }, include: [
+//         {model: db.printings, include: [
+//           {model: db.card}
+//         ]}, 
+//         {model: db.tradescollections, as: "tradeEntry", where: {
+//           tradeId: req.body.tradeId
+//         }}
+//       ]
