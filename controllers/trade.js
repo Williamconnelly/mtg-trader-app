@@ -277,10 +277,10 @@ router.put("/progress", verifyToken, (req, res) => {
     // User wants to lock trade
     case("lock"):
       // Hash string of combined card offers for future LOCK vs SUBMIT comparison
-      const hashCards = bcrypt.hashSync(req.body.cardSet, 12);
+      const hashLock = bcrypt.hashSync(req.body.cardSet, 12);
       // Update trade state to new user lock
       db.trade.update({
-        [`${req.body.role[req.body.role.length - 1]}_lock`]: hashCards},
+        [`${req.body.role[req.body.role.length - 1]}_lock`]: hashLock},
         {where: {
           id: req.body.tradeId
         }}).then(result => {
@@ -312,7 +312,41 @@ router.put("/progress", verifyToken, (req, res) => {
       break;
     // User wants to submit their final trade
     case("submit"):
-      res.send({msg: "It is submitted!"});
+      db.trade.findOne({
+        where: {
+          id: req.body.tradeId
+        },
+        attributes: {exclude: ['createdAt','updatedAt','b_accept']}
+      }).then(currentTrade => {
+        // Check if passed ID amalgam matches encrypted lock hash
+        if (bcrypt.compareSync(req.body.cardSet, currentTrade[`${req.body.role[req.body.role.length - 1]}_lock`])) {
+          // Update appropriate submit column
+          db.trade.update({
+            [`${req.body.role[req.body.role.length - 1]}_submit`]: true},
+            {where: {
+              id: req.body.tradeId
+            }}).then(result => {
+              if (currentTrade.b_submit !== null) {
+                // TODO: (READY TO COMPLETE!) EITHER REDIRECT TO CHECKOUT ROUTE OR COMPLETE TRADE FUNCTIONALITY HERE
+                res.send({msg: `${req.body.role} has successfully submitted their trade and it can be COMPLETED`});
+              } else {
+                res.send({msg: `${req.body.role} has successfully submitted their trade and it CANNOT be COMPLETED`});
+              }
+            }).catch(err => {
+              res.json({
+                error: true,
+                status: 401,
+                message: `${req.body.role} was unable to submit their trade because they failed to update the trade`
+              });
+            })
+        } else {
+          res.json({
+            error: true,
+            status: 401,
+            message: `${req.body.role} was unable to submit their trade because their card strings did not match`
+          });
+        }
+      })
       break;
     default:
       break;
@@ -320,30 +354,3 @@ router.put("/progress", verifyToken, (req, res) => {
 });
 
 module.exports = router;
-
-      // db.trade.findOne({
-      //   where: {
-      //     [`${req.body.role[req.body.role.length - 1]}_user`]: 5
-      //   }
-      // }).then(result => {
-      //   res.send(result);
-      // });
-
-// if (req.body.offered > 0) {
-//   db.tradescollections.update({
-//     copies_offered: req.body.offered
-//   }, {where: {
-//     collectionId: req.body.card.id,
-//     tradeId: req.body.tradeId
-//   }}).then(result => {
-//     db.collection.findOne({
-//       where: {
-//         id: req.body.card.id
-//       }, include: [
-//         {model: db.printings, include: [
-//           {model: db.card}
-//         ]}, 
-//         {model: db.tradescollections, as: "tradeEntry", where: {
-//           tradeId: req.body.tradeId
-//         }}
-//       ]
