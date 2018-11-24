@@ -20,7 +20,7 @@ export class TradeComponent implements OnInit {
     ["addCard", this.socketAddCard],
     ["updateCard", this.socketUpdateCard],
     ["removeCard", this.socketRemoveCard]
-  ]
+  ];
 
   opened: boolean;
   trade;
@@ -50,7 +50,7 @@ export class TradeComponent implements OnInit {
       this.tradeId = params.id;
       this.roomName = 'trade' + params.id;
       this.socket.emit('joinRoom', {roomName: this.roomName});
-      for (let i=0; i<this.listenerArray.length; i++) {
+      for (let i = 0; i < this.listenerArray.length; i++) {
         this.socket.on(this.listenerArray[i][0], this.listenerArray[i][1].bind(this))
       }
     });
@@ -64,7 +64,7 @@ export class TradeComponent implements OnInit {
   }
 
   ngOnDestroy() {
-    for (let i=0; i<this.listenerArray.length; i++) {
+    for (let i = 0; i < this.listenerArray.length; i++) {
       this.socket.removeListener(this.listenerArray[i][0], this.listenerArray[i][1])
     }
   }
@@ -232,6 +232,11 @@ export class TradeComponent implements OnInit {
         }
       }
       console.log(this.collection);
+    });
+  }
+  progressTrade(role, action) {
+    this._tradeService.progressTrade(role, action).subscribe(result => {
+      console.log(result);
     });
   }
 }

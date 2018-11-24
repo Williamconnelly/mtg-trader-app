@@ -22,11 +22,6 @@
     </div>
     <div *ngIf="currentCard.selection && currentCard.selection.hasOwnProperty('id')" class="current-card">
       <img class="target-img" src="{{currentCard.selection.printing.img_url}}" alt="{{currentCard.selection.printing.card.name}}">
-      <!-- <select [(ngModel)]="currentCard.offerNumber" name="offerSelect">
-        <option *ngFor="let i of currentCard.offerArray" [ngValue]="i">{{ i }}</option>
-      </select>
-      <button *ngIf ="updateBool === false" (click)="addCard()" class="add-button">Add to Trade</button>
-      <button *ngIf ="updateBool === true" (click)="updateCard()" class="add-button">Update Offer</button> -->
       <div *ngIf ="updateBool === false">
         <select [(ngModel)]="currentCard.offerNumber" name="offerSelect">
           <option *ngFor="let i of currentCard.offerArray" [ngValue]="i">{{ i }}</option>
@@ -40,6 +35,9 @@
       <button (click)="updateCard()" class="add-button">Update Offer</button>
       <button (click)="removeCard()">Remove</button>
       </div>
+    </div>
+    <div>
+      <button (click)="progressTrade(loggedUser.role, 'lock')">Lock Trade</button>
     </div>
   </mat-drawer>
 </mat-drawer-container>

@@ -273,4 +273,21 @@ router.post("/message", verifyToken, (req, res) => {
   })
 })
 
+router.put("/progress", verifyToken, (req, res) => {
+  switch(req.body.action) {
+    // User wants to lock trade
+    case("lock"):
+      res.send({msg: "It is locked!"});
+      break;
+    case("unlock"):
+      res.send({msg: "It is unlocked!"});
+      break;
+    case("submit"):
+      res.send({msg: "It is submitted!"});
+      break;
+    default:
+      break;
+  }
+});
+
 module.exports = router;
