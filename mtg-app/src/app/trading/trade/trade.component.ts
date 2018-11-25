@@ -177,7 +177,6 @@ export class TradeComponent implements OnInit {
           this.partner.role = 'user_a';
         }
         this.trade = result['trade'];
-        console.log(this.trade[`${this.loggedUser['role'][this.loggedUser['role'].length - 1]}_lock`]);
         if (this.trade[`${this.loggedUser['role'][this.loggedUser['role'].length - 1]}_lock`] !== null) {
           this.tradeState.locked = true;
         }

@@ -327,7 +327,6 @@ router.put("/progress", verifyToken, (req, res) => {
               id: req.body.tradeId
             }}).then(result => {
               if (currentTrade.b_submit !== null) {
-                // TODO: (READY TO COMPLETE!) EITHER REDIRECT TO CHECKOUT ROUTE OR COMPLETE TRADE FUNCTIONALITY HERE
                 res.send({msg: `${req.body.role} has successfully submitted their trade and it can be COMPLETED`});
               } else {
                 res.send({msg: `${req.body.role} has successfully submitted their trade and it CANNOT be COMPLETED`});
@@ -352,5 +351,7 @@ router.put("/progress", verifyToken, (req, res) => {
       break;
   }
 });
+
+
 
 module.exports = router;

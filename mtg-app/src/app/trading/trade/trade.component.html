@@ -43,8 +43,9 @@
       <button *ngIf="tradeState.locked" (click)="progressTrade(loggedUser['role'], 'submit')">Submit Trade</button>
     </div>
     <div *ngIf="loggedUser['role'] === 'user_b'">
-      <button *ngIf="!tradeState.locked else submitButton" (click)="progressTrade(loggedUser['role'], 'lock')">Lock Trade</button>
-      <ng-template #submitButton><button (click)="progressTrade(loggedUser['role'], 'submit')">Submit Trade</button></ng-template>
+      <button *ngIf="!tradeState.locked" (click)="progressTrade(loggedUser['role'], 'lock')">Lock Trade</button>
+      <button *ngIf="tradeState.locked" (click)="progressTrade(loggedUser['role'], 'unlock')">Unlock</button>
+      <button *ngIf="tradeState.locked" (click)="progressTrade(loggedUser['role'], 'submit')">Submit Trade</button>
     </div>
   </mat-drawer>
 </mat-drawer-container>
