@@ -14,13 +14,14 @@
   </mat-drawer-content>
   <!-- Drawer Content -->
   <mat-drawer #drawer mode="side">
-    <div class="scroll-box" *ngIf="trade !== undefined && trade.hasOwnProperty('collections')">
+    <!-- TODO: REFINE RENDERING ON LOCKED STATE FOR SCROLL-BOX AND CURRENT-CARD -->
+    <div class="scroll-box" *ngIf="trade !== undefined && trade.hasOwnProperty('collections') && !tradeState.locked">
       <div *ngFor="let card of collection" class="card-row" (click)=targetCard(card) [class.matched]="card.hasOwnProperty('match')">
         <p class="row-name">{{ card.printing.card.name }} <span *ngIf="card.foil === true">(f)</span></p>
         <p class="row-set">{{ card.printing.set.title }}<span class="row-num">Available: {{ card.trade_copies }}</span></p>
       </div>
     </div>
-    <div *ngIf="currentCard.selection && currentCard.selection.hasOwnProperty('id')" class="current-card">
+    <div *ngIf="currentCard.selection && currentCard.selection.hasOwnProperty('id') && !tradeState.locked" class="current-card">
       <img class="target-img" src="{{currentCard.selection.printing.img_url}}" alt="{{currentCard.selection.printing.card.name}}">
       <div *ngIf ="updateBool === false">
         <select [(ngModel)]="currentCard.offerNumber" name="offerSelect">
@@ -36,8 +37,14 @@
       <button (click)="removeCard()">Remove</button>
       </div>
     </div>
-    <div>
-      <button (click)="progressTrade(loggedUser.role, 'submit')">Lock Trade</button>
+    <div *ngIf="loggedUser['role'] === 'user_a'">
+      <button *ngIf="!tradeState.locked" (click)="progressTrade(loggedUser['role'], 'lock')">Lock Trade</button>
+      <button *ngIf="tradeState.locked" (click)="progressTrade(loggedUser['role'], 'unlock')">Unlock</button>
+      <button *ngIf="tradeState.locked" (click)="progressTrade(loggedUser['role'], 'submit')">Submit Trade</button>
+    </div>
+    <div *ngIf="loggedUser['role'] === 'user_b'">
+      <button *ngIf="!tradeState.locked else submitButton" (click)="progressTrade(loggedUser['role'], 'lock')">Lock Trade</button>
+      <ng-template #submitButton><button (click)="progressTrade(loggedUser['role'], 'submit')">Submit Trade</button></ng-template>
     </div>
   </mat-drawer>
 </mat-drawer-container>

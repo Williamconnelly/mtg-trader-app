@@ -10,7 +10,7 @@ import { AuthService } from '../../auth.service';
   styleUrls: ['./trade.component.css']
 })
 export class TradeComponent implements OnInit {
-  loggedUser;
+  loggedUser = {};
   partner;
 
   socket;
@@ -36,6 +36,10 @@ export class TradeComponent implements OnInit {
     offerNumber: 1
   };
   comparison: Object = {};
+  tradeState = {
+    locked: false,
+    submit: false,
+  };
 
   constructor(
     private _tradeService: TradeService,
@@ -59,7 +63,6 @@ export class TradeComponent implements OnInit {
       console.log('full collection');
       console.log(this.collection);
       this.updateTrade();
-      // this.makeComparison();
     });
   }
 
@@ -162,19 +165,22 @@ export class TradeComponent implements OnInit {
   updateTrade() {
     this._route.params.subscribe((params: Params) => {
       this._tradeService.getCurrentTrade(params.id).subscribe(result => {
-        console.log(result["trade"])
-        if (result["trade"].user_a.id === result['myUser']) {
-          this.loggedUser = result["trade"].user_a;
-          this.loggedUser.role = 'user_a';
-          this.partner = result["trade"].user_b;
+        if (result['trade'].user_a.id === result['myUser']) {
+          this.loggedUser = result['trade'].user_a;
+          this.loggedUser['role'] = 'user_a';
+          this.partner = result['trade'].user_b;
           this.partner.role = 'user_b';
         } else {
-          this.loggedUser = result["trade"].user_b;
-          this.loggedUser.role = 'user_b';
-          this.partner = result["trade"].user_a;
+          this.loggedUser = result['trade'].user_b;
+          this.loggedUser['role'] = 'user_b';
+          this.partner = result['trade'].user_a;
           this.partner.role = 'user_a';
         }
         this.trade = result['trade'];
+        console.log(this.trade[`${this.loggedUser['role'][this.loggedUser['role'].length - 1]}_lock`]);
+        if (this.trade[`${this.loggedUser['role'][this.loggedUser['role'].length - 1]}_lock`] !== null) {
+          this.tradeState.locked = true;
+        }
         console.log(this.trade);
         this.getOffers(this.trade.collections);
       });
@@ -234,10 +240,21 @@ export class TradeComponent implements OnInit {
     });
   }
   progressTrade(role: string, action: string) {
+    // Handle front-end display w/o response data
+    if (action === 'lock') {
+      this.tradeState.locked = true;
+    } else if (action === 'unlock') {
+      this.tradeState.locked = false;
+    } else if (action === 'submit') {
+      this.tradeState.submit = true;
+    }
+    console.log(this.tradeState);
+    // Create string of card offers for backend hashing and checking
     let cardSet = ``;
     for (const card of this.userOffers) {
       cardSet += `${card.printingId}`;
     }
+    // Send data to backend with corresponding action
     this._tradeService.progressTrade(role, action, this.tradeId, cardSet).subscribe(result => {
       console.log(result);
     });
