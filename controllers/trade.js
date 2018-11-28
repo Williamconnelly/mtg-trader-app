@@ -5,6 +5,7 @@ const axios = require("axios");
 const Sequelize = require('sequelize');
 const op = Sequelize.Op;
 const verifyToken = require("../middleware/verifyToken");
+const bcrypt = require("bcrypt");
 require('dotenv').config();
 
 // Finds trade
@@ -202,8 +203,6 @@ router.put("/update", verifyToken, (req, res) => {
       collectionId: req.body.card.id,
       tradeId: req.body.tradeId
     }}).then(result => {
-      // console.log(result);
-      // res.send({msg: `Updated!`});
       db.collection.findOne({
         where: {
           id: req.body.card.id
@@ -272,5 +271,109 @@ router.post("/message", verifyToken, (req, res) => {
     }
   })
 })
+
+router.put("/progress", verifyToken, (req, res) => {
+  switch(req.body.action) {
+    // User wants to lock trade
+    case("lock"):
+      // Hash string of combined card offers for future LOCK vs SUBMIT comparison
+      const hashLock = bcrypt.hashSync(req.body.cardSet, 12);
+      // Update trade state to new user lock
+      db.trade.update({
+        [`${req.body.role[req.body.role.length - 1]}_lock`]: hashLock},
+        {where: {
+          id: req.body.tradeId
+        }}).then(result => {
+          res.send({msg: `${req.body.role} has locked their trade`});
+        }).catch(err => {
+          res.json({
+            error: true,
+            status: 401,
+            message: `${req.body.role} was unable to lock their trade`
+          });
+        });
+      break;
+    // User wants to unlock trade
+    case("unlock"):
+      // Update trade to unlock user (Set their lock state to NULL)
+      db.trade.update({
+        [`${req.body.role[req.body.role.length - 1]}_lock`]: null},
+        {where: {
+          id: req.body.tradeId
+        }}).then(result => {
+          res.send({msg: `${req.body.role} has unlocked their trade`});
+        }).catch(err => {
+          res.json({
+            error: true,
+            status: 401,
+            message: `${req.body.role} was unable to unlock their trade`
+          });
+        });
+      break;
+    // User wants to submit their final trade
+    case("submit"):
+      db.trade.findOne({
+        where: {
+          id: req.body.tradeId
+        },
+        attributes: {exclude: ['createdAt','updatedAt','b_accept']}
+      }).then(currentTrade => {
+        // Check if passed ID amalgam matches encrypted lock hash
+        if (bcrypt.compareSync(req.body.cardSet, currentTrade[`${req.body.role[req.body.role.length - 1]}_lock`])) {
+          // Update appropriate submit column
+          db.trade.update({
+            [`${req.body.role[req.body.role.length - 1]}_submit`]: true},
+            {where: {
+              id: req.body.tradeId
+            }}).then(result => {
+              if (currentTrade.b_submit !== null) {
+                res.send({msg: `${req.body.role} has successfully submitted their trade and it can be COMPLETED`, ready: true});
+              } else {
+                res.send({msg: `${req.body.role} has successfully submitted their trade and it CANNOT be COMPLETED`});
+              }
+            }).catch(err => {
+              res.json({
+                error: true,
+                status: 401,
+                message: `${req.body.role} was unable to submit their trade because they failed to update the trade`
+              });
+            })
+        } else {
+          res.json({
+            error: true,
+            status: 401,
+            message: `${req.body.role} was unable to submit their trade because their card strings did not match`
+          });
+        }
+      })
+      break;
+    default:
+      break;
+  }
+});
+
+router.put("/complete", verifyToken, (req, res) => {
+  let i = 0;
+  let activeUser;
+  while (i < req.body.trade.collections.length) {
+    let offer = req.body.trade.collections[i];
+    activeUser = offer.userId;
+
+    const findUser = id => {
+      db.user.findOne({
+        where: {
+          id
+        }
+      })
+    }
+
+    const foundData = findUser(1);
+    console.log(foundData);
+    res.send(foundData);
+
+    i++
+  }
+  // res.send({msg: "temp"});
+});
 
 module.exports = router;
