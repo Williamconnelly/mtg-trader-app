@@ -327,7 +327,7 @@ router.put("/progress", verifyToken, (req, res) => {
               id: req.body.tradeId
             }}).then(result => {
               if (currentTrade.b_submit !== null) {
-                res.send({msg: `${req.body.role} has successfully submitted their trade and it can be COMPLETED`});
+                res.send({msg: `${req.body.role} has successfully submitted their trade and it can be COMPLETED`, ready: true});
               } else {
                 res.send({msg: `${req.body.role} has successfully submitted their trade and it CANNOT be COMPLETED`});
               }
@@ -352,6 +352,28 @@ router.put("/progress", verifyToken, (req, res) => {
   }
 });
 
+router.put("/complete", verifyToken, (req, res) => {
+  let i = 0;
+  let activeUser;
+  while (i < req.body.trade.collections.length) {
+    let offer = req.body.trade.collections[i];
+    activeUser = offer.userId;
 
+    const findUser = id => {
+      db.user.findOne({
+        where: {
+          id
+        }
+      })
+    }
+
+    const foundData = findUser(1);
+    console.log(foundData);
+    res.send(foundData);
+
+    i++
+  }
+  // res.send({msg: "temp"});
+});
 
 module.exports = router;

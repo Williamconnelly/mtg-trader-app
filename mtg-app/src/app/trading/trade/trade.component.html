@@ -38,14 +38,14 @@
       </div>
     </div>
     <div *ngIf="loggedUser['role'] === 'user_a'">
-      <button *ngIf="!tradeState.locked" (click)="progressTrade(loggedUser['role'], 'lock')">Lock Trade</button>
-      <button *ngIf="tradeState.locked" (click)="progressTrade(loggedUser['role'], 'unlock')">Unlock</button>
-      <button *ngIf="tradeState.locked" (click)="progressTrade(loggedUser['role'], 'submit')">Submit Trade</button>
+      <button *ngIf="!trade.a_lock" (click)="progressTrade(loggedUser['role'], 'lock')">Lock Trade</button>
+      <button *ngIf="trade.a_lock" (click)="progressTrade(loggedUser['role'], 'unlock')">Unlock</button>
+      <button *ngIf="trade.a_lock && trade.b_lock" (click)="progressTrade(loggedUser['role'], 'submit')">Submit Trade</button>
     </div>
     <div *ngIf="loggedUser['role'] === 'user_b'">
-      <button *ngIf="!tradeState.locked" (click)="progressTrade(loggedUser['role'], 'lock')">Lock Trade</button>
-      <button *ngIf="tradeState.locked" (click)="progressTrade(loggedUser['role'], 'unlock')">Unlock</button>
-      <button *ngIf="tradeState.locked" (click)="progressTrade(loggedUser['role'], 'submit')">Submit Trade</button>
+      <button *ngIf="!trade.b_lock" (click)="progressTrade(loggedUser['role'], 'lock')">Lock Trade</button>
+      <button *ngIf="trade.b_lock" (click)="progressTrade(loggedUser['role'], 'unlock')">Unlock</button>
+      <button *ngIf="trade.a_lock && trade.b_lock" (click)="progressTrade(loggedUser['role'], 'submit')">Submit Trade</button>
     </div>
   </mat-drawer>
 </mat-drawer-container>

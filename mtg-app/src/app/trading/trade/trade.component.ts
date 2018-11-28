@@ -239,15 +239,6 @@ export class TradeComponent implements OnInit {
     });
   }
   progressTrade(role: string, action: string) {
-    // Handle front-end display w/o response data
-    if (action === 'lock') {
-      this.tradeState.locked = true;
-    } else if (action === 'unlock') {
-      this.tradeState.locked = false;
-    } else if (action === 'submit') {
-      this.tradeState.submit = true;
-    }
-    console.log(this.tradeState);
     // Create string of card offers for backend hashing and checking
     let cardSet = ``;
     for (const card of this.userOffers) {
@@ -255,7 +246,26 @@ export class TradeComponent implements OnInit {
     }
     // Send data to backend with corresponding action
     this._tradeService.progressTrade(role, action, this.tradeId, cardSet).subscribe(result => {
+      // Handle front-end display w/o response data
       console.log(result);
+      if (action === 'lock') {
+        this.tradeState.locked = true;
+        this.trade[`${this.loggedUser['role'][this.loggedUser['role'].length - 1]}_lock`] = cardSet;
+      } else if (action === 'unlock') {
+        this.tradeState.locked = false;
+        this.trade[`${this.loggedUser['role'][this.loggedUser['role'].length - 1]}_lock`] = null;
+      } else if (action === 'submit') {
+        this.tradeState.submit = true;
+        this.trade[`${this.loggedUser['role'][this.loggedUser['role'].length - 1]}_submit`] = 'true';
+        if (result.ready) {
+          this._tradeService.completeTrade(this.trade).subscribe(data => {
+            console.log("HIT COMPLETE ROUTE!");
+            console.log(data);
+          });
+        }
+      }
+      console.log(this.tradeState);
+      console.log(this.trade);
     });
   }
 }

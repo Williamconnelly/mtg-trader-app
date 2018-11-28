@@ -14,6 +14,7 @@ export class TradeService {
   private _comparePartnersURL = `http://localhost:3000/trade/compare`;
   private _sendMessageURL = 'http://localhost:3000/trade/message';
   private _progressTradeURL = 'http://localhost:3000/trade/progress';
+  private _completeTradeURL = 'http://localhost:3000/trade/complete';
   constructor(private http: HttpClient) { }
   initiateTrade(id) {
     return this.http.get<any>(`${this._initiateTradeURL}${id}`);
@@ -37,11 +38,13 @@ export class TradeService {
   removeCard(card: object, tradeId: number) {
     return this.http.post(this._removeTradeURL, {card, tradeId});
   }
-
   sendMessage(messageObject) {
     return this.http.post<any>(this._sendMessageURL, messageObject);
   }
   progressTrade(role: string, action: string, tradeId: number, cardSet: string) {
     return this.http.put<any>(this._progressTradeURL, {role, action, tradeId, cardSet});
+  }
+  completeTrade(trade) {
+    return this.http.put<any>(this._completeTradeURL, {trade});
   }
 }
