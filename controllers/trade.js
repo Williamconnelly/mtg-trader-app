@@ -353,94 +353,65 @@ router.put("/progress", verifyToken, (req, res) => {
 });
 
 router.put("/complete", verifyToken, (req, res) => {
-  // // Find both user collections for cross-referencing offers
-  // db.collection.findAll({
-  //   where: {
-  //     [op.or]: [{userId: req.body.trade.a_user}, {userId: req.body.trade.b_user}]
-  //   }, attributes: ['id','printingId','userId','owned_copies']
-  // }).then(userCollections => {
-  //   let i = 0;
-  //   // Iterate over all offers in trade
-  //   while (i < req.body.trade.collections.length) {
-  //     console.log(`LOOPING - LOOP: ${i}`)
-  //     let offer = req.body.trade.collections[i];
-  //     let partnerId = offer.userId === req.body.trade.a_user ? req.body.trade.b_user : req.body.trade.a_user;
-  //     // Update the partner's collection
-
-  //     // const updatePartnerCollection = () => {
-  //     //   console.log("RUNNING UPDATE FUNCTION");
-  //     //   for (let o = 0; o < userCollections.length; o++) {
-  //     //     if (userCollections[o].userId === partnerId && 
-  //     //     (offer.printingId === userCollections[o].printingId && offer.foil === userCollections[o].foil)) {
-  //     //       return db.collection.update({
-  //     //         owned_copies: (userCollections[o].owned_copies + offer.tradescollections.copies_offered)}, 
-  //     //         {where: {
-  //     //           id: userCollections[o].id
-  //     //         }
-  //     //       })
-  //     //     }
-  //     //   }
-  //     //   db.user.findOne({
-  //     //     where: {
-  //     //       id: partnerId
-  //     //     }
-  //     //   }).then(foundUser => {
-  //     //     db.printings.findOne({
-  //     //       where: {
-  //     //         id: offer.printingId
-  //     //       }
-  //     //     }).then(foundPrinting => {
-  //     //       return foundUser.addPrinting(foundPrinting, {through: {
-  //     //         owned_copies: offer.tradescollections.copies_offered, 
-  //     //         trade_copies: 0, 
-  //     //         foil: offer.foil
-  //     //       }})
-  //     //     });
-  //     //   })
-  //     // }
-
-  //     const updatePartnerCollection = () => {
-  //       return db.user.findOne({
-  //         where: {
-  //           id: 1
-  //         }
-  //       })
-  //     }
-
-  //     updatePartnerCollection().then(result => {
-  //       console.log("UPDATED THE PARTNER COLLECTION!")
-  //       i++
-  //     });
-  //   }
-  //   res.send({msg: "Completed Updating Cards"});
-  // })
-
+  // Find both user collections for cross-referencing offers
   db.collection.findAll({
     where: {
       [op.or]: [{userId: req.body.trade.a_user}, {userId: req.body.trade.b_user}]
     }, attributes: ['id','printingId','userId','owned_copies']
   }).then(userCollections => {
 
-    let i = 0;
-    while(i < req.body.trade.collections.length) {
-      console.log(`LOOPING - LOOP: ${i}`)
-      let offer = req.body.trade.collections[i];
-      let partnerId = offer.userId === req.body.trade.a_user ? req.body.trade.b_user : req.body.trade.a_user;
+    // Recursive function to iterate over each card offered in the trade (Handle both collections and partner's wishlist)
+    const handleOffers = cardNum => {
+      if (cardNum < req.body.trade.collections.length) {
+        let offer = req.body.trade.collections[cardNum];
+        let partnerId = offer.userId === req.body.trade.a_user ? req.body.trade.b_user : req.body.trade.a_user;
 
-      const func = () => {
-        return db.user.findOne({
-          where: {
-            id: 1
+        // Function checks if the offered card is already in the partner's collection (YES? UPDATE || NO? CREATE)
+        const updatePartnerCollection = () => {
+          for (let i = 0; i < userCollections.length; i++) {
+            if (userCollections[i].userId === partnerId && 
+            (offer.printingId === userCollections[i].printingId && offer.foil === userCollections[i].foil)) {
+              // UPDATE
+              return db.collection.update({
+                owned_copies: (userCollections[i].owned_copies + offer.tradescollections.copies_offered)
+              }, {where: {
+                id: userCollections[i].id
+              }})
+            }
+            // CREATE
+            return db.user.findOne({
+              where: {
+                id: partnerId
+              }
+            }).then(foundUser => {
+              db.printings.findOne({
+                where: {
+                  id: offer.printingId
+                }
+              }).then(foundPrinting => {
+                foundUser.addPrinting(foundPrinting, {through: {
+                  owned_copies: offer.tradescollections.copies_offered, 
+                  trade_copies: 0, 
+                  foil: offer.foil
+                }})
+              });
+            })
           }
-        })
+        }
+
+        updatePartnerCollection().then((result) => {
+          console.log("UPDATED PARTNER'S COLLECTION");
+          handleOffers(++cardNum);
+        });
+
+      } else {
+        res.send({msg: "Offers Handled!"});
       }
-
-      
-
     }
-    res.send({msg: "Completed?!?!"});
-  })
 
+    handleOffers(0);
+
+  })
 });
 
 module.exports = router;
