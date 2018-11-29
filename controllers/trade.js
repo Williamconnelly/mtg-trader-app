@@ -357,7 +357,7 @@ router.put("/complete", verifyToken, (req, res) => {
   db.collection.findAll({
     where: {
       [op.or]: [{userId: req.body.trade.a_user}, {userId: req.body.trade.b_user}]
-    }, attributes: ['id','printingId','userId','owned_copies']
+    }, attributes: ['id','printingId','userId','owned_copies','foil']
   }).then(userCollections => {
 
     // Recursive function to iterate over each card offered in the trade (Handle both collections and partner's wishlist)
@@ -378,34 +378,33 @@ router.put("/complete", verifyToken, (req, res) => {
                 id: userCollections[i].id
               }})
             }
-            // CREATE
-            return db.user.findOne({
-              where: {
-                id: partnerId
-              }
-            }).then(foundUser => {
-              db.printings.findOne({
-                where: {
-                  id: offer.printingId
-                }
-              }).then(foundPrinting => {
-                foundUser.addPrinting(foundPrinting, {through: {
-                  owned_copies: offer.tradescollections.copies_offered, 
-                  trade_copies: 0, 
-                  foil: offer.foil
-                }})
-              });
-            })
           }
+          // CREATE
+          return db.user.findOne({
+            where: {
+              id: partnerId
+            }
+          }).then(foundUser => {
+            db.printings.findOne({
+              where: {
+                id: offer.printingId
+              }
+            }).then(foundPrinting => {
+              foundUser.addPrinting(foundPrinting, {through: {
+                owned_copies: offer.tradescollections.copies_offered, 
+                trade_copies: 0, 
+                foil: offer.foil
+              }})
+            });
+          })
         }
 
         updatePartnerCollection().then((result) => {
           console.log("UPDATED PARTNER'S COLLECTION");
           handleOffers(++cardNum);
         });
-
       } else {
-        res.send({msg: "Offers Handled!"});
+        res.send({msg: "All Offers Handled!", userCollections});
       }
     }
 
