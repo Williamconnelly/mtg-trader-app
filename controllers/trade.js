@@ -353,27 +353,94 @@ router.put("/progress", verifyToken, (req, res) => {
 });
 
 router.put("/complete", verifyToken, (req, res) => {
-  let i = 0;
-  let activeUser;
-  while (i < req.body.trade.collections.length) {
-    let offer = req.body.trade.collections[i];
-    activeUser = offer.userId;
+  // // Find both user collections for cross-referencing offers
+  // db.collection.findAll({
+  //   where: {
+  //     [op.or]: [{userId: req.body.trade.a_user}, {userId: req.body.trade.b_user}]
+  //   }, attributes: ['id','printingId','userId','owned_copies']
+  // }).then(userCollections => {
+  //   let i = 0;
+  //   // Iterate over all offers in trade
+  //   while (i < req.body.trade.collections.length) {
+  //     console.log(`LOOPING - LOOP: ${i}`)
+  //     let offer = req.body.trade.collections[i];
+  //     let partnerId = offer.userId === req.body.trade.a_user ? req.body.trade.b_user : req.body.trade.a_user;
+  //     // Update the partner's collection
 
-    const findUser = id => {
-      db.user.findOne({
-        where: {
-          id
-        }
-      })
+  //     // const updatePartnerCollection = () => {
+  //     //   console.log("RUNNING UPDATE FUNCTION");
+  //     //   for (let o = 0; o < userCollections.length; o++) {
+  //     //     if (userCollections[o].userId === partnerId && 
+  //     //     (offer.printingId === userCollections[o].printingId && offer.foil === userCollections[o].foil)) {
+  //     //       return db.collection.update({
+  //     //         owned_copies: (userCollections[o].owned_copies + offer.tradescollections.copies_offered)}, 
+  //     //         {where: {
+  //     //           id: userCollections[o].id
+  //     //         }
+  //     //       })
+  //     //     }
+  //     //   }
+  //     //   db.user.findOne({
+  //     //     where: {
+  //     //       id: partnerId
+  //     //     }
+  //     //   }).then(foundUser => {
+  //     //     db.printings.findOne({
+  //     //       where: {
+  //     //         id: offer.printingId
+  //     //       }
+  //     //     }).then(foundPrinting => {
+  //     //       return foundUser.addPrinting(foundPrinting, {through: {
+  //     //         owned_copies: offer.tradescollections.copies_offered, 
+  //     //         trade_copies: 0, 
+  //     //         foil: offer.foil
+  //     //       }})
+  //     //     });
+  //     //   })
+  //     // }
+
+  //     const updatePartnerCollection = () => {
+  //       return db.user.findOne({
+  //         where: {
+  //           id: 1
+  //         }
+  //       })
+  //     }
+
+  //     updatePartnerCollection().then(result => {
+  //       console.log("UPDATED THE PARTNER COLLECTION!")
+  //       i++
+  //     });
+  //   }
+  //   res.send({msg: "Completed Updating Cards"});
+  // })
+
+  db.collection.findAll({
+    where: {
+      [op.or]: [{userId: req.body.trade.a_user}, {userId: req.body.trade.b_user}]
+    }, attributes: ['id','printingId','userId','owned_copies']
+  }).then(userCollections => {
+
+    let i = 0;
+    while(i < req.body.trade.collections.length) {
+      console.log(`LOOPING - LOOP: ${i}`)
+      let offer = req.body.trade.collections[i];
+      let partnerId = offer.userId === req.body.trade.a_user ? req.body.trade.b_user : req.body.trade.a_user;
+
+      const func = () => {
+        return db.user.findOne({
+          where: {
+            id: 1
+          }
+        })
+      }
+
+      
+
     }
+    res.send({msg: "Completed?!?!"});
+  })
 
-    const foundData = findUser(1);
-    console.log(foundData);
-    res.send(foundData);
-
-    i++
-  }
-  // res.send({msg: "temp"});
 });
 
 module.exports = router;
