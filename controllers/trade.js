@@ -353,27 +353,99 @@ router.put("/progress", verifyToken, (req, res) => {
 });
 
 router.put("/complete", verifyToken, (req, res) => {
-  let i = 0;
-  let activeUser;
-  while (i < req.body.trade.collections.length) {
-    let offer = req.body.trade.collections[i];
-    activeUser = offer.userId;
+  // Find both user collections for cross-referencing offers
+  db.collection.findAll({
+    where: {
+      [op.or]: [{userId: req.body.trade.a_user}, {userId: req.body.trade.b_user}]
+    }, attributes: ['id','printingId','userId','owned_copies','foil']
+  }).then(userCollections => {
+    // Find both user wishlists for cross-referencing the cards they receive
+    db.wishlist.findAll({
+      where: {
+        [op.or]: [{userId: req.body.trade.a_user}, {userId: req.body.trade.b_user}]
+      }, attributes: ['id','userId','cardId','pref_printing','pref_foil','number_wanted']
+    }).then(userWishlists => {
+      // Recursive function to iterate over each card offered in the trade (Handle both collections and partner's wishlist)
+      const handleOffers = cardNum => {
+        if (cardNum < req.body.trade.collections.length) {
+          let offer = req.body.trade.collections[cardNum];
+          let partnerId = offer.userId === req.body.trade.a_user ? req.body.trade.b_user : req.body.trade.a_user;
 
-    const findUser = id => {
-      db.user.findOne({
-        where: {
-          id
+          // Function checks if the offered card is already in the partner's collection (YES? UPDATE || NO? CREATE)
+          const updatePartnerCollection = () => {
+            for (let i = 0; i < userCollections.length; i++) {
+              if (userCollections[i].userId === partnerId && 
+              (offer.printingId === userCollections[i].printingId && offer.foil === userCollections[i].foil)) {
+                // UPDATE
+                return db.collection.update({
+                  owned_copies: (userCollections[i].owned_copies + offer.tradescollections.copies_offered)
+                }, {where: {
+                  id: userCollections[i].id
+                }})
+              }
+            }
+            // CREATE
+            return db.user.findOne({
+              where: {
+                id: partnerId
+              }
+            }).then(foundUser => {
+              db.printings.findOne({
+                where: {
+                  id: offer.printingId
+                }
+              }).then(foundPrinting => {
+                foundUser.addPrinting(foundPrinting, {through: {
+                  owned_copies: offer.tradescollections.copies_offered, 
+                  trade_copies: 0, 
+                  foil: offer.foil
+                }})
+              });
+            })
+          }
+
+          // Function to remove copies of the offered card from the owner's collection
+          // Implicitly returns either an update or destroy depending on whether the owner has any copies remaining
+          const updateOwnerCollection = (owned, offered) => offered === owned ? 
+            db.collection.destroy({where: {id: offer.id}}) : 
+            db.collection.update({owned_copies: (owned - offered)}, {where: {id: offer.id}});
+          
+          // Function to update the partner's wishlist (DESTROY if they recieve all the copies they want, UPDATE if they want more)
+          const updatePartnerWishlist = () => {
+            for (let o = 0; o < userWishlists.length; o++) {
+              // If the partner's Id matches and the foil booleans line up
+              if (userWishlists[o].userId === partnerId && userWishlists[o].pref_foil === offer.foil) {
+                // If the user wanted a specific printing and they recieved one OR if they did not and recieved a copy of the card
+                if (userWishlists[o].pref_printing === null && offer.printing.card.id === userWishlists[o].cardId || 
+                userWishlists[o].pref_printing !== null && offer.printingId === userWishlists[o].pref_printing) {
+                  return userWishlists[o].number_wanted <= offer.tradescollections.copies_offered ?
+                  db.wishlist.destroy({where: {id: userWishlists[o].id}}) :
+                  db.wishlist.update({number_wanted: (userWishlists[o].number_wanted - offer.tradescollections.copies_offered)}, {where: {id: userWishlists[o].id}})
+                }
+              }
+            }
+          }
+
+          // Update the partner's collection to include the new card or copies
+          updatePartnerCollection().then(() => {
+            console.log("UPDATED PARTNER'S COLLECTION");
+            // Remove copies from the owner's collection after they are 'traded'
+            updateOwnerCollection(offer.owned_copies, offer.tradescollections.copies_offered).then(() => {
+              console.log("UPDATED OWNER'S COLLECTION");
+              // Lower the number of desired copies on the partner's wishlist or delete the row if they got all that they wanted
+              updatePartnerWishlist().then(() => {
+                console.log("UPDATED PARTNER'S WISHLIST");
+                handleOffers(++cardNum);
+              })
+            })
+          });
+        } else {
+          res.send({msg: "All Offers Handled!", userCollections, userWishlists});
         }
-      })
-    }
-
-    const foundData = findUser(1);
-    console.log(foundData);
-    res.send(foundData);
-
-    i++
-  }
-  // res.send({msg: "temp"});
+      }
+      handleOffers(0);
+    })
+  })
 });
 
 module.exports = router;
