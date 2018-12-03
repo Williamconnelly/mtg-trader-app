@@ -18,7 +18,7 @@ app.use(cors());
 
 app.use('/auth', require('./controllers/auth'));
 app.use('/card', require('./controllers/card'));
-app.use('/user', require('./controllers/user'));
+app.use('/user', require('./controllers/user')(io));
 app.use('/trade', require('./controllers/trade'));
 app.use('/gathering', require('./controllers/gathering'));
 
