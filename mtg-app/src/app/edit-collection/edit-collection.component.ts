@@ -193,7 +193,8 @@ export class EditCollectionComponent implements OnInit {
     this.card.deleteCollectionEntry(this.collectionArray[index].id, force).subscribe(data => {
       switch(data["status"]) {
         case "Success":
-          this.collectionArray.splice(index, 1);
+          let removedItem = this.collectionArray.splice(index, 1);
+          this.fullCollection.splice(this.fullCollection.findIndex(element => element === removedItem), 1);
           break;
         case "Pending":
           if (window.confirm(data["message"])) {
