@@ -167,11 +167,6 @@ export class EditCollectionComponent implements OnInit {
     console.log(this.collectionArray[index].class);
   }
 
-  childUpdatePrinting(index) {
-    console.log("API UPDATE CALL");
-    console.log(index);
-  }
-
   childSuccessfulUpdate(index) {
     this.collectionArray[index].class = "updateSuccess";
     setTimeout(() => {
