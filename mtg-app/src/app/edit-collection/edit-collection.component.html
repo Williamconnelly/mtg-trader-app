@@ -41,9 +41,26 @@
   <h1>Collection</h1>
   <hr>
   <div>
-    <button (click)="filtersBoolean = !filtersBoolean">Filters</button><br>
-    <div *ngIf="filtersBoolean">
-      <p>hello</p>
+    <button (click)="filterBoolean = !filterBoolean">Filters</button><br>
+    <div *ngIf="filterBoolean">
+      <label for="">Name: </label>
+      <input type="text" [(ngModel)]="filterOptions.name" (ngModelChange)="filterCollection()">
+      <br>
+      <div *ngFor="let key of filterColors" style="display:inline-block">
+        <input type="checkbox" [(ngModel)]="filterOptions.colors[key]" (ngModelChange)="colorChanges($event)">
+        <label for="">{{ key }}</label>
+      </div>
+      <input type="checkbox" [(ngModel)]="filterOptions.colorless" (ngModelChange)="colorlessChanges($event)">
+      <label for="">Colorless</label>
+      <br>
+      <div *ngFor="let key of filterSuperTypes" style="display: inline-block;">
+        <input type="checkbox" [(ngModel)]="filterOptions.superTypes[key]" (ngModelChange)="filterCollection($event)">
+        <label for=""> {{ key }}</label>
+      </div><br>
+      <div *ngFor="let key of filterTypes" style="display: inline-block;">
+        <input type="checkbox" [(ngModel)]="filterOptions.types[key]" (ngModelChange)="filterCollection($event)">
+        <label for=""> {{ key }}</label>
+      </div>
     </div>
     <div *ngFor="let collection of collectionArray; let i = index" style="display:inline-block; padding:5px;" class="{{ collection.class }}">
       <img src="{{ collection.printingInput.img_url }}">

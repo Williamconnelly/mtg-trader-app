@@ -9,10 +9,40 @@ import { AuthService } from '../auth.service';
 })
 export class EditCollectionComponent implements OnInit {
   cardSearch = "";
+  fullCollection = [];
   collectionArray = [];
   addCard;
   addCardBoolean = false;
-  filtersBoolean = false;
+  filterBoolean = false;
+  filterOptions = {
+    name: "",
+    colors: {
+      White: false,
+      Blue: false,
+      Black: false,
+      Red: false,
+      Green: false
+    },
+    colorless: false,
+    superTypes: {
+      Legendary: false,
+      Snow: false,
+      World: false
+    },
+    types: {
+      Artifact: false,
+      Creature: false,
+      Land: false,
+      Enchantment: false,
+      Planeswalker: false,
+      Instant: false,
+      Sorcery: false,
+      Tribal: false
+    }
+  }
+  filterColors = Object.keys(this.filterOptions.colors);
+  filterSuperTypes = Object.keys(this.filterOptions.superTypes);
+  filterTypes = Object.keys(this.filterOptions.types);
   autocomplete = [];
 
   constructor(private card : CardService, private _auth : AuthService) { }
@@ -24,8 +54,80 @@ export class EditCollectionComponent implements OnInit {
       for (let i=0; i<existingCollection.length; i++) {
         existingCollection[i] = this.prepareForCollectionArray(existingCollection[i]);
       }
+      this.fullCollection = existingCollection;
       this.collectionArray = existingCollection;
     });
+  }
+
+  colorChanges(changes) {
+    if (changes) {
+      this.filterOptions.colorless = false;
+    }
+    this.filterCollection();
+  }
+
+  colorlessChanges(changes) {
+    if (changes) {
+      this.filterOptions.colors = {
+        White: false,
+        Blue: false,
+        Black: false,
+        Red: false,
+        Green: false
+      }
+    }
+    this.filterCollection();
+  }
+
+  filterCollection() {
+    let colorArray = [];
+    let superTypeArray =[];
+    let typeArray = [];
+    let name = this.filterOptions.name;
+    this.filterColors.forEach(key => {
+      if (this.filterOptions.colors[key]) {
+        colorArray.push(key);
+      }
+    });
+    this.filterSuperTypes.forEach(key => {
+      if (this.filterOptions.superTypes[key]) {
+        superTypeArray.push(key);
+      }
+    });
+    this.filterTypes.forEach(key => {
+      if (this.filterOptions.types[key]) {
+        typeArray.push(key);
+      }
+    });
+    
+    this.collectionArray = this.fullCollection.filter(function(item) {
+      if (!item.printing.card.name.toLowerCase().includes(name.toLowerCase())) {
+        return false;
+      }
+      if (this.filterOptions.colorless) {
+        if (item.printing.card.colors !== null) {
+          return false;
+        }
+      } else {
+        for (let i=0; i<colorArray.length; i++) {
+          if (item.printing.card.colors === null || !item.printing.card.colors.includes(colorArray[i])) {
+            return false;
+          }
+        }
+      }
+      for (let i=0; i<superTypeArray.length; i++) {
+        if (item.printing.card.supertypes === null || !item.printing.card.supertypes.includes(superTypeArray[i])) {
+          return false;
+        }
+      }
+      for (let i=0; i<typeArray.length; i++) {
+        if (!item.printing.card.types.includes(typeArray[i])) {
+          return false;
+        }
+      }
+
+      return true;
+    }.bind(this));
   }
 
   prepareForCollectionArray(collectionItem) {
@@ -116,7 +218,9 @@ export class EditCollectionComponent implements OnInit {
       this.card.addCardToCollection(collection).subscribe(data => {
         if (data["status"] === "Success") {
           this.addCard = undefined;
-          this.collectionArray.push(this.prepareForCollectionArray(data["collection"]));
+          let preparedCollection = this.prepareForCollectionArray(data["collection"]);
+          this.fullCollection.push(preparedCollection);
+          this.filterCollection();
         } else {
           console.log("Unsuccessful submission");
           window.alert(data["message"]);
