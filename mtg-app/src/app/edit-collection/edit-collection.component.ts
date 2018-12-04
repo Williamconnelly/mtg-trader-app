@@ -9,10 +9,42 @@ import { AuthService } from '../auth.service';
 })
 export class EditCollectionComponent implements OnInit {
   cardSearch = "";
+  fullCollection = [];
   collectionArray = [];
-  cardArray = [];
-  options = [];
-
+  addCard;
+  addCardBoolean = false;
+  filterBoolean = false;
+  filterOptions = {
+    name: "",
+    colors: {
+      White: false,
+      Blue: false,
+      Black: false,
+      Red: false,
+      Green: false
+    },
+    colorless: false,
+    superTypes: {
+      Legendary: false,
+      Snow: false,
+      World: false
+    },
+    types: {
+      Artifact: false,
+      Creature: false,
+      Land: false,
+      Enchantment: false,
+      Planeswalker: false,
+      Instant: false,
+      Sorcery: false,
+      Tribal: false
+    }
+  }
+  filterColors = Object.keys(this.filterOptions.colors);
+  filterSuperTypes = Object.keys(this.filterOptions.superTypes);
+  filterTypes = Object.keys(this.filterOptions.types);
+  autocomplete = [];
+  autocompleteTimer;
 
   constructor(private card : CardService, private _auth : AuthService) { }
 
@@ -23,8 +55,97 @@ export class EditCollectionComponent implements OnInit {
       for (let i=0; i<existingCollection.length; i++) {
         existingCollection[i] = this.prepareForCollectionArray(existingCollection[i]);
       }
+      this.fullCollection = existingCollection;
       this.collectionArray = existingCollection;
     });
+  }
+
+  autocompleteBuffer() {
+    if (this.autocompleteTimer !== undefined) {
+      clearTimeout(this.autocompleteTimer);
+    }
+    if (this.cardSearch.length >= 3) {
+      this.autocompleteTimer = setTimeout(function() {
+        this.card.autocomplete(this.cardSearch).subscribe(data => {
+          this.autocomplete = data;
+          console.log(this.autocomplete);
+        })
+      }.bind(this), 750);
+    } else {
+      clearTimeout(this.autocompleteTimer);
+      this.autocomplete = [];
+    }
+  }
+
+  colorChanges(changes) {
+    if (changes) {
+      this.filterOptions.colorless = false;
+    }
+    this.filterCollection();
+  }
+
+  colorlessChanges(changes) {
+    if (changes) {
+      this.filterOptions.colors = {
+        White: false,
+        Blue: false,
+        Black: false,
+        Red: false,
+        Green: false
+      }
+    }
+    this.filterCollection();
+  }
+
+  filterCollection() {
+    let colorArray = [];
+    let superTypeArray =[];
+    let typeArray = [];
+    let name = this.filterOptions.name;
+    this.filterColors.forEach(key => {
+      if (this.filterOptions.colors[key]) {
+        colorArray.push(key);
+      }
+    });
+    this.filterSuperTypes.forEach(key => {
+      if (this.filterOptions.superTypes[key]) {
+        superTypeArray.push(key);
+      }
+    });
+    this.filterTypes.forEach(key => {
+      if (this.filterOptions.types[key]) {
+        typeArray.push(key);
+      }
+    });
+    
+    this.collectionArray = this.fullCollection.filter(function(item) {
+      if (!item.printing.card.name.toLowerCase().includes(name.toLowerCase())) {
+        return false;
+      }
+      if (this.filterOptions.colorless) {
+        if (item.printing.card.colors !== null) {
+          return false;
+        }
+      } else {
+        for (let i=0; i<colorArray.length; i++) {
+          if (item.printing.card.colors === null || !item.printing.card.colors.includes(colorArray[i])) {
+            return false;
+          }
+        }
+      }
+      for (let i=0; i<superTypeArray.length; i++) {
+        if (item.printing.card.supertypes === null || !item.printing.card.supertypes.includes(superTypeArray[i])) {
+          return false;
+        }
+      }
+      for (let i=0; i<typeArray.length; i++) {
+        if (!item.printing.card.types.includes(typeArray[i])) {
+          return false;
+        }
+      }
+
+      return true;
+    }.bind(this));
   }
 
   prepareForCollectionArray(collectionItem) {
@@ -43,6 +164,7 @@ export class EditCollectionComponent implements OnInit {
     let obs = this.card.findCardByName(this.cardSearch);
     let scryObs = this.card.scryfallFindCardByName(this.cardSearch);
     this.cardSearch = "";
+    this.autocomplete = [];
     obs.subscribe(cardResult => {
       console.log("Database Card Result")
       console.log(cardResult);
@@ -53,7 +175,8 @@ export class EditCollectionComponent implements OnInit {
           trade_copies: 0,
           foil: false
         }
-        this.cardArray.push(cardResult);
+        console.log(cardResult);
+        this.addCard = cardResult;
       }
     });
   }
@@ -61,11 +184,6 @@ export class EditCollectionComponent implements OnInit {
   childUpdatePrintingBuffer(index) {
     this.collectionArray[index].class = "updateBuffer";
     console.log(this.collectionArray[index].class);
-  }
-
-  childUpdatePrinting(index) {
-    console.log("API UPDATE CALL");
-    console.log(index);
   }
 
   childSuccessfulUpdate(index) {
@@ -89,7 +207,8 @@ export class EditCollectionComponent implements OnInit {
     this.card.deleteCollectionEntry(this.collectionArray[index].id, force).subscribe(data => {
       switch(data["status"]) {
         case "Success":
-          this.collectionArray.splice(index, 1);
+          let removedItem = this.collectionArray.splice(index, 1);
+          this.fullCollection.splice(this.fullCollection.findIndex(element => element === removedItem), 1);
           break;
         case "Pending":
           if (window.confirm(data["message"])) {
@@ -102,22 +221,26 @@ export class EditCollectionComponent implements OnInit {
     })
   }
 
-  submitPrintingToCollection(index) {
-    let collection = {}
-    for (let key in this.cardArray[index].collection) {
-      collection[key] = this.cardArray[index].collection[key];
-    }
-    console.log(collection)
-    collection["foil"] = collection["foil"] ? collection["printingId"].foil_version : !collection["printingId"].nonFoil_version
-    collection["printingId"] = collection["printingId"].id;
-    this.card.addCardToCollection(collection).subscribe(data => {
-      if (data["status"] === "Success") {
-        this.cardArray.splice(index, 1);
-        this.collectionArray.push(this.prepareForCollectionArray(data["collection"]));
-      } else {
-        console.log("Unsuccessful submission");
-        window.alert(data["message"]);
+  submitPrintingToCollection() {
+    if (this.addCard !== undefined) {
+      let collection = {}
+      for (let key in this.addCard["collection"]) {
+        collection[key] = this.addCard["collection"][key];
       }
-    });
+      console.log(collection)
+      collection["foil"] = collection["foil"] ? collection["printingId"].foil_version : !collection["printingId"].nonFoil_version
+      collection["printingId"] = collection["printingId"].id;
+      this.card.addCardToCollection(collection).subscribe(data => {
+        if (data["status"] === "Success") {
+          this.addCard = undefined;
+          let preparedCollection = this.prepareForCollectionArray(data["collection"]);
+          this.fullCollection.push(preparedCollection);
+          this.filterCollection();
+        } else {
+          console.log("Unsuccessful submission");
+          window.alert(data["message"]);
+        }
+      });
+    }
   }
 }

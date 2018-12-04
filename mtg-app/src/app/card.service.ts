@@ -58,4 +58,7 @@ export class CardService {
   scryfallFindCardByName(name) {
     return this.http.get<any>("https://api.scryfall.com/cards/named?fuzzy=" + name.replace(" ", "+"));
   }
+  autocomplete(string) {
+    return this.http.get<any>("http://localhost:3000/autocomplete/" + string);
+  }
 }

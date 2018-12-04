@@ -12,6 +12,8 @@ var app = express();
 var http = require("http").Server(app);
 var io = require('socket.io')(http);
 
+const trie = require('./trie').trie;
+
 app.use(bp.json());
 // app.use(express.json());
 app.use(cors());
@@ -21,6 +23,7 @@ app.use('/card', require('./controllers/card'));
 app.use('/user', require('./controllers/user')(io));
 app.use('/trade', require('./controllers/trade'));
 app.use('/gathering', require('./controllers/gathering'));
+app.use('/autocomplete', require('./controllers/autocomplete')(trie));
 
 app.use(express.static(path.join(__dirname, 'mtg-app/dist/mtg-app')));
 
