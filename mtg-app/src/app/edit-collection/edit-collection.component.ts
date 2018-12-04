@@ -10,9 +10,10 @@ import { AuthService } from '../auth.service';
 export class EditCollectionComponent implements OnInit {
   cardSearch = "";
   collectionArray = [];
-  cardArray = [];
-  options = [];
-
+  addCard;
+  addCardBoolean = false;
+  filtersBoolean = false;
+  autocomplete = [];
 
   constructor(private card : CardService, private _auth : AuthService) { }
 
@@ -53,7 +54,8 @@ export class EditCollectionComponent implements OnInit {
           trade_copies: 0,
           foil: false
         }
-        this.cardArray.push(cardResult);
+        console.log(cardResult);
+        this.addCard = cardResult;
       }
     });
   }
@@ -102,22 +104,24 @@ export class EditCollectionComponent implements OnInit {
     })
   }
 
-  submitPrintingToCollection(index) {
-    let collection = {}
-    for (let key in this.cardArray[index].collection) {
-      collection[key] = this.cardArray[index].collection[key];
-    }
-    console.log(collection)
-    collection["foil"] = collection["foil"] ? collection["printingId"].foil_version : !collection["printingId"].nonFoil_version
-    collection["printingId"] = collection["printingId"].id;
-    this.card.addCardToCollection(collection).subscribe(data => {
-      if (data["status"] === "Success") {
-        this.cardArray.splice(index, 1);
-        this.collectionArray.push(this.prepareForCollectionArray(data["collection"]));
-      } else {
-        console.log("Unsuccessful submission");
-        window.alert(data["message"]);
+  submitPrintingToCollection() {
+    if (this.addCard !== undefined) {
+      let collection = {}
+      for (let key in this.addCard["collection"]) {
+        collection[key] = this.addCard["collection"][key];
       }
-    });
+      console.log(collection)
+      collection["foil"] = collection["foil"] ? collection["printingId"].foil_version : !collection["printingId"].nonFoil_version
+      collection["printingId"] = collection["printingId"].id;
+      this.card.addCardToCollection(collection).subscribe(data => {
+        if (data["status"] === "Success") {
+          this.addCard = undefined;
+          this.collectionArray.push(this.prepareForCollectionArray(data["collection"]));
+        } else {
+          console.log("Unsuccessful submission");
+          window.alert(data["message"]);
+        }
+      });
+    }
   }
 }
