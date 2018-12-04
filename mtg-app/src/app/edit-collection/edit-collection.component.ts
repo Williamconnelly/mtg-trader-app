@@ -64,13 +64,16 @@ export class EditCollectionComponent implements OnInit {
     if (this.autocompleteTimer !== undefined) {
       clearTimeout(this.autocompleteTimer);
     }
-    if (this.cardSearch.length > 0) {
+    if (this.cardSearch.length >= 3) {
       this.autocompleteTimer = setTimeout(function() {
         this.card.autocomplete(this.cardSearch).subscribe(data => {
           this.autocomplete = data;
           console.log(this.autocomplete);
         })
       }.bind(this), 750);
+    } else {
+      clearTimeout(this.autocompleteTimer);
+      this.autocomplete = [];
     }
   }
 
@@ -161,6 +164,7 @@ export class EditCollectionComponent implements OnInit {
     let obs = this.card.findCardByName(this.cardSearch);
     let scryObs = this.card.scryfallFindCardByName(this.cardSearch);
     this.cardSearch = "";
+    this.autocomplete = [];
     obs.subscribe(cardResult => {
       console.log("Database Card Result")
       console.log(cardResult);

@@ -26,6 +26,7 @@ class Trie {
     }
 
     autocomplete(string) {
+        string = string.toLowerCase();
         let words = []
         let curr = this.head;
         // for (let i=0; i<string.length; i++) {
