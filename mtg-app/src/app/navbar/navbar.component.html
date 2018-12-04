@@ -1,10 +1,10 @@
-<div class="topnav" id="myTopnav" [ngClass]="status ? 'responsive' : 'not'">
+<div *ngIf="_authService.user" class="topnav" id="myTopnav" [ngClass]="status ? 'responsive' : 'not'">
   <a routerLink="/">Home</a>
   <a *ngIf="!_authService.loggedIn()" routerLink="/signup">Signup</a>
   <a *ngIf="!_authService.loggedIn()" routerLink="/login">Login</a>
   <a *ngIf="_authService.loggedIn()" routerLink="/gathering">Gathering</a>
   <a *ngIf="_authService.loggedIn()" routerLink="/view-collection">Collection</a>
   <a *ngIf="_authService.loggedIn()" routerLink="/view-list">Wishlist</a>
+  <a *ngIf="_authService.loggedIn()" routerLink="/profile/{{_authService.user.id}}">Profile</a>
   <a *ngIf="_authService.loggedIn()" (click)="_authService.logoutUser()">Logout</a>
-  <a href="javascript:void(0);" class="icon" (click)="clickEvent()">&#9776; Menu</a>
 </div>

@@ -10,7 +10,7 @@ export class AuthService {
   private _registerUrl = 'http://localhost:3000/auth/signup';
   private _loginUrl = 'http://localhost:3000/auth/login';
   private _getUserUrl = 'http://localhost:3000/auth/getUser';
-  private user;
+  public user;
 
   constructor(private http: HttpClient, private _router: Router) { }
 
