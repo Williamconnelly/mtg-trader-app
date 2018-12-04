@@ -44,6 +44,7 @@ export class EditCollectionComponent implements OnInit {
   filterSuperTypes = Object.keys(this.filterOptions.superTypes);
   filterTypes = Object.keys(this.filterOptions.types);
   autocomplete = [];
+  autocompleteTimer;
 
   constructor(private card : CardService, private _auth : AuthService) { }
 
@@ -57,6 +58,20 @@ export class EditCollectionComponent implements OnInit {
       this.fullCollection = existingCollection;
       this.collectionArray = existingCollection;
     });
+  }
+
+  autocompleteBuffer() {
+    if (this.autocompleteTimer !== undefined) {
+      clearTimeout(this.autocompleteTimer);
+    }
+    if (this.cardSearch.length > 0) {
+      this.autocompleteTimer = setTimeout(function() {
+        this.card.autocomplete(this.cardSearch).subscribe(data => {
+          this.autocomplete = data;
+          console.log(this.autocomplete);
+        })
+      }.bind(this), 750);
+    }
   }
 
   colorChanges(changes) {

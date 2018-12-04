@@ -2,7 +2,7 @@
   <button (click)="addCardBoolean = !addCardBoolean">Add Cards</button>
   <div *ngIf="addCardBoolean">
     <form (submit)="submitCardSearch()" class="add-card-form">
-      <input type="text" [(ngModel)]="cardSearch" [matAutocomplete]="auto" name="cardSearch" class="card-search" placeholder="Find a Card...">
+      <input type="text" [(ngModel)]="cardSearch" (ngModelChange)="autocompleteBuffer()" [matAutocomplete]="auto" name="cardSearch" class="card-search" placeholder="Find a Card...">
       <input type="submit" value="Search" class="search-button">
     </form>
     <mat-autocomplete #auto="matAutocomplete">
