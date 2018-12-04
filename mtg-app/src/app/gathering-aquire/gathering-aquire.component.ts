@@ -37,7 +37,6 @@ export class GatheringAquireComponent implements OnInit {
                 this.setSelection === 'all') &&
                 (card['card.cardPrintings.users.collection.foil'] === this.foilSelection ||
                 this.foilSelection === 'all') &&
-
                 (card['card.cardPrintings.users.collection.trade_copies'] >= this.cardNumberSelection ||
                 this.cardNumberSelection === 'all')
       );
