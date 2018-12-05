@@ -65,6 +65,9 @@ export class EditCollectionComponent implements OnInit {
     let scryObs = this.card.scryfallFindCardByName(this.cardSearch);
     this.cardSearch = "";
     this.autocomplete = [];
+    if (this.autocompleteTimer !== undefined) {
+      clearTimeout(this.autocompleteTimer);
+    }
     obs.subscribe(cardResult => {
       console.log("Database Card Result")
       console.log(cardResult);
@@ -102,17 +105,19 @@ export class EditCollectionComponent implements OnInit {
     }
   }
 
-  deleteCollectionEntry(index, force) {
+  deleteCollectionEntry(id, force) {
     // TODO: Add "are you sure" delay
-    this.card.deleteCollectionEntry(this.collectionArray[index].id, force).subscribe(data => {
+    this.card.deleteCollectionEntry(id, force).subscribe(data => {
       switch(data["status"]) {
         case "Success":
-          let removedItem = this.collectionArray.splice(index, 1)[0];
-          this.fullCollection.splice(this.fullCollection.findIndex(element => element.id === removedItem.id), 1);
+          let findIndex = this.collectionArray.findIndex(element => element.id === id);
+          this.collectionArray.splice(findIndex, findIndex > -1 ? 1 : 0);
+          findIndex = this.fullCollection.findIndex(element => element.id === id);
+          this.fullCollection.splice(findIndex, findIndex > -1 ? 1 : 0);
           break;
         case "Pending":
           if (window.confirm(data["message"])) {
-            this.deleteCollectionEntry(index, {force:true});
+            this.deleteCollectionEntry(id, {force:true});
           }
           break;
         case "Fail":

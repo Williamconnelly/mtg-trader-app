@@ -68,7 +68,7 @@
         <label for="">Foil:</label>
         <input type="checkbox" [(ngModel)]="wishlist.pref_foil"><br>
       </div>
-      <button (click)="deleteWishlistEntry(i)">Delete</button>
+      <button (click)="deleteWishlistEntry(wishlist.id)">Delete</button>
     </div>
   </div>
 </div>
