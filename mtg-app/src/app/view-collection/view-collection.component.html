@@ -1,7 +1,11 @@
 <div class="view-wrapper">
   <hr>
   <h1>Collection</h1>
-  <a routerLink="/edit-collection">Edit Collection</a>
+  <a routerLink="/edit-collection">Edit Collection</a><br>
+  <app-filter #filter
+  [fullArray]="fullCollection"
+  (filterEmitter)="collectionArray = $event"
+  ></app-filter>
   <hr>
   <div *ngFor="let collection of collectionArray; let cardIdx = index" class="card-wrapper">
     <div class="card-display">

@@ -1,4 +1,5 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewChild } from '@angular/core';
+import { FilterComponent } from '../filter/filter.component';
 import { CardService } from '../card.service';
 import { AuthService } from '../auth.service';
 
@@ -13,38 +14,9 @@ export class EditCollectionComponent implements OnInit {
   collectionArray = [];
   addCard;
   addCardBoolean = false;
-  filterBoolean = false;
-  filterOptions = {
-    name: "",
-    colors: {
-      White: false,
-      Blue: false,
-      Black: false,
-      Red: false,
-      Green: false
-    },
-    colorless: false,
-    superTypes: {
-      Legendary: false,
-      Snow: false,
-      World: false
-    },
-    types: {
-      Artifact: false,
-      Creature: false,
-      Land: false,
-      Enchantment: false,
-      Planeswalker: false,
-      Instant: false,
-      Sorcery: false,
-      Tribal: false
-    }
-  }
-  filterColors = Object.keys(this.filterOptions.colors);
-  filterSuperTypes = Object.keys(this.filterOptions.superTypes);
-  filterTypes = Object.keys(this.filterOptions.types);
   autocomplete = [];
   autocompleteTimer;
+  @ViewChild("filter") filter : FilterComponent;
 
   constructor(private card : CardService, private _auth : AuthService) { }
 
@@ -61,12 +33,13 @@ export class EditCollectionComponent implements OnInit {
   }
 
   autocompleteBuffer() {
+    let cardSearch = this.cardSearch;
     if (this.autocompleteTimer !== undefined) {
       clearTimeout(this.autocompleteTimer);
     }
-    if (this.cardSearch.length >= 3) {
+    if (cardSearch.length >= 3) {
       this.autocompleteTimer = setTimeout(function() {
-        this.card.autocomplete(this.cardSearch).subscribe(data => {
+        this.card.autocomplete(cardSearch).subscribe(data => {
           this.autocomplete = data;
         })
       }.bind(this), 750);
@@ -74,77 +47,6 @@ export class EditCollectionComponent implements OnInit {
       clearTimeout(this.autocompleteTimer);
       this.autocomplete = [];
     }
-  }
-
-  colorChanges(changes) {
-    if (changes) {
-      this.filterOptions.colorless = false;
-    }
-    this.filterCollection();
-  }
-
-  colorlessChanges(changes) {
-    if (changes) {
-      this.filterOptions.colors = {
-        White: false,
-        Blue: false,
-        Black: false,
-        Red: false,
-        Green: false
-      }
-    }
-    this.filterCollection();
-  }
-
-  filterCollection() {
-    let colorArray = [];
-    let superTypeArray =[];
-    let typeArray = [];
-    let name = this.filterOptions.name;
-    this.filterColors.forEach(key => {
-      if (this.filterOptions.colors[key]) {
-        colorArray.push(key);
-      }
-    });
-    this.filterSuperTypes.forEach(key => {
-      if (this.filterOptions.superTypes[key]) {
-        superTypeArray.push(key);
-      }
-    });
-    this.filterTypes.forEach(key => {
-      if (this.filterOptions.types[key]) {
-        typeArray.push(key);
-      }
-    });
-    
-    this.collectionArray = this.fullCollection.filter(function(item) {
-      if (!item.printing.card.name.toLowerCase().includes(name.toLowerCase())) {
-        return false;
-      }
-      if (this.filterOptions.colorless) {
-        if (item.printing.card.colors !== null) {
-          return false;
-        }
-      } else {
-        for (let i=0; i<colorArray.length; i++) {
-          if (item.printing.card.colors === null || !item.printing.card.colors.includes(colorArray[i])) {
-            return false;
-          }
-        }
-      }
-      for (let i=0; i<superTypeArray.length; i++) {
-        if (item.printing.card.supertypes === null || !item.printing.card.supertypes.includes(superTypeArray[i])) {
-          return false;
-        }
-      }
-      for (let i=0; i<typeArray.length; i++) {
-        if (!item.printing.card.types.includes(typeArray[i])) {
-          return false;
-        }
-      }
-
-      return true;
-    }.bind(this));
   }
 
   prepareForCollectionArray(collectionItem) {
@@ -206,8 +108,8 @@ export class EditCollectionComponent implements OnInit {
     this.card.deleteCollectionEntry(this.collectionArray[index].id, force).subscribe(data => {
       switch(data["status"]) {
         case "Success":
-          let removedItem = this.collectionArray.splice(index, 1);
-          this.fullCollection.splice(this.fullCollection.findIndex(element => element === removedItem), 1);
+          let removedItem = this.collectionArray.splice(index, 1)[0];
+          this.fullCollection.splice(this.fullCollection.findIndex(element => element.id === removedItem.id), 1);
           break;
         case "Pending":
           if (window.confirm(data["message"])) {
@@ -234,7 +136,7 @@ export class EditCollectionComponent implements OnInit {
           this.addCard = undefined;
           let preparedCollection = this.prepareForCollectionArray(data["collection"]);
           this.fullCollection.push(preparedCollection);
-          this.filterCollection();
+          this.filter.filterCards();
         } else {
           console.log("Unsuccessful submission");
           window.alert(data["message"]);

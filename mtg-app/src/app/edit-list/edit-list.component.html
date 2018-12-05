@@ -7,6 +7,10 @@
   <h1>Wishlist</h1>
   <hr>
   <div>
+    <app-filter #filter
+    [fullArray]="fullWishlist"
+    (filterEmitter)="wishlistArray = $event"
+    ></app-filter><br>
     <div *ngFor="let wishlist of wishlistArray; let i = index;" style="display:inline-block;padding:5px;" class="{{wishlist.class}}">
       <img *ngIf="wishlist.pref_printing === 'none'" src="{{ wishlist.url }}" alt="">
       <img *ngIf="wishlist.pref_printing !== 'none'" src="{{ wishlist.pref_printing.img_url }}" alt="">

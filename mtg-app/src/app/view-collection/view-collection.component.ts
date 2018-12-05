@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { CardService } from '../card.service';
 import { ActivatedRoute, Router, Params } from '@angular/router';
 import { AuthService} from '../auth.service';
@@ -9,6 +9,7 @@ import { AuthService} from '../auth.service';
   styleUrls: ['./view-collection.component.css']
 })
 export class ViewCollectionComponent implements OnInit {
+  fullCollection = [];
   collectionArray = [];
 
   constructor(private card: CardService, private _route: ActivatedRoute, private _authService: AuthService) { }
@@ -42,6 +43,7 @@ export class ViewCollectionComponent implements OnInit {
         this._authService.logoutUser();
       }
       if (!collection.hasOwnProperty('message')) {
+        this.fullCollection = collection;
         this.collectionArray = collection;
       }
     });

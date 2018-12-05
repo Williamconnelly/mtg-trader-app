@@ -1,7 +1,8 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { EditCardComponent } from '../edit-card/edit-card.component';
 import { CardService } from '../card.service';
 import { AuthService } from '../auth.service';
+import { FilterComponent } from '../filter/filter.component';
 
 @Component({
   selector: 'app-edit-list',
@@ -10,9 +11,10 @@ import { AuthService } from '../auth.service';
 })
 export class EditListComponent implements OnInit {
   cardSearch = "";
+  fullWishlist = [];
   wishlistArray = [];
   cardArray = [];
-
+  @ViewChild("filter") filter : FilterComponent;
 
   constructor(private card : CardService, private _auth : AuthService) { }
 
@@ -22,6 +24,7 @@ export class EditListComponent implements OnInit {
       for (let i=0; i<wishlist.length; i++) {
         wishlist[i] = this.prepareForWishlistArray(wishlist[i]);
       }
+      this.fullWishlist = wishlist;
       this.wishlistArray = wishlist;
     })
   }
@@ -52,7 +55,8 @@ export class EditListComponent implements OnInit {
     console.log(index);
     this.card.deleteWishlistEntry(this.wishlistArray[index].id).subscribe(data => {
       if (data["status"] === "Success") {
-        this.wishlistArray.splice(index, 1);
+        let removedItem = this.wishlistArray.splice(index, 1)[0];
+        this.fullWishlist.splice(this.fullWishlist.findIndex(element => element.id === removedItem.id),1);
       }
     });
   }
@@ -111,7 +115,8 @@ export class EditListComponent implements OnInit {
       if (data["status"] === "Success") {
         console.log(data["wishlist"]);
         this.cardArray.splice(index, 1);
-        this.wishlistArray.push(this.prepareForWishlistArray(data["wishlist"]));
+        this.fullWishlist.push(this.prepareForWishlistArray(data["wishlist"]));
+        this.filter.filterCards();
       }
     });
   }
