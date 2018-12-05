@@ -11,9 +11,13 @@ import { FilterComponent } from '../filter/filter.component';
 })
 export class EditListComponent implements OnInit {
   cardSearch = "";
+  addCardBoolean = false;
+  addCard;
   fullWishlist = [];
   wishlistArray = [];
   cardArray = [];
+  autocomplete = [];
+  autocompleteTimer;
   @ViewChild("filter") filter : FilterComponent;
 
   constructor(private card : CardService, private _auth : AuthService) { }
@@ -27,6 +31,23 @@ export class EditListComponent implements OnInit {
       this.fullWishlist = wishlist;
       this.wishlistArray = wishlist;
     })
+  }
+
+  autocompleteBuffer() {
+    let cardSearch = this.cardSearch;
+    if (this.autocompleteTimer !== undefined) {
+      clearTimeout(this.autocompleteTimer);
+    }
+    if (cardSearch.length >= 3) {
+      this.autocompleteTimer = setTimeout(function() {
+        this.card.autocomplete(cardSearch).subscribe(data => {
+          this.autocomplete = data;
+        })
+      }.bind(this), 750);
+    } else {
+      clearTimeout(this.autocompleteTimer);
+      this.autocomplete = [];
+    }
   }
 
   prepareForWishlistArray(wishlistItem) {
@@ -77,7 +98,7 @@ export class EditListComponent implements OnInit {
           number_wanted: 1
         }
         console.log(cardResult);
-        this.cardArray.push(cardResult);
+        this.addCard = cardResult;
       }
     });
   }
@@ -103,10 +124,10 @@ export class EditListComponent implements OnInit {
     window.alert(eventObj["message"]);
   }
 
-  submitCardToWishlist(index) {
+  submitCardToWishlist() {
     let wishlist = {};
-    for (let key in this.cardArray[index].wishlist) {
-      wishlist[key] = this.cardArray[index].wishlist[key]
+    for (let key in this.addCard.wishlist) {
+      wishlist[key] = this.addCard.wishlist[key]
     }
     wishlist["pref_foil"] = wishlist["pref_printing"] === "none" ? wishlist["pref_foil"] : wishlist["pref_foil"] ? wishlist["pref_printing"].foil_version : !wishlist["pref_printing"].nonFoil_version;
     wishlist["pref_printing"] = wishlist["pref_printing"] === "none" ? null : wishlist["pref_printing"].id
@@ -114,7 +135,7 @@ export class EditListComponent implements OnInit {
       console.log(data);
       if (data["status"] === "Success") {
         console.log(data["wishlist"]);
-        this.cardArray.splice(index, 1);
+        this.addCard = undefined;
         this.fullWishlist.push(this.prepareForWishlistArray(data["wishlist"]));
         this.filter.filterCards();
       }

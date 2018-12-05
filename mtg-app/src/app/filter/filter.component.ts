@@ -7,7 +7,6 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 })
 export class FilterComponent implements OnInit {
   @Input() fullArray;
-  @Input() type;
   @Output() filterEmitter = new EventEmitter<any>();
 
   filterBoolean = false;
@@ -44,7 +43,7 @@ export class FilterComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-    console.log(this.type);
+    
   }
 
   colorChanges(changes) {

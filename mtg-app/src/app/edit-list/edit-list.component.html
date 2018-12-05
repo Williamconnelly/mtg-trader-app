@@ -1,8 +1,41 @@
 <div class="editlist-wrapper">
-  <form (submit)="submitCardSearch()" class="add-card-form">
-    <input type="text" [(ngModel)]="cardSearch" name="cardSearch" class="card-search" placeholder="Add Card...">
-    <input type="submit" value="Search" class="search-button">
-  </form>
+  <button (click)="addCardBoolean = !addCardBoolean">Add Cards</button>
+  <div *ngIf="addCardBoolean">
+    <form (submit)="submitCardSearch()" class="add-card-form">
+      <input type="text" [(ngModel)]="cardSearch" (ngModelChange)="autocompleteBuffer()" [matAutocomplete]="auto" name="cardSearch" class="card-search" placeholder="Add Card...">
+      <input type="submit" value="Search" class="search-button">
+    </form>
+    <mat-autocomplete #auto="matAutocomplete">
+        <mat-option *ngFor="let option of autocomplete" [value]="option">{{option}}</mat-option>
+      </mat-autocomplete>
+    <div *ngIf="addCard; else noCard">
+      <div class="card-display-new">
+        <img *ngIf="addCard.wishlist.pref_printing === 'none'" src="{{ addCard.url }}" class="card-image">
+        <img *ngIf="addCard.wishlist.pref_printing !== 'none'" src="{{ addCard.wishlist.pref_printing.img_url }}" class="card-image">
+        <p class="card-name">{{ addCard.name }}</p>
+        <label for="card-printing" class="printing-display">Preferred Printing</label>
+        <div class="card-printing">
+          <select [(ngModel)]="addCard.wishlist.pref_printing" name="" id="">
+            <option value="none">No Pref</option>
+            <option *ngFor="let printing of addCard.cardPrintings; let setIdx = index" [ngValue]="printing">{{ printing.set.title }}</option>
+          </select>
+        </div>
+        <label for="card-desire" class="desire-display">Desired Copies:</label>
+        <div class="card-desire">
+          <input type="number" step="1" [(ngModel)]="addCard.wishlist.number_wanted" name="">
+        </div>
+        <label for="card-foil" class="foil-display" *ngIf="addCard.wishlist.pref_printing === 'none' || (addCard.wishlist.pref_printing.foil_version && addCard.wishlist.pref_printing.nonFoil_version)">Foil</label>
+        <div class="card-foil" *ngIf="addCard.wishlist.pref_printing === 'none' || (addCard.wishlist.pref_printing.foil_version && addCard.wishlist.pref_printing.nonFoil_version)">
+          <input type="checkbox" [(ngModel)]="addCard.wishlist.pref_foil">
+        </div>
+        <button (click)="submitCardToWishlist()">Submit</button>
+      </div>
+    </div>
+    <ng-template #noCard>
+      <img src="https://img.scryfall.com/errors/missing.jpg" alt="" width="146px">
+    </ng-template>
+  </div>
+      
   <hr>
   <h1>Wishlist</h1>
   <hr>
@@ -36,34 +69,6 @@
         <input type="checkbox" [(ngModel)]="wishlist.pref_foil"><br>
       </div>
       <button (click)="deleteWishlistEntry(i)">Delete</button>
-    </div>
-  </div>
-  <hr>
-  <h1>New Cards</h1>
-  <hr>
-  <div>
-    <div *ngFor="let card of cardArray; let cardIdx = index" class="card-wrapper">
-      <div class="card-display-new">
-        <img *ngIf="card.wishlist.pref_printing === 'none'" src="{{ card.url }}" class="card-image">
-        <img *ngIf="card.wishlist.pref_printing !== 'none'" src="{{ card.wishlist.pref_printing.img_url }}" class="card-image">
-        <p class="card-name">{{ card.name }}</p>
-        <label for="card-printing" class="printing-display">Preferred Printing</label>
-        <div class="card-printing">
-          <select [(ngModel)]="card.wishlist.pref_printing" name="" id="">
-            <option value="none">No Pref</option>
-            <option *ngFor="let printing of card.cardPrintings; let setIdx = index" [ngValue]="printing">{{ printing.set.title }}</option>
-          </select>
-        </div>
-        <label for="card-desire" class="desire-display">Desired Copies:</label>
-        <div class="card-desire">
-          <input type="number" step="1" [(ngModel)]="card.wishlist.number_wanted" name="">
-        </div>
-        <label for="card-foil" class="foil-display" *ngIf="card.wishlist.pref_printing === 'none' || (card.wishlist.pref_printing.foil_version && card.wishlist.pref_printing.nonFoil_version)">Foil</label>
-        <div class="card-foil" *ngIf="card.wishlist.pref_printing === 'none' || (card.wishlist.pref_printing.foil_version && card.wishlist.pref_printing.nonFoil_version)">
-          <input type="checkbox" [(ngModel)]="card.wishlist.pref_foil">
-        </div>
-        <button (click)="submitCardToWishlist(cardIdx)">Submit</button>
-      </div>
     </div>
   </div>
 </div>
