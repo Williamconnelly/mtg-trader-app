@@ -70,12 +70,13 @@ export class EditListComponent implements OnInit {
   }
 
   // TODO: Put in "are you sure" step
-  deleteWishlistEntry(index) {
-    console.log(index);
-    this.card.deleteWishlistEntry(this.wishlistArray[index].id).subscribe(data => {
+  deleteWishlistEntry(id) {
+    this.card.deleteWishlistEntry(id).subscribe(data => {
       if (data["status"] === "Success") {
-        let removedItem = this.wishlistArray.splice(index, 1)[0];
-        this.fullWishlist.splice(this.fullWishlist.findIndex(element => element.id === removedItem.id),1);
+        let findIndex = this.wishlistArray.findIndex(element => element.id === id);
+        this.wishlistArray.splice(findIndex, findIndex > -1 ? 1 : 0);
+        findIndex = this.fullWishlist.findIndex(element => element.id === id);
+        this.fullWishlist.splice(findIndex, findIndex > -1 ? 1 : 0);
       }
     });
   }
