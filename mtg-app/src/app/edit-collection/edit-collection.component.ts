@@ -68,7 +68,6 @@ export class EditCollectionComponent implements OnInit {
       this.autocompleteTimer = setTimeout(function() {
         this.card.autocomplete(this.cardSearch).subscribe(data => {
           this.autocomplete = data;
-          console.log(this.autocomplete);
         })
       }.bind(this), 750);
     } else {

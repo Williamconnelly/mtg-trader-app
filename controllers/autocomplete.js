@@ -3,8 +3,8 @@ module.exports = function(trie) {
     const express = require("express");
     const router = express.Router();
 
-    router.get("/:word", (req, res) => {
-        res.json(trie.autocomplete(req.params.word));
+    router.post("/", (req, res) => {
+        res.json(trie.autocomplete(req.body.word));
     })
     return router;
 }
