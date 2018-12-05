@@ -44,7 +44,6 @@ export class EditCollectionComponent implements OnInit {
         })
       }.bind(this), 750);
     } else {
-      clearTimeout(this.autocompleteTimer);
       this.autocomplete = [];
     }
   }

@@ -1,5 +1,4 @@
 import { Component, OnInit, Input, ViewChild } from '@angular/core';
-import { EditCardComponent } from '../edit-card/edit-card.component';
 import { CardService } from '../card.service';
 import { AuthService } from '../auth.service';
 import { FilterComponent } from '../filter/filter.component';
@@ -45,7 +44,6 @@ export class EditListComponent implements OnInit {
         })
       }.bind(this), 750);
     } else {
-      clearTimeout(this.autocompleteTimer);
       this.autocomplete = [];
     }
   }
