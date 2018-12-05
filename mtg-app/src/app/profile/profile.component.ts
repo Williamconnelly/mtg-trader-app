@@ -66,4 +66,14 @@ export class ProfileComponent implements OnInit {
       console.log(result);
     });
   }
+  acceptTrade(tradeId) {
+    this._trade.acceptTrade(tradeId).subscribe(result => {
+      console.log(result);
+    });
+  }
+  declineTrade(tradeId) {
+    this._trade.declineTrade(tradeId).subscribe(result => {
+      console.log(result);
+    });
+  }
 }

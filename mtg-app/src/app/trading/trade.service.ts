@@ -16,6 +16,9 @@ export class TradeService {
   private _progressTradeURL = 'http://localhost:3000/trade/progress';
   private _completeTradeURL = 'http://localhost:3000/trade/complete';
   private _findTradesURL = 'http://localhost:3000/trade/list';
+  private _acceptURL = 'http://localhost:3000/trade/accept/';
+  private _declineURL = 'http://localhost:3000/trade/decline/';
+
   constructor(private http: HttpClient) { }
   initiateTrade(id) {
     return this.http.get<any>(`${this._initiateTradeURL}${id}`);
@@ -50,5 +53,11 @@ export class TradeService {
   }
   findTrades() {
     return this.http.get<any>(this._findTradesURL);
+  }
+  acceptTrade(tradeId) {
+    return this.http.put<any>(`${this._acceptURL}${tradeId}`, {tradeId});
+  }
+  declineTrade(tradeId) {
+    return this.http.delete<any>(`${this._declineURL}${tradeId}`);
   }
 }

@@ -45,18 +45,6 @@ router.get("/list", verifyToken, (req, res) => {
   })
 })
 
-// // Finds all trades where the user has been sent a request but has not accepted
-// router.get("/pending", verifyToken, (req, res) => {
-//   db.trade.findAll({
-//     where: {
-//       b_user: req.user.id,
-//       b_accept: false
-//     }
-//   }).then(result => {
-//     res.json(result);
-//   })
-// })
-
 // Initiates a trade between logged user as a_user and targeted user as b_user. Errors if already existing.
 router.get("/initiate/:id", verifyToken, (req, res) => {
   db.trade.findOrCreate({
@@ -84,6 +72,40 @@ router.get("/initiate/:id", verifyToken, (req, res) => {
       });
     }
   })  
+})
+
+// Decline a trade (Destroys table row)
+router.delete("/decline/:id", verifyToken, (req, res) => {
+  db.trade.destroy({
+    where: {
+      id: req.params.id
+    }
+  }).then(() => {
+    res.send({msg: "Trade Declined (Properly Deleted)"})
+  }).catch(err => {
+    res.json({
+      error: true,
+      status: 401,
+      message: "User was unable to decline trade"
+    });
+  })
+});
+
+// Accept a trade (Update's the accept boolean in table row)
+router.put("/accept/:id", verifyToken, (req, res) => {
+  db.trade.update({
+    b_accept: true
+  }, {where: {
+    id: req.params.id
+  }}).then(() => {
+    res.send({msg: "Trade Accepted! The route can now be visited"})
+  }).catch(err => {
+    res.json({
+      error: true,
+      status: 401,
+      message: "Unable to accept trade (Failed to update)"
+    });
+  })
 })
 
 router.get("/collection", verifyToken, (req, res) => {

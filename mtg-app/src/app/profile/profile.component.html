@@ -12,9 +12,10 @@
   <div class="scroll-box">
     <div *ngFor="let activeTrade of trades.active" class="card-row">
       <p>Trade with
-        <span *ngIf="activeTrade.a_user === currentUser.id">{{ activeTrade.user_b.username }}</span>
+        <a *ngIf="activeTrade.a_user === currentUser.id" routerLink="/trade/{{ activeTrade.id }}">{{ activeTrade.user_b.username }}</a>
+        <a *ngIf="activeTrade.b_user === currentUser.id" routerLink="/trade/{{ activeTrade.id }}">{{ activeTrade.user_a.username }}</a>
+        <!-- <span *ngIf="activeTrade.a_user === currentUser.id">{{ activeTrade.user_b.username }}</span> -->
         <span *ngIf="activeTrade.b_user === currentUser.id">{{ activeTrade.user_a.username }}</span>
-        : Click to continue
       </p>
     </div>
   </div>
@@ -24,7 +25,12 @@
     <div *ngFor="let pendingTrade of trades.pending" class="card-row">
       <p>Trade with
         <span *ngIf="pendingTrade.a_user === currentUser.id">{{ pendingTrade.user_b.username }}: Offer Sent</span>
-        <span *ngIf="pendingTrade.b_user === currentUser.id">{{ pendingTrade.user_a.username }}: Click to accept</span>
+        <span *ngIf="pendingTrade.b_user === currentUser.id">{{ pendingTrade.user_a.username }}:
+          <br>
+          <span (click)="acceptTrade(pendingTrade.id)">Accept</span>
+          <br>
+          <span (click)="declineTrade(pendingTrade.id)">Decline</span>
+      </span>
       </p>
     </div>
   </div>
