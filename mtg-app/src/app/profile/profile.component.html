@@ -1,5 +1,31 @@
-<div>
-  <div *ngIf="owner">
-    <p>Hello {{ loggedUser.username }}</p>
+<div *ngIf="currentUser">
+  <h1>{{ currentUser.username }}</h1>
+  <div>
+    <a routerLink="/view-collection/{{ currentUser.id }}" class="user-btn">Collection</a>
+    <a routerLink="/view-list/{{ currentUser.id }}" class="user-btn">Wishlist</a>
+    <a *ngIf="!owner" (click)="initiateTrade(currentUser.id)" class="user-btn">Initiate Trade</a>
+  </div>
+</div>
+
+<div *ngIf="owner">
+  <h3>Current Trades:</h3>
+  <div class="scroll-box">
+    <div *ngFor="let activeTrade of trades.active" class="card-row">
+      <p>Trade with
+        <span *ngIf="activeTrade.a_user === currentUser.id">{{ activeTrade.user_b.username }}</span>
+        <span *ngIf="activeTrade.b_user === currentUser.id">{{ activeTrade.user_a.username }}</span>
+        : Click to continue
+      </p>
+    </div>
+  </div>
+
+  <h3>Pending Trades</h3>
+  <div class="scroll-box">
+    <div *ngFor="let pendingTrade of trades.pending" class="card-row">
+      <p>Trade with
+        <span *ngIf="pendingTrade.a_user === currentUser.id">{{ pendingTrade.user_b.username }}: Offer Sent</span>
+        <span *ngIf="pendingTrade.b_user === currentUser.id">{{ pendingTrade.user_a.username }}: Click to accept</span>
+      </p>
+    </div>
   </div>
 </div>

@@ -86,4 +86,15 @@ router.get("/getUser", verifyToken, (req, res) => {
   })
 })
 
+// Find a given user
+router.get("/user/:id", verifyToken, (req, res) => {
+  db.user.findOne({
+    where: {
+      id: req.params.id
+    }, attributes: {exlude: ["createdAt", "updatedAt", "password", "email"]}
+  }).then(foundUser => {
+    res.json(foundUser);
+  })
+})
+
 module.exports = router;

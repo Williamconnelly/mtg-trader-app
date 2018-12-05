@@ -36,23 +36,26 @@ router.get("/list", verifyToken, (req, res) => {
   db.trade.findAll({
     where: {
       [op.or]: [{a_user: req.user.id}, {b_user: req.user.id}]
-    }
+    }, include: [
+      {model: db.user, as:"user_a", attributes: {exclude: ["password","createdAt","updatedAt","email"]}},
+      {model: db.user, as:"user_b", attributes: {exclude: ["password","createdAt","updatedAt","email"]}}
+    ]
   }).then(result => {
     res.json(result);
   })
 })
 
-// Finds all trades where the user has been sent a request but has not accepted
-router.get("/pending", verifyToken, (req, res) => {
-  db.trade.findAll({
-    where: {
-      b_user: req.user.id,
-      b_accept: false
-    }
-  }).then(result => {
-    res.json(result);
-  })
-})
+// // Finds all trades where the user has been sent a request but has not accepted
+// router.get("/pending", verifyToken, (req, res) => {
+//   db.trade.findAll({
+//     where: {
+//       b_user: req.user.id,
+//       b_accept: false
+//     }
+//   }).then(result => {
+//     res.json(result);
+//   })
+// })
 
 // Initiates a trade between logged user as a_user and targeted user as b_user. Errors if already existing.
 router.get("/initiate/:id", verifyToken, (req, res) => {
