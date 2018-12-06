@@ -14,8 +14,6 @@
       <p>Trade with
         <a *ngIf="activeTrade.a_user === currentUser.id" routerLink="/trade/{{ activeTrade.id }}">{{ activeTrade.user_b.username }}</a>
         <a *ngIf="activeTrade.b_user === currentUser.id" routerLink="/trade/{{ activeTrade.id }}">{{ activeTrade.user_a.username }}</a>
-        <!-- <span *ngIf="activeTrade.a_user === currentUser.id">{{ activeTrade.user_b.username }}</span> -->
-        <span *ngIf="activeTrade.b_user === currentUser.id">{{ activeTrade.user_a.username }}</span>
       </p>
     </div>
   </div>

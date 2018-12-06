@@ -69,11 +69,22 @@ export class ProfileComponent implements OnInit {
   acceptTrade(tradeId) {
     this._trade.acceptTrade(tradeId).subscribe(result => {
       console.log(result);
+      for (let trade in this.trades.pending) {
+        if (this.trades.pending[trade].id === tradeId) {
+          this.trades.active.push(this.trades.pending.splice(trade, 1)[0]);
+        }
+      }
+      console.log(this.trades);
     });
   }
   declineTrade(tradeId) {
     this._trade.declineTrade(tradeId).subscribe(result => {
       console.log(result);
+      for (let trade in this.trades.pending) {
+        if (this.trades.pending[trade].id === tradeId) {
+          this.trades.pending.splice(trade, 1);
+        }
+      }
     });
   }
 }
