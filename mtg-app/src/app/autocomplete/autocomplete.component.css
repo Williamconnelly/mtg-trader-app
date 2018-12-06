@@ -1,0 +1,29 @@
+.card-search, .search-button {
+    font-size: inherit;
+    padding: 0.3em 0.4em;
+    -moz-box-sizing: content-box;
+    -webkit-box-sizing: content-box;
+    box-sizing: content-box;
+    border: 1px solid #000000;
+    background-color: #fff;
+    height: 2em;
+  }
+  
+  .card-search {
+    margin-right: 0;
+    width: 12em;
+  }
+  
+  .card-search:focus {
+    outline: none;
+  }
+  
+  .search-button {
+    margin-left: 0;
+    background-color: #d8d8d8;
+    width: 4em;
+  }
+  .search-button:active, .search-button:focus {
+    background-color: rgb(175, 175, 175);
+    outline: none;
+  }

@@ -1,7 +1,7 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { EditCardComponent } from '../edit-card/edit-card.component';
+import { Component, OnInit, Output, ViewChild } from '@angular/core';
 import { CardService } from '../card.service';
 import { AuthService } from '../auth.service';
+import { FilterComponent } from '../filter/filter.component';
 
 @Component({
   selector: 'app-edit-list',
@@ -9,10 +9,11 @@ import { AuthService } from '../auth.service';
   styleUrls: ['./edit-list.component.css']
 })
 export class EditListComponent implements OnInit {
-  cardSearch = "";
+  addCardBoolean = false;
+  addCard;
+  fullWishlist = [];
   wishlistArray = [];
-  cardArray = [];
-
+  @ViewChild("filter") filter : FilterComponent;
 
   constructor(private card : CardService, private _auth : AuthService) { }
 
@@ -22,6 +23,7 @@ export class EditListComponent implements OnInit {
       for (let i=0; i<wishlist.length; i++) {
         wishlist[i] = this.prepareForWishlistArray(wishlist[i]);
       }
+      this.fullWishlist = wishlist;
       this.wishlistArray = wishlist;
     })
   }
@@ -43,24 +45,21 @@ export class EditListComponent implements OnInit {
     return wishlistItem
   }
 
-  logCardArrayAtIndex(index) {
-    console.log(this.cardArray[index]);
-  }
-
   // TODO: Put in "are you sure" step
-  deleteWishlistEntry(index) {
-    console.log(index);
-    this.card.deleteWishlistEntry(this.wishlistArray[index].id).subscribe(data => {
+  deleteWishlistEntry(id) {
+    this.card.deleteWishlistEntry(id).subscribe(data => {
       if (data["status"] === "Success") {
-        this.wishlistArray.splice(index, 1);
+        let findIndex = this.wishlistArray.findIndex(element => element.id === id);
+        this.wishlistArray.splice(findIndex, findIndex > -1 ? 1 : 0);
+        findIndex = this.fullWishlist.findIndex(element => element.id === id);
+        this.fullWishlist.splice(findIndex, findIndex > -1 ? 1 : 0);
       }
     });
   }
 
-  submitCardSearch() {
-    console.log("Searching for " + this.cardSearch);
-    let obs = this.card.findCardByName(this.cardSearch);
-    this.cardSearch = "";
+  submitCardSearch(cardSearch) {
+    console.log(cardSearch);
+    let obs = this.card.findCardByName(cardSearch);
     obs.subscribe(cardResult => {
       console.log("Database Card Result")
       console.log(cardResult);
@@ -73,14 +72,25 @@ export class EditListComponent implements OnInit {
           number_wanted: 1
         }
         console.log(cardResult);
-        this.cardArray.push(cardResult);
+        this.addCard = cardResult;
       }
     });
   }
 
-  childUpdateCardBuffer(index) {
-    this.wishlistArray[index].class = "updateBuffer"
-    console.log(this.wishlistArray[index].class);
+  childUpdateCardBuffer(emitObj) {
+    this.wishlistArray[emitObj.index].class = "updateBuffer"
+    console.log(this.wishlistArray[emitObj.index].class);
+    switch(emitObj.field) {
+      case 'foil':
+        this.wishlistArray[emitObj.index].pref_foil = emitObj.value;
+        break;
+      case 'printing':
+        this.wishlistArray[emitObj.index].pref_printing = emitObj.value;
+        break;
+      default:
+        this.wishlistArray[emitObj.index][emitObj.field] = emitObj.value;
+        break;
+    }
   }
 
   childUpdateCard(index) {
@@ -99,10 +109,10 @@ export class EditListComponent implements OnInit {
     window.alert(eventObj["message"]);
   }
 
-  submitCardToWishlist(index) {
+  submitCardToWishlist() {
     let wishlist = {};
-    for (let key in this.cardArray[index].wishlist) {
-      wishlist[key] = this.cardArray[index].wishlist[key]
+    for (let key in this.addCard.wishlist) {
+      wishlist[key] = this.addCard.wishlist[key]
     }
     wishlist["pref_foil"] = wishlist["pref_printing"] === "none" ? wishlist["pref_foil"] : wishlist["pref_foil"] ? wishlist["pref_printing"].foil_version : !wishlist["pref_printing"].nonFoil_version;
     wishlist["pref_printing"] = wishlist["pref_printing"] === "none" ? null : wishlist["pref_printing"].id
@@ -110,8 +120,9 @@ export class EditListComponent implements OnInit {
       console.log(data);
       if (data["status"] === "Success") {
         console.log(data["wishlist"]);
-        this.cardArray.splice(index, 1);
-        this.wishlistArray.push(this.prepareForWishlistArray(data["wishlist"]));
+        this.addCard = undefined;
+        this.fullWishlist.push(this.prepareForWishlistArray(data["wishlist"]));
+        this.filter.filterCards();
       }
     });
   }

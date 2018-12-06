@@ -25,13 +25,24 @@ class Trie {
         }
     }
 
+    get(word) {
+        word = word.toLowerCase();
+        let curr = this.head;
+        let i=0;
+        while (i<word.length && curr) {
+            curr = curr[word[i]];
+            i++
+        }
+        if (i === word.length && curr && curr.word !== undefined) {
+            return curr.word
+        }
+        return false;
+    }
+
     autocomplete(string) {
         string = string.toLowerCase();
         let words = []
         let curr = this.head;
-        // for (let i=0; i<string.length; i++) {
-        //     curr = curr[string[i]];
-        // }
         let i=0;
         while (i<string.length && curr) {
             curr = curr[string[i++]];

@@ -1,7 +1,11 @@
 <div class="view-wrapper">
   <hr>
   <h1>Wishlist</h1>
-  <a routerLink="/edit-list">Edit Wishlist</a>
+  <a routerLink="/edit-list">Edit Wishlist</a><br>
+  <app-filter #filter
+  [fullArray]="fullWishlist"
+  (filterEmitter)="wishlistArray = $event"
+  ></app-filter>
   <hr>
   <div *ngFor="let wishlist of wishlistArray; let cardIdx = index" class="card-wrapper">
     <div class="card-display">

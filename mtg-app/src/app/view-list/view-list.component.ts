@@ -9,6 +9,7 @@ import { AuthService} from '../auth.service';
   styleUrls: ['./view-list.component.css']
 })
 export class ViewListComponent implements OnInit {
+  fullWishlist = [];
   wishlistArray = [];
 
   constructor(private card: CardService, private _route: ActivatedRoute, private _authService: AuthService) { }
@@ -55,6 +56,7 @@ export class ViewListComponent implements OnInit {
           }
         }
         this.wishlistArray = wishlist;
+        this.fullWishlist = wishlist;
       }
     });
   }

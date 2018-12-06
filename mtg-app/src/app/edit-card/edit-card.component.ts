@@ -17,6 +17,7 @@ export class EditCardComponent implements OnInit {
   @Input() number_wanted;
   @Input() printing;
   @Input() foil;
+  @Input() name;
   @Input() card;
   @Input() revertIndicator;
 
@@ -40,24 +41,16 @@ export class EditCardComponent implements OnInit {
     }
   }
 
-  ngOnChanges(changes) {
-    // Trigger updateCardBuffer when there are changes to printing or foil but NO changes to revertIndicator
-    if (((changes.hasOwnProperty('printing') && !changes.printing.firstChange) || changes.hasOwnProperty('foil') && !changes.foil.firstChange) && !changes.hasOwnProperty('revertIndicator')) {
-      console.log(changes);
-      this.updateCardBuffer();
-    }
-  }
-
   minusWanted() {
     if (this.number_wanted > 1) {
       this.number_wanted--;
-      this.updateCardBuffer();
+      this.updateCardBuffer('number_wanted', this.number_wanted);
     }
   }
 
   plusWanted() {
     this.number_wanted++;
-    this.updateCardBuffer();
+    this.updateCardBuffer('number_wanted', this.number_wanted);
   }
 
   minusOwned() {
@@ -65,36 +58,42 @@ export class EditCardComponent implements OnInit {
       this.owned_copies--;
       if (this.trade_copies > this.owned_copies) {
         this.trade_copies = this.owned_copies;
+        this.updateCardBuffer('trade_copies', this.trade_copies)
       }
-      this.updateCardBuffer();
+      this.updateCardBuffer('owned_copies', this.owned_copies);
     }
   }
 
   plusOwned() {
     this.owned_copies++;
-    this.updateCardBuffer();
+    this.updateCardBuffer('owned_copies', this.owned_copies);
   }
 
   minusTrade() {
     if (this.trade_copies > 0) {
       this.trade_copies--;
-      this.updateCardBuffer();
+      this.updateCardBuffer('trade_copies', this.trade_copies);
     }
   }
 
   plusTrade() {
     if (this.trade_copies < this.owned_copies) {
       this.trade_copies++;
-      this.updateCardBuffer();
+      this.updateCardBuffer('trade_copies', this.trade_copies);
     }
   }
 
-  updateCardBuffer() {
+  updateCardBuffer(field, newValue) {
+    let emitObj = {
+      index: this.index,
+      field: field,
+      value: newValue
+    }
     if (this.updateTimer !== undefined) {
       clearTimeout(this.updateTimer);
     }
     this.updateTimer = setTimeout(this.updateCard.bind(this), 1500);
-    this.updateBufferEmitter.emit(this.index);
+    this.updateBufferEmitter.emit(emitObj);
   }
   
 
@@ -121,6 +120,8 @@ export class EditCardComponent implements OnInit {
     }
     if (Object.keys(updateObject).length > 0) {
       let observable = (this.number_wanted !== undefined) ? this._card.updateWishlistEntry(updateObject, this.id) : this._card.updateCollectionEntry(updateObject, this.id)
+      this.updateEmitter.emit(this.index);
+      console.log(updateObject);
       observable.subscribe(data => {
         console.log(data);
         switch(data["status"]) {
@@ -146,8 +147,6 @@ export class EditCardComponent implements OnInit {
             break;
         }
       });
-      this.updateEmitter.emit(this.index);
-      console.log(updateObject);
     } else {
       console.log("Nothing needs updating");
       this.successfulUpdateEmitter.emit(this.index);

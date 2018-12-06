@@ -1,0 +1,7 @@
+<form (submit)="submit()" class="add-card-form">
+    <input type="text" [(ngModel)]="cardSearch" (ngModelChange)="autocompleteBuffer()" [matAutocomplete]="auto" name="cardSearch" class="card-search" placeholder="Find a Card...">
+    <input type="submit" value="Search" class="search-button">
+  </form>
+<mat-autocomplete #auto="matAutocomplete">
+  <mat-option *ngFor="let option of autocomplete" [value]="option">{{option}}</mat-option>
+</mat-autocomplete>

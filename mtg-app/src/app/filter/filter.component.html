@@ -1,0 +1,21 @@
+<button (click)="filterBoolean = !filterBoolean">Filters</button>
+<div *ngIf="filterBoolean">
+  <label for="">Name: </label>
+  <input type="text" [(ngModel)]="filterOptions.name" (ngModelChange)="filterCards()">
+  <br>
+  <div *ngFor="let key of filterColors" style="display:inline-block">
+    <input type="checkbox" [(ngModel)]="filterOptions.colors[key]" (ngModelChange)="colorChanges($event)">
+    <label for="">{{ key }}</label>
+  </div>
+  <input type="checkbox" [(ngModel)]="filterOptions.colorless" (ngModelChange)="colorlessChanges($event)">
+  <label for="">Colorless</label>
+  <br>
+  <div *ngFor="let key of filterSuperTypes" style="display: inline-block;">
+    <input type="checkbox" [(ngModel)]="filterOptions.superTypes[key]" (ngModelChange)="filterCards()">
+    <label for=""> {{ key }}</label>
+  </div><br>
+  <div *ngFor="let key of filterTypes" style="display: inline-block;">
+    <input type="checkbox" [(ngModel)]="filterOptions.types[key]" (ngModelChange)="filterCards()">
+    <label for=""> {{ key }}</label>
+  </div>
+</div>
