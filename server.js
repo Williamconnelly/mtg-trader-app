@@ -19,7 +19,7 @@ app.use(bp.json());
 app.use(cors());
 
 app.use('/auth', require('./controllers/auth'));
-app.use('/card', require('./controllers/card'));
+app.use('/card', require('./controllers/card')(trie));
 app.use('/user', require('./controllers/user')(io));
 app.use('/trade', require('./controllers/trade'));
 app.use('/gathering', require('./controllers/gathering'));
