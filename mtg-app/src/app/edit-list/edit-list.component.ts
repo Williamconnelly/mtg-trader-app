@@ -77,9 +77,20 @@ export class EditListComponent implements OnInit {
     });
   }
 
-  childUpdateCardBuffer(index) {
-    this.wishlistArray[index].class = "updateBuffer"
-    console.log(this.wishlistArray[index].class);
+  childUpdateCardBuffer(emitObj) {
+    this.wishlistArray[emitObj.index].class = "updateBuffer"
+    console.log(this.wishlistArray[emitObj.index].class);
+    switch(emitObj.field) {
+      case 'foil':
+        this.wishlistArray[emitObj.index].pref_foil = emitObj.value;
+        break;
+      case 'printing':
+        this.wishlistArray[emitObj.index].pref_printing = emitObj.value;
+        break;
+      default:
+        this.wishlistArray[emitObj.index][emitObj.field] = emitObj.value;
+        break;
+    }
   }
 
   childUpdateCard(index) {

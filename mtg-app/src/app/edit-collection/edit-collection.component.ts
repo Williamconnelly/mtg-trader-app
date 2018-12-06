@@ -59,9 +59,17 @@ export class EditCollectionComponent implements OnInit {
     });
   }
 
-  childUpdatePrintingBuffer(index) {
-    this.collectionArray[index].class = "updateBuffer";
-    console.log(this.collectionArray[index].class);
+  childUpdatePrintingBuffer(emitObj) {
+    this.collectionArray[emitObj.index].class = "updateBuffer";
+    console.log(this.collectionArray[emitObj.index].class);
+    switch(emitObj.field) {
+      case 'printing':
+        this.collectionArray[emitObj.index].printingInput = emitObj.value;
+        break;
+      default:
+        this.collectionArray[emitObj.index][emitObj.field] = emitObj.value;
+        break;
+    }
   }
 
   childSuccessfulUpdate(index) {

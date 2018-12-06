@@ -44,13 +44,13 @@ export class EditCardComponent implements OnInit {
   minusWanted() {
     if (this.number_wanted > 1) {
       this.number_wanted--;
-      this.updateCardBuffer();
+      this.updateCardBuffer('number_wanted', this.number_wanted);
     }
   }
 
   plusWanted() {
     this.number_wanted++;
-    this.updateCardBuffer();
+    this.updateCardBuffer('number_wanted', this.number_wanted);
   }
 
   minusOwned() {
@@ -58,36 +58,42 @@ export class EditCardComponent implements OnInit {
       this.owned_copies--;
       if (this.trade_copies > this.owned_copies) {
         this.trade_copies = this.owned_copies;
+        this.updateCardBuffer('trade_copies', this.trade_copies)
       }
-      this.updateCardBuffer();
+      this.updateCardBuffer('owned_copies', this.owned_copies);
     }
   }
 
   plusOwned() {
     this.owned_copies++;
-    this.updateCardBuffer();
+    this.updateCardBuffer('owned_copies', this.owned_copies);
   }
 
   minusTrade() {
     if (this.trade_copies > 0) {
       this.trade_copies--;
-      this.updateCardBuffer();
+      this.updateCardBuffer('trade_copies', this.trade_copies);
     }
   }
 
   plusTrade() {
     if (this.trade_copies < this.owned_copies) {
       this.trade_copies++;
-      this.updateCardBuffer();
+      this.updateCardBuffer('trade_copies', this.trade_copies);
     }
   }
 
-  updateCardBuffer() {
+  updateCardBuffer(field, newValue) {
+    let emitObj = {
+      index: this.index,
+      field: field,
+      value: newValue
+    }
     if (this.updateTimer !== undefined) {
       clearTimeout(this.updateTimer);
     }
     this.updateTimer = setTimeout(this.updateCard.bind(this), 1500);
-    this.updateBufferEmitter.emit(this.index);
+    this.updateBufferEmitter.emit(emitObj);
   }
   
 
