@@ -22,6 +22,7 @@ export class AutocompleteComponent implements OnInit {
   submit() {
     console.log("Autocomplete search field submit");
     this.searchEmitter.emit(this.cardSearch);
+    clearTimeout(this.autocompleteTimer);
     this.cardSearch = "";
     this.lastAutocomplete = undefined;
     this.autocomplete = [];
