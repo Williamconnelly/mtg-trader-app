@@ -114,6 +114,8 @@ export class EditCardComponent implements OnInit {
     }
     if (Object.keys(updateObject).length > 0) {
       let observable = (this.number_wanted !== undefined) ? this._card.updateWishlistEntry(updateObject, this.id) : this._card.updateCollectionEntry(updateObject, this.id)
+      this.updateEmitter.emit(this.index);
+      console.log(updateObject);
       observable.subscribe(data => {
         console.log(data);
         switch(data["status"]) {
@@ -139,8 +141,6 @@ export class EditCardComponent implements OnInit {
             break;
         }
       });
-      this.updateEmitter.emit(this.index);
-      console.log(updateObject);
     } else {
       console.log("Nothing needs updating");
       this.successfulUpdateEmitter.emit(this.index);
