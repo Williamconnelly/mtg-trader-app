@@ -9,13 +9,10 @@ import { AuthService } from '../auth.service';
   styleUrls: ['./edit-collection.component.css']
 })
 export class EditCollectionComponent implements OnInit {
-  cardSearch = "";
   fullCollection = [];
   collectionArray = [];
   addCard;
   addCardBoolean = false;
-  autocomplete = [];
-  autocompleteTimer;
   @ViewChild("filter") filter : FilterComponent;
 
   constructor(private card : CardService, private _auth : AuthService) { }
@@ -32,22 +29,6 @@ export class EditCollectionComponent implements OnInit {
     });
   }
 
-  autocompleteBuffer() {
-    let cardSearch = this.cardSearch;
-    if (this.autocompleteTimer !== undefined) {
-      clearTimeout(this.autocompleteTimer);
-    }
-    if (cardSearch.length >= 3) {
-      this.autocompleteTimer = setTimeout(function() {
-        this.card.autocomplete(cardSearch).subscribe(data => {
-          this.autocomplete = data;
-        })
-      }.bind(this), 750);
-    } else {
-      this.autocomplete = [];
-    }
-  }
-
   prepareForCollectionArray(collectionItem) {
     for (let i=0; i<collectionItem.printing.card.cardPrintings.length; i++) {
       if (collectionItem.printing.card.cardPrintings[i].id === collectionItem.printing.id) {
@@ -59,15 +40,9 @@ export class EditCollectionComponent implements OnInit {
     return collectionItem
   }
 
-  submitCardSearch() {
-    console.log("Searching for " + this.cardSearch);
-    let obs = this.card.findCardByName(this.cardSearch);
-    let scryObs = this.card.scryfallFindCardByName(this.cardSearch);
-    this.cardSearch = "";
-    this.autocomplete = [];
-    if (this.autocompleteTimer !== undefined) {
-      clearTimeout(this.autocompleteTimer);
-    }
+  submitCardSearch(cardSearch) {
+    console.log("Searching for " + cardSearch);
+    let obs = this.card.findCardByName(cardSearch);
     obs.subscribe(cardResult => {
       console.log("Database Card Result")
       console.log(cardResult);

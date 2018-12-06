@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild } from '@angular/core';
+import { Component, OnInit, Output, ViewChild } from '@angular/core';
 import { CardService } from '../card.service';
 import { AuthService } from '../auth.service';
 import { FilterComponent } from '../filter/filter.component';
@@ -9,14 +9,10 @@ import { FilterComponent } from '../filter/filter.component';
   styleUrls: ['./edit-list.component.css']
 })
 export class EditListComponent implements OnInit {
-  cardSearch = "";
   addCardBoolean = false;
   addCard;
   fullWishlist = [];
   wishlistArray = [];
-  cardArray = [];
-  autocomplete = [];
-  autocompleteTimer;
   @ViewChild("filter") filter : FilterComponent;
 
   constructor(private card : CardService, private _auth : AuthService) { }
@@ -30,22 +26,6 @@ export class EditListComponent implements OnInit {
       this.fullWishlist = wishlist;
       this.wishlistArray = wishlist;
     })
-  }
-
-  autocompleteBuffer() {
-    let cardSearch = this.cardSearch;
-    if (this.autocompleteTimer !== undefined) {
-      clearTimeout(this.autocompleteTimer);
-    }
-    if (cardSearch.length >= 3) {
-      this.autocompleteTimer = setTimeout(function() {
-        this.card.autocomplete(cardSearch).subscribe(data => {
-          this.autocomplete = data;
-        })
-      }.bind(this), 750);
-    } else {
-      this.autocomplete = [];
-    }
   }
 
   prepareForWishlistArray(wishlistItem) {
@@ -65,10 +45,6 @@ export class EditListComponent implements OnInit {
     return wishlistItem
   }
 
-  logCardArrayAtIndex(index) {
-    console.log(this.cardArray[index]);
-  }
-
   // TODO: Put in "are you sure" step
   deleteWishlistEntry(id) {
     this.card.deleteWishlistEntry(id).subscribe(data => {
@@ -81,10 +57,9 @@ export class EditListComponent implements OnInit {
     });
   }
 
-  submitCardSearch() {
-    console.log("Searching for " + this.cardSearch);
-    let obs = this.card.findCardByName(this.cardSearch);
-    this.cardSearch = "";
+  submitCardSearch(cardSearch) {
+    console.log(cardSearch);
+    let obs = this.card.findCardByName(cardSearch);
     obs.subscribe(cardResult => {
       console.log("Database Card Result")
       console.log(cardResult);

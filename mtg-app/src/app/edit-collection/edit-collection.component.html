@@ -1,13 +1,7 @@
 <div class="editcollection-wrapper">
   <button (click)="addCardBoolean = !addCardBoolean">Add Cards</button>
   <div *ngIf="addCardBoolean">
-    <form (submit)="submitCardSearch()" class="add-card-form">
-      <input type="text" [(ngModel)]="cardSearch" (ngModelChange)="autocompleteBuffer()" [matAutocomplete]="auto" name="cardSearch" class="card-search" placeholder="Find a Card...">
-      <input type="submit" value="Search" class="search-button">
-    </form>
-    <mat-autocomplete #auto="matAutocomplete">
-      <mat-option *ngFor="let option of autocomplete" [value]="option">{{option}}</mat-option>
-    </mat-autocomplete>
+    <app-autocomplete (searchEmitter)="submitCardSearch($event)"></app-autocomplete>
     <div>
       <div *ngIf="addCard === undefined">
         <img src="https://img.scryfall.com/errors/missing.jpg" alt="" width="146px">
