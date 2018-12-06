@@ -17,6 +17,7 @@ export class EditCardComponent implements OnInit {
   @Input() number_wanted;
   @Input() printing;
   @Input() foil;
+  @Input() name;
   @Input() card;
   @Input() revertIndicator;
 
@@ -37,14 +38,6 @@ export class EditCardComponent implements OnInit {
       this.dbVersion["trade_copies"] = this.trade_copies;
       this.dbVersion["foil"] = this.foil;
       this.dbVersion["printingId"] = this.printing.id;
-    }
-  }
-
-  ngOnChanges(changes) {
-    // Trigger updateCardBuffer when there are changes to printing or foil but NO changes to revertIndicator
-    if (((changes.hasOwnProperty('printing') && !changes.printing.firstChange) || changes.hasOwnProperty('foil') && !changes.foil.firstChange) && !changes.hasOwnProperty('revertIndicator')) {
-      console.log(changes);
-      this.updateCardBuffer();
     }
   }
 

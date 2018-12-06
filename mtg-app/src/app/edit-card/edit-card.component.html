@@ -1,7 +1,23 @@
+<img *ngIf="printing.hasOwnProperty('img_url'); else noImgUrl" src="{{ printing.img_url}}">
+<ng-template>
+    <img src="card.url" alt="">
+</ng-template>
+<p>{{ name }}</p>
 <div *ngIf="number_wanted !== undefined">
+    <select [(ngModel)]="printing" (ngModelChange)="updateCardBuffer()" name="" id="">
+        <option value="none">No Pref</option>
+        <option *ngFor="let printing of card.card.cardPrintings" [ngValue]="printing">{{ printing.set.title }}</option>
+    </select><br>
     <span>Number Wanted: </span><button (click)="minusWanted()">-</button><span> {{ number_wanted }} </span><button (click)="plusWanted()">+</button>
 </div>
 <div *ngIf="owned_copies !== undefined">
+    <select [(ngModel)]="printing" (ngModelChange)="updateCardBuffer()" name="card-set" id="">
+        <option *ngFor="let printing of card.printing.card.cardPrintings" [ngValue]="printing">{{ printing.set.title }}</option>
+    </select><br>
     <span>Owned Copies: </span><button (click)="minusOwned()">-</button><span> {{ owned_copies }} </span><button (click)="plusOwned()">+</button><br>
-    <span>For Trade: </span><button (click)="minusTrade()">-</button><span> {{ trade_copies }} </span><button (click)="plusTrade()">+</button>
+    <span>For Trade: </span><button (click)="minusTrade()">-</button><span> {{ trade_copies }} </span><button (click)="plusTrade()">+</button><br>
+</div>
+<div *ngIf="printing === 'none' || (printing.foil_version && printing.nonFoil_version)">
+    <label for="">Foil</label>
+    <input type="checkbox" [(ngModel)]="foil" (ngModelChange)="updateCardBuffer()">
 </div>

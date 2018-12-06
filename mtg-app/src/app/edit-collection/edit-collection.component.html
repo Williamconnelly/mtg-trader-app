@@ -7,28 +7,28 @@
         <img src="https://img.scryfall.com/errors/missing.jpg" alt="" width="146px">
       </div>
       <div *ngIf="addCard !== undefined" class="card-display">
-          <img src="{{ addCard.collection.printingId.img_url }}" class="card-image">
-          <p class="card-name">{{ addCard.name }}</p>
-          <label for="card-set" class="set-display">Card: Set</label>
-          <div class="card-set">
-            <select [(ngModel)]="addCard.collection.printingId" name="card-set" id="">
-              <option *ngFor="let subPrinting of addCard.cardPrintings let setIdx = index" [ngValue]="subPrinting">{{ subPrinting.set.title }}</option>
-            </select>
-          </div>
-          <label for="card-owned" class="owned-display">Owned:</label>
-          <div class="card-owned">
-            <input type="number" step="1" [(ngModel)]="addCard.collection.owned_copies" name="card-owned">
-          </div>
-          <label for="card-trade" class="trade-display">For Trade:</label>
-          <div class="card-trade">
-            <input type="number" step="1" [(ngModel)]="addCard.collection.trade_copies" name="card-trade">
-          </div>
-          <label for="card-foil" class="foil-display" *ngIf="addCard.collection.printingId.foil_version && addCard.collection.printingId.nonFoil_version">Foil</label>
-          <div class="card-foil" *ngIf="addCard.collection.printingId.foil_version && addCard.collection.printingId.nonFoil_version">
-            <input type="checkbox" [(ngModel)]="addCard.collection.foil">
-          </div>
-          <button (click)="submitPrintingToCollection()">Submit</button>
+        <img src="{{ addCard.collection.printingId.img_url }}" class="card-image">
+        <p class="card-name">{{ addCard.name }}</p>
+        <label for="card-set" class="set-display">Card: Set</label>
+        <div class="card-set">
+          <select [(ngModel)]="addCard.collection.printingId" name="card-set" id="">
+            <option *ngFor="let subPrinting of addCard.cardPrintings let setIdx = index" [ngValue]="subPrinting">{{ subPrinting.set.title }}</option>
+          </select>
         </div>
+        <label for="card-owned" class="owned-display">Owned:</label>
+        <div class="card-owned">
+          <input type="number" step="1" [(ngModel)]="addCard.collection.owned_copies" name="card-owned">
+        </div>
+        <label for="card-trade" class="trade-display">For Trade:</label>
+        <div class="card-trade">
+          <input type="number" step="1" [(ngModel)]="addCard.collection.trade_copies" name="card-trade">
+        </div>
+        <label for="card-foil" class="foil-display" *ngIf="addCard.collection.printingId.foil_version && addCard.collection.printingId.nonFoil_version">Foil</label>
+        <div class="card-foil" *ngIf="addCard.collection.printingId.foil_version && addCard.collection.printingId.nonFoil_version">
+          <input type="checkbox" [(ngModel)]="addCard.collection.foil">
+        </div>
+        <button (click)="submitPrintingToCollection()">Submit</button>
+      </div>
     </div>
   </div>
   <hr>
@@ -41,11 +41,6 @@
     ></app-filter>
     <br>
     <div *ngFor="let collection of collectionArray; let i = index" style="display:inline-block; padding:5px;" class="{{ collection.class }}">
-      <img src="{{ collection.printingInput.img_url }}">
-      <p>{{ collection.printing.card.name }}</p>
-      <select [(ngModel)]="collection.printingInput" name="card-set" id="">
-        <option *ngFor="let printing of collection.printing.card.cardPrintings" [ngValue]="printing">{{ printing.set.title }}</option>
-      </select>
       <app-edit-card 
       [index]="i"
       [id]="collection.id"
@@ -53,14 +48,12 @@
       [trade_copies]="collection.trade_copies"
       [printing]="collection.printingInput"
       [foil]="collection.foil"
+      [name]="collection.printing.card.name"
+      [card]="collection"
       (updateBufferEmitter)="childUpdatePrintingBuffer($event)"
       (successfulUpdateEmitter)="childSuccessfulUpdate($event)"
       (unsuccessfulUpdateEmitter)="childUnsuccessfulUpdate($event)"
       ></app-edit-card>
-      <div *ngIf="collection.printingInput.foil_version && collection.printingInput.nonFoil_version">
-        <label for="">Foil:</label>
-        <input type="checkbox" [(ngModel)]="collection.foil"><br>
-      </div>
       <button (click)="deleteCollectionEntry(collection.id, {})">Delete</button>
     </div>
   </div>
