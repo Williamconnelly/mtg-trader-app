@@ -43,9 +43,6 @@ class Trie {
         string = string.toLowerCase();
         let words = []
         let curr = this.head;
-        // for (let i=0; i<string.length; i++) {
-        //     curr = curr[string[i]];
-        // }
         let i=0;
         while (i<string.length && curr) {
             curr = curr[string[i++]];
