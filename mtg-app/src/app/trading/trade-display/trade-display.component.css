@@ -19,14 +19,20 @@ body {
   background-color: whitesmoke;
 }
 
+.slick-initialized img {
+  visibility: visible;
+  width: 85%;
+  height: auto;
+}
+
 .inner {
   padding: 6px;
   text-align: center;
 }
 
 img {
-  width: 85%;
-  height: auto;
+  visibility: hidden;
+  width: 0px;
 }
 img:hover {
   opacity: 0.9;
