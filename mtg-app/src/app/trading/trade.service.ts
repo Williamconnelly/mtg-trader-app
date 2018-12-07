@@ -17,7 +17,7 @@ export class TradeService {
   private _completeTradeURL = 'http://localhost:3000/trade/complete';
   private _findTradesURL = 'http://localhost:3000/trade/list';
   private _acceptURL = 'http://localhost:3000/trade/accept/';
-  private _declineURL = 'http://localhost:3000/trade/decline/';
+  private _deleteTradeURL = 'http://localhost:3000/trade/delete/';
 
   constructor(private http: HttpClient) { }
   initiateTrade(id) {
@@ -57,7 +57,7 @@ export class TradeService {
   acceptTrade(tradeId) {
     return this.http.put<any>(`${this._acceptURL}${tradeId}`, {tradeId});
   }
-  declineTrade(tradeId) {
-    return this.http.delete<any>(`${this._declineURL}${tradeId}`);
+  deleteTrade(tradeId) {
+    return this.http.delete<any>(`${this._deleteTradeURL}${tradeId}`);
   }
 }

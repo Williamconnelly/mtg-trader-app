@@ -10,7 +10,7 @@ import { AuthService } from '../../auth.service';
   styleUrls: ['./trade.component.css']
 })
 export class TradeComponent implements OnInit {
-  loggedUser = {};
+  loggedUser = {id: undefined};
   partner;
 
   socket;
@@ -39,6 +39,7 @@ export class TradeComponent implements OnInit {
   tradeState = {
     locked: false,
     submit: false,
+    completed: false
   };
 
   constructor(
@@ -261,6 +262,9 @@ export class TradeComponent implements OnInit {
           this._tradeService.completeTrade(this.trade).subscribe(data => {
             console.log("HIT COMPLETE ROUTE!");
             console.log(data);
+            if (data.completed === true) {
+              this.tradeState.completed = true;
+            }
           });
         }
       }

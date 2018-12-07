@@ -10,7 +10,7 @@ import { ActivatedRoute, Router, Params } from '@angular/router';
 })
 export class ProfileComponent implements OnInit {
   userId: number;
-  currentUser;
+  currentUser: Object;
   owner: Boolean = false;
   trades = {
     active: [],
@@ -78,7 +78,7 @@ export class ProfileComponent implements OnInit {
     });
   }
   declineTrade(tradeId) {
-    this._trade.declineTrade(tradeId).subscribe(result => {
+    this._trade.deleteTrade(tradeId).subscribe(result => {
       console.log(result);
       for (let trade in this.trades.pending) {
         if (this.trades.pending[trade].id === tradeId) {
