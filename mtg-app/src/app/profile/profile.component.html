@@ -20,14 +20,14 @@
 
   <h3>Pending Trades</h3>
   <div class="scroll-box">
-    <div *ngFor="let pendingTrade of trades.pending" class="card-row">
+    <div *ngFor="let pendingTrade of trades.pending; let i = index" class="card-row">
       <p>Trade with
         <span *ngIf="pendingTrade.a_user === currentUser.id">{{ pendingTrade.user_b.username }}: Offer Sent</span>
         <span *ngIf="pendingTrade.b_user === currentUser.id">{{ pendingTrade.user_a.username }}:
           <br>
-          <span (click)="acceptTrade(pendingTrade.id)">Accept</span>
+          <span (click)="acceptTrade(pendingTrade.id, i)">Accept</span>
           <br>
-          <span (click)="declineTrade(pendingTrade.id)">Decline</span>
+          <span (click)="declineTrade(pendingTrade.id, i)">Decline</span>
       </span>
       </p>
     </div>
