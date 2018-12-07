@@ -15,6 +15,10 @@ export class TradeService {
   private _sendMessageURL = 'http://localhost:3000/trade/message';
   private _progressTradeURL = 'http://localhost:3000/trade/progress';
   private _completeTradeURL = 'http://localhost:3000/trade/complete';
+  private _findTradesURL = 'http://localhost:3000/trade/list';
+  private _acceptURL = 'http://localhost:3000/trade/accept/';
+  private _deleteTradeURL = 'http://localhost:3000/trade/delete/';
+
   constructor(private http: HttpClient) { }
   initiateTrade(id) {
     return this.http.get<any>(`${this._initiateTradeURL}${id}`);
@@ -46,5 +50,14 @@ export class TradeService {
   }
   completeTrade(trade) {
     return this.http.put<any>(this._completeTradeURL, {trade});
+  }
+  findTrades() {
+    return this.http.get<any>(this._findTradesURL);
+  }
+  acceptTrade(tradeId) {
+    return this.http.put<any>(`${this._acceptURL}${tradeId}`, {tradeId});
+  }
+  deleteTrade(tradeId) {
+    return this.http.delete<any>(`${this._deleteTradeURL}${tradeId}`);
   }
 }

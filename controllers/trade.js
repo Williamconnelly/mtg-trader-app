@@ -36,19 +36,10 @@ router.get("/list", verifyToken, (req, res) => {
   db.trade.findAll({
     where: {
       [op.or]: [{a_user: req.user.id}, {b_user: req.user.id}]
-    }
-  }).then(result => {
-    res.json(result);
-  })
-})
-
-// Finds all trades where the user has been sent a request but has not accepted
-router.get("/pending", verifyToken, (req, res) => {
-  db.trade.findAll({
-    where: {
-      b_user: req.user.id,
-      b_accept: false
-    }
+    }, include: [
+      {model: db.user, as:"user_a", attributes: {exclude: ["password","createdAt","updatedAt","email"]}},
+      {model: db.user, as:"user_b", attributes: {exclude: ["password","createdAt","updatedAt","email"]}}
+    ]
   }).then(result => {
     res.json(result);
   })
@@ -81,6 +72,40 @@ router.get("/initiate/:id", verifyToken, (req, res) => {
       });
     }
   })  
+})
+
+// Decline a trade (Destroys table row)
+router.delete("/delete/:id", verifyToken, (req, res) => {
+  db.trade.destroy({
+    where: {
+      id: req.params.id
+    }
+  }).then(() => {
+    res.send({msg: "Trade Declined (Properly Deleted)"})
+  }).catch(err => {
+    res.json({
+      error: true,
+      status: 401,
+      message: "User was unable to decline trade"
+    });
+  })
+});
+
+// Accept a trade (Update's the accept boolean in table row)
+router.put("/accept/:id", verifyToken, (req, res) => {
+  db.trade.update({
+    b_accept: true
+  }, {where: {
+    id: req.params.id
+  }}).then(() => {
+    res.send({msg: "Trade Accepted! The route can now be visited"})
+  }).catch(err => {
+    res.json({
+      error: true,
+      status: 401,
+      message: "Unable to accept trade (Failed to update)"
+    });
+  })
 })
 
 router.get("/collection", verifyToken, (req, res) => {
@@ -422,6 +447,12 @@ router.put("/complete", verifyToken, (req, res) => {
                   db.wishlist.destroy({where: {id: userWishlists[o].id}}) :
                   db.wishlist.update({number_wanted: (userWishlists[o].number_wanted - offer.tradescollections.copies_offered)}, {where: {id: userWishlists[o].id}})
                 }
+                // If there is no match in either of the user's wishlists return a promise with null
+              } else {
+                const updatePromise = new Promise((resolve, reject) => {
+                  resolve(null);
+                });
+                return updatePromise;
               }
             }
           }
@@ -440,7 +471,16 @@ router.put("/complete", verifyToken, (req, res) => {
             })
           });
         } else {
-          res.send({msg: "All Offers Handled!", userCollections, userWishlists});
+          // All 'trades' have been completed. Now delete trade
+          db.trade.destroy({
+            where: {
+              id: req.body.trade.id
+            }
+          }).then(() => {
+            console.log("TRADE DELETED");
+            // // TODO: Notify non-present USER
+            res.send({msg: "All Offers Handled!", userCollections, userWishlists, completed: true});
+          })
         }
       }
       handleOffers(0);

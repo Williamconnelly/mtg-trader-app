@@ -11,15 +11,11 @@ import { ViewCollectionComponent } from './view-collection/view-collection.compo
 import { HomeComponent } from './home/home.component';
 import { CardShowComponent } from './card-show/card-show.component';
 import { TradeComponent } from './trading/trade/trade.component';
+import { ProfileComponent } from './profile/profile.component';
 
 const routes: Routes = [
   {
     path: '',
-    redirectTo: '/home',
-    pathMatch: 'full'
-  },
-  {
-    path: 'home',
     component: HomeComponent
   },
   {
@@ -67,6 +63,10 @@ const routes: Routes = [
   {
     path: 'trade/:id',
     component: TradeComponent
+  },
+  {
+    path: 'profile/:userId',
+    component: ProfileComponent
   },
   {
     path: '**',

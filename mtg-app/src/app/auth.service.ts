@@ -10,6 +10,7 @@ export class AuthService {
   private _registerUrl = 'http://localhost:3000/auth/signup';
   private _loginUrl = 'http://localhost:3000/auth/login';
   private _getUserUrl = 'http://localhost:3000/auth/getUser';
+  private _findUserURL = 'http://localhost:3000/auth/user/';
   private user;
 
   constructor(private http: HttpClient, private _router: Router) { }
@@ -20,6 +21,9 @@ export class AuthService {
   }
   loginUser(user) {
     return this.http.post<any>(this._loginUrl, user);
+  }
+  findUser(userId) {
+    return this.http.get<any>(`${this._findUserURL}${userId}`);
   }
   loggedIn() {
     // Returns true or false based on the presence of the token in localStorage

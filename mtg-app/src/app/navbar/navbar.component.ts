@@ -7,14 +7,14 @@ import { AuthService } from '../auth.service';
   styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent implements OnInit {
-  status = false;
 
   constructor(private _authService: AuthService) { }
 
   ngOnInit() {
-  }
-  clickEvent() {
-    this.status = !this.status;
-    console.log('ahhh');
+    if (this._authService.loggedIn()) {
+      this._authService.getUser().subscribe(data => {
+        this._authService.storeUser(data);
+      });
+    }
   }
 }

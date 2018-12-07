@@ -12,10 +12,6 @@ export class AppComponent {
   constructor(private _auth: AuthService) { }
 
   ngOnInit() {
-    if (this._auth.loggedIn()) {
-      this._auth.getUser().subscribe(data => {
-        this._auth.storeUser(data);
-      })
-    }
+
   }
 }
