@@ -1,8 +1,9 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { TradeService } from '../trade.service';
 import { ActivatedRoute, Router, Params } from '@angular/router';
 import { SocketService } from '../../socket.service';
 import { AuthService } from '../../auth.service';
+import { TradeDisplayComponent } from '../trade-display/trade-display.component';
 
 @Component({
   selector: 'app-trade',
@@ -12,6 +13,8 @@ import { AuthService } from '../../auth.service';
 export class TradeComponent implements OnInit {
   loggedUser = {id: undefined};
   partner;
+  @ViewChild("userDisplay") userDisplay : TradeDisplayComponent;
+  @ViewChild("partnerDisplay") partnerDisplay : TradeDisplayComponent;
 
   socket;
   roomName;
@@ -104,6 +107,7 @@ export class TradeComponent implements OnInit {
         this.trade.collections.push(result['trade']);
         // this.updateTrade();
         // this.targetCard(this.currentCard.selection);
+        this.userDisplay.updateSlick();
         this.socket.emit('addCard', {
           roomName: this.roomName,
           addCard: result['trade']
@@ -150,13 +154,16 @@ export class TradeComponent implements OnInit {
         for (let i=0; i < this.userOffers.length; i++) {
           if (this.userOffers[i].id === result['cardRemoved']) {
             this.userOffers.splice(i, 1);
+            break;
           }
         }
         for (let o = 0; o < this.trade.collections.length; o++) {
           if (this.trade.collections[o].id === result['cardRemoved']) {
             this.trade.collections.splice(o, 1);
+            break;
           }
         }
+        this.userDisplay.updateSlick();
         console.log(this.userOffers);
       }
       this.updateBool = false;
@@ -190,6 +197,7 @@ export class TradeComponent implements OnInit {
     console.log("socketAddCard");
     console.log(data);
     this.partnerOffers.push(data);
+    this.partnerDisplay.updateSlick();
   }
   socketUpdateCard(data) {
     console.log("socketUpdateCard");
@@ -208,8 +216,11 @@ export class TradeComponent implements OnInit {
     for (let i=0; i < this.partnerOffers.length; i++) {
       if (this.partnerOffers[i].id === data["collectionId"]) {
         this.partnerOffers.splice(i, 1);
+        this.partnerDisplay.updateSlick();
+        break;
       }
     }
+
   }
   getOffers(trade) {
     this.userOffers = [];

@@ -3,8 +3,8 @@
   <mat-drawer-content>
     <button mat-raised-button (click)="drawer.toggle()">Toggle drawer</button>
     <h1 *ngIf="tradeState.completed">Trade completed!</h1>
-    <app-trade-display *ngIf="trade && trade.hasOwnProperty('collections')" [userCards]="userOffers" [role]="loggedUser.role" (targetCardEmitter)="targetCardFromOffer($event)"></app-trade-display>
-    <app-trade-display *ngIf="trade && trade.hasOwnProperty('collections')" [userCards]="partnerOffers" [role]="partner.role"></app-trade-display>
+    <app-trade-display *ngIf="trade && trade.hasOwnProperty('collections')" #userDisplay [userCards]="userOffers" [role]="loggedUser.role" (targetCardEmitter)="targetCardFromOffer($event)"></app-trade-display>
+    <app-trade-display *ngIf="trade && trade.hasOwnProperty('collections')" #partnerDisplay [userCards]="partnerOffers" [role]="partner.role"></app-trade-display>
     <app-trade-message *ngIf="trade && trade.hasOwnProperty('messages')"
     [socket]="socket"
     [tradeId]="tradeId"
