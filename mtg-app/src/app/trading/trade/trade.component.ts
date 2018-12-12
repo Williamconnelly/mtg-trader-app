@@ -42,7 +42,6 @@ export class TradeComponent implements OnInit {
   tradeState = {
     locked: false,
     submit: false,
-    completed: false
   };
 
   constructor(
@@ -235,19 +234,21 @@ export class TradeComponent implements OnInit {
   toggleCardDisplay() {
     this.displayToggle = !this.displayToggle;
   }
-  // Temp Method
+  // TODO: Refacotor into custom method and query
   makeComparison() {
     this._tradeService.comparePartners(this.partner.id).subscribe(result => {
       this.comparison = result;
       console.log(this.comparison);
-      for (let i = 0; i < this.collection.length; i++) {
-        for (let o = 0; o < this.comparison[0].cards.length; o++) {
-          if (this.collection[i].printingId === this.comparison[0].cards[o]['printing.id']) {
-            this.collection[i].match = true;
+      if (Object.keys(this.comparison).length > 0) {
+        for (let i = 0; i < this.collection.length; i++) {
+          for (let o = 0; o < this.comparison[0].cards.length; o++) {
+            if (this.collection[i].printingId === this.comparison[0].cards[o]['printing.id']) {
+              this.collection[i].match = true;
+            }
           }
         }
+        console.log(this.collection);
       }
-      console.log(this.collection);
     });
   }
   progressTrade(role: string, action: string) {
@@ -271,10 +272,10 @@ export class TradeComponent implements OnInit {
         this.trade[`${this.loggedUser['role'][this.loggedUser['role'].length - 1]}_submit`] = 'true';
         if (result.ready) {
           this._tradeService.completeTrade(this.trade).subscribe(data => {
-            console.log("HIT COMPLETE ROUTE!");
+            console.log('HIT COMPLETE ROUTE!');
             console.log(data);
             if (data.completed === true) {
-              this.tradeState.completed = true;
+              this.openModal();
             }
           });
         }
@@ -282,5 +283,9 @@ export class TradeComponent implements OnInit {
       console.log(this.tradeState);
       console.log(this.trade);
     });
+  }
+  openModal() {
+    const modal = document.getElementById('myModal');
+    modal.style.display = 'block';
   }
 }

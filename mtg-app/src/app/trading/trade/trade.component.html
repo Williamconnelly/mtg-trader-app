@@ -12,6 +12,13 @@
     [partner]="partner"
     [messages]="trade.messages"
     ></app-trade-message>
+    <button id="myBtn" (click)="openModal()">Open Modal</button>
+    <div id="myModal" class="modal">
+      <div class="modal-content">
+        <p>Your trade has been completed!</p>
+        <a routerLink="/view-collection">Back to Collection</a>
+      </div>
+    </div>
   </mat-drawer-content>
   <!-- Drawer Content -->
   <mat-drawer #drawer mode="side">

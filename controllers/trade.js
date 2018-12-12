@@ -431,9 +431,9 @@ router.put("/complete", verifyToken, (req, res) => {
 
           // Function to remove copies of the offered card from the owner's collection
           // Implicitly returns either an update or destroy depending on whether the owner has any copies remaining
-          const updateOwnerCollection = (owned, offered) => offered === owned ? 
+          const updateOwnerCollection = (owned, forTrade, offered) => offered === owned ? 
             db.collection.destroy({where: {id: offer.id}}) : 
-            db.collection.update({owned_copies: (owned - offered)}, {where: {id: offer.id}});
+            db.collection.update({owned_copies: (owned - offered), trade_copies: (forTrade - offered)}, {where: {id: offer.id}});
           
           // Function to update the partner's wishlist (DESTROY if they recieve all the copies they want, UPDATE if they want more)
           const updatePartnerWishlist = () => {
@@ -461,7 +461,7 @@ router.put("/complete", verifyToken, (req, res) => {
           updatePartnerCollection().then(() => {
             console.log("UPDATED PARTNER'S COLLECTION");
             // Remove copies from the owner's collection after they are 'traded'
-            updateOwnerCollection(offer.owned_copies, offer.tradescollections.copies_offered).then(() => {
+            updateOwnerCollection(offer.owned_copies, offer.trade_copies, offer.tradescollections.copies_offered).then(() => {
               console.log("UPDATED OWNER'S COLLECTION");
               // Lower the number of desired copies on the partner's wishlist or delete the row if they got all that they wanted
               updatePartnerWishlist().then(() => {
@@ -477,9 +477,18 @@ router.put("/complete", verifyToken, (req, res) => {
               id: req.body.trade.id
             }
           }).then(() => {
+            // The trade has been deleted, delete trade associations
             console.log("TRADE DELETED");
-            // // TODO: Notify non-present USER
-            res.send({msg: "All Offers Handled!", userCollections, userWishlists, completed: true});
+            db.tradescollections.destroy({
+              where: {
+                tradeId: req.body.trade.id
+              }
+            }).then(() => {
+              // Trade associations have been deleted, send back reponse for completion
+              console.log("TRADE ASSOCIATIONS DELETED");
+              // // TODO: Notify non-present USER
+              res.send({msg: "All Offers Handled!", userCollections, userWishlists, completed: true});
+            })
           })
         }
       }
