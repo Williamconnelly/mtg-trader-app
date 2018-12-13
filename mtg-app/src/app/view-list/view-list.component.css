@@ -61,3 +61,12 @@
   height: 2em;
   background-color: #d8d8d8;
 }
+
+.foilOverlay {
+  position: absolute; 
+  width: 146px;
+  height: 204px;
+  left: 0px;
+  top: 0px;
+  z-index: 2;
+}
