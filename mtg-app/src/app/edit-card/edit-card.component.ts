@@ -138,12 +138,12 @@ export class EditCardComponent implements OnInit {
               console.log("window.confirm true")
               this.updateCard(true);
             } else {
-              this.unsuccessfulUpdateEmitter.emit({index: this.index, dbVersion: this.dbVersion});  
+              this.unsuccessfulUpdateEmitter.emit({index: this.index, id:this.id, updateKeys:Object.keys(updateObject), dbVersion: this.dbVersion});  
             }
             break;
           case "Fail":
             console.log("case fail");
-            this.unsuccessfulUpdateEmitter.emit({index: this.index, dbVersion:this.dbVersion, message:data["message"]});
+            this.unsuccessfulUpdateEmitter.emit({index: this.index, id:this.id, updateKeys:Object.keys(updateObject), dbVersion:this.dbVersion, message:data["message"]});
             break;
         }
       });

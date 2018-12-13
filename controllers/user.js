@@ -465,6 +465,7 @@ module.exports = function(io) {
             where: {
               id: {[op.not]:req.params.id},
               userId: req.user.id,
+              cardId: wishlist.cardId,
               pref_printing: req.body.hasOwnProperty("pref_printing") ? req.body.pref_printing : wishlist.pref_printing,
               pref_foil: req.body.hasOwnProperty("pref_foil") ? req.body.pref_foil : wishlist.pref_foil
             }

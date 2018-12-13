@@ -86,6 +86,22 @@ export class EditCollectionComponent implements OnInit {
     if (eventObj.hasOwnProperty("message")) {
       window.alert(eventObj["message"]);
     }
+    setTimeout(() => {
+      let id = this.fullCollection.findIndex(element => element.id === eventObj.id);
+      if (id > -1) {
+        this.fullCollection[id].class = "updateDone";
+      }
+    }, 250)
+    let id = this.fullCollection.findIndex(element => element.id === eventObj.id);
+    if (id > -1) {
+      if (eventObj.updateKeys.includes("foil")) {this.fullCollection[id].foil = eventObj.dbVersion.foil}
+      if (eventObj.updateKeys.includes("owned_copies")) {this.fullCollection[id].owned_copies = eventObj.dbVersion.owned_copies}
+      if (eventObj.updateKeys.includes("trade_copies")) {this.fullCollection[id].trade_copies = eventObj.dbVersion.trade_copies}
+      if (eventObj.updateKeys.includes("printingId")) {
+        let printingIndex = this.fullCollection[id].printing.card.cardPrintings.findIndex(element => element.id === eventObj.dbVersion.printingId);
+        this.fullCollection[id].printingInput = this.fullCollection[id].printing.card.cardPrintings[printingIndex];
+      }
+    }
   }
 
   deleteCollectionEntry(id, force) {

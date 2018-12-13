@@ -1,3 +1,24 @@
 .inProgress {
     background-color: red;
 }
+
+.cardImage {
+    z-index: 1;
+}
+
+.foilOverlay {
+    position: absolute; 
+    width: 146px;
+    height: 204px;
+    left: 0px;
+    top: 0px;
+    z-index: 2;
+}
+
+.imageWrapper {
+    position: relative;
+}
+
+.setDropDown {
+    max-width: 170px;
+}
