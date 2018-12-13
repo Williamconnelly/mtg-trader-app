@@ -106,7 +106,7 @@ export class TradeComponent implements OnInit {
         this.trade.collections.push(result['trade']);
         // this.updateTrade();
         // this.targetCard(this.currentCard.selection);
-        this.userDisplay.updateSlick();
+        // this.userDisplay.updateSlick();
         this.socket.emit('addCard', {
           roomName: this.roomName,
           addCard: result['trade']
@@ -162,7 +162,7 @@ export class TradeComponent implements OnInit {
             break;
           }
         }
-        this.userDisplay.updateSlick();
+        // this.userDisplay.updateSlick();
         console.log(this.userOffers);
       }
       this.updateBool = false;
@@ -196,7 +196,7 @@ export class TradeComponent implements OnInit {
     console.log("socketAddCard");
     console.log(data);
     this.partnerOffers.push(data);
-    this.partnerDisplay.updateSlick();
+    // this.partnerDisplay.updateSlick();
   }
   socketUpdateCard(data) {
     console.log("socketUpdateCard");
@@ -215,7 +215,7 @@ export class TradeComponent implements OnInit {
     for (let i=0; i < this.partnerOffers.length; i++) {
       if (this.partnerOffers[i].id === data["collectionId"]) {
         this.partnerOffers.splice(i, 1);
-        this.partnerDisplay.updateSlick();
+        // this.partnerDisplay.updateSlick();
         break;
       }
     }

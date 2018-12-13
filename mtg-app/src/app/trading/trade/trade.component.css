@@ -78,3 +78,35 @@
   border: 1px solid #888;
   width: 80%;
 }
+
+h1 {
+  margin-left: 14.4px;
+}
+
+.trade-header {
+  overflow: hidden;
+}
+
+.trade-header h1 {
+  margin-left: 14.4px;
+  float: left;
+}
+
+.drawer-btn {
+  padding: 0.5em;
+  font-size: 0.8em;
+  border: 1px solid black;
+  float: left;
+  margin: 2em 4.6em;
+  border-radius: 4px;
+}
+
+.drawer-btn p {
+  margin: 0;
+}
+
+.drawer-btn:hover {
+  cursor: pointer;
+  color: white;
+  background-color: #212238;
+}

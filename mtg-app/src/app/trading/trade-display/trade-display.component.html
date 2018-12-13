@@ -1,7 +1,12 @@
-<body>
-  <div class="gallery gallery-responsive portfolio_slider {{ role }}">
-    <div *ngFor="let card of userCards" (click)="targetCardFromOffer(card)" class="inner">
-      <img src="{{ card.printing.img_url }}" alt="{{ card.printing.card.name }}">
+<div class="display-wrapper">
+  <div class="info-bar">
+    <p>{{ user.username}}</p>
+  </div>
+  <div class="offer-wrapper">
+    <div class="offer-container">
+      <div *ngFor="let card of userCards" class="card-display">
+        <img src="{{ card.printing.img_url }}" (click)="targetCardFromOffer(card)" alt="{{ card.printing.card.name }}">
+      </div>
     </div>
   </div>
-</body>
+</div>
