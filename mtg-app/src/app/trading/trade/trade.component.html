@@ -7,8 +7,8 @@
 <mat-drawer-container>
   <!-- Main Content -->
   <mat-drawer-content>
-    <app-trade-display *ngIf="trade && trade.hasOwnProperty('collections')" #userDisplay [userCards]="userOffers" [user]="loggedUser" (targetCardEmitter)="targetCardFromOffer($event)"></app-trade-display>
-    <app-trade-display *ngIf="trade && trade.hasOwnProperty('collections')" #partnerDisplay [userCards]="partnerOffers" [user]="partner"></app-trade-display>
+    <app-trade-display *ngIf="trade && trade.hasOwnProperty('collections')" #userDisplay [trade]="trade" [userCards]="userOffers" [user]="loggedUser" (targetCardEmitter)="targetCardFromOffer($event)"></app-trade-display>
+    <app-trade-display *ngIf="trade && trade.hasOwnProperty('collections')" #partnerDisplay [trade]="trade" [userCards]="partnerOffers" [user]="partner"></app-trade-display>
     <app-trade-message *ngIf="trade && trade.hasOwnProperty('messages')"
     [socket]="socket"
     [tradeId]="tradeId"

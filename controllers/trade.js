@@ -16,7 +16,7 @@ router.post("/current", verifyToken, (req, res) => {
     }, include: [
       {model: db.collection, include: [
         {model: db.printings, include: [
-          {model: db.card}
+          {model: db.card}, {model: db.set}
         ]}
       ]},
       {model: db.user, as:"user_a", attributes: {exclude: ["password", "createdAt", "updatedAt", "email"]}},
