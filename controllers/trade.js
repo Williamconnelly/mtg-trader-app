@@ -233,7 +233,7 @@ router.put("/update", verifyToken, (req, res) => {
           id: req.body.card.id
         }, include: [
           {model: db.printings, include: [
-            {model: db.card}
+            {model: db.card}, {model: db.set}
           ]}, 
           {model: db.tradescollections, as: "tradeEntry", where: {
             tradeId: req.body.tradeId

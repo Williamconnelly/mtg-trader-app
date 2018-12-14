@@ -27,7 +27,7 @@
   <!-- Drawer Content -->
   <mat-drawer #drawer mode="side" opened="true">
     <!-- TODO: REFINE RENDERING ON LOCKED STATE FOR SCROLL-BOX AND CURRENT-CARD -->
-    <div *ngIf="trade !== undefined && trade.hasOwnProperty('collections') && !tradeState.locked" class="drawer-content">
+    <div *ngIf="trade !== undefined && trade.hasOwnProperty('collections')" class="drawer-content">
       <div class="drawer-header">
         <p>Collection</p>
       </div>
@@ -37,7 +37,10 @@
           <p class="row-set">{{ card.printing.set.title }}<span class="row-num">Available: {{ card.trade_copies }}</span></p>
         </div>
       </div>
-      <div class="drawer-card-container" *ngIf="currentCard.selection && currentCard.selection.hasOwnProperty('id') && !tradeState.locked">
+      <div *ngIf="tradeState.locked && currentCard.selection" id="disabler">
+        <p>Locked</p>
+      </div>
+      <div class="drawer-card-container" *ngIf="currentCard.selection && currentCard.selection.hasOwnProperty('id')">
         <img class="target-img" src="{{currentCard.selection.printing.img_url}}" alt="{{currentCard.selection.printing.card.name}}">
         <div class="update-container">
           <div *ngIf ="updateBool === false">
@@ -73,16 +76,36 @@
           </div>
         </div>
       </div>
+      <div class="trade-control-wrapper">
+        <div *ngIf="loggedUser['role'] === 'user_a'">
+          <!-- <button *ngIf="!trade.a_lock" (click)="progressTrade(loggedUser['role'], 'lock')">Lock Trade</button> -->
+          <div *ngIf="!trade.a_lock" (click)="progressTrade(loggedUser['role'], 'lock')" class="info-btn">
+            <p>Lock Trade</p>
+          </div>
+          <!-- <button *ngIf="trade.a_lock" (click)="progressTrade(loggedUser['role'], 'unlock')">Unlock</button> -->
+          <div *ngIf="trade.a_lock" (click)="progressTrade(loggedUser['role'], 'unlock')" class="info-btn">
+            <p>Unlock Trade</p>
+          </div>
+          <!-- <button *ngIf="trade.a_lock && trade.b_lock" (click)="progressTrade(loggedUser['role'], 'submit')">Submit Trade</button> -->
+          <div *ngIf="trade.a_lock && trade.b_lock" (click)="progressTrade(loggedUser['role'], 'submit')" class="info-btn">
+            <p>Submit Trade</p>
+          </div>
+        </div>
+        <div *ngIf="loggedUser['role'] === 'user_b'">
+          <!-- <button *ngIf="!trade.b_lock" (click)="progressTrade(loggedUser['role'], 'lock')">Lock Trade</button> -->
+          <div *ngIf="!trade.b_lock" (click)="progressTrade(loggedUser['role'], 'lock')" class="info-btn">
+            <p>Lock Trade</p>
+          </div>
+          <!-- <button *ngIf="trade.b_lock" (click)="progressTrade(loggedUser['role'], 'unlock')">Unlock</button> -->
+          <div *ngIf="trade.b_lock" (click)="progressTrade(loggedUser['role'], 'unlock')" class="info-btn">
+            <p>Unlock Trade</p>
+          </div>
+          <!-- <button *ngIf="trade.a_lock && trade.b_lock" (click)="progressTrade(loggedUser['role'], 'submit')">Submit Trade</button> -->
+          <div *ngIf="trade.a_lock && trade.b_lock" (click)="progressTrade(loggedUser['role'], 'submit')" class="info-btn">
+            <p>Submit Trade</p>
+          </div>
+        </div>
+      </div>
     </div>
-    <!-- <div *ngIf="loggedUser['role'] === 'user_a'">
-      <button *ngIf="!trade.a_lock" (click)="progressTrade(loggedUser['role'], 'lock')">Lock Trade</button>
-      <button *ngIf="trade.a_lock" (click)="progressTrade(loggedUser['role'], 'unlock')">Unlock</button>
-      <button *ngIf="trade.a_lock && trade.b_lock" (click)="progressTrade(loggedUser['role'], 'submit')">Submit Trade</button>
-    </div>
-    <div *ngIf="loggedUser['role'] === 'user_b'">
-      <button *ngIf="!trade.b_lock" (click)="progressTrade(loggedUser['role'], 'lock')">Lock Trade</button>
-      <button *ngIf="trade.b_lock" (click)="progressTrade(loggedUser['role'], 'unlock')">Unlock</button>
-      <button *ngIf="trade.a_lock && trade.b_lock" (click)="progressTrade(loggedUser['role'], 'submit')">Submit Trade</button>
-    </div> -->
   </mat-drawer>
 </mat-drawer-container>
