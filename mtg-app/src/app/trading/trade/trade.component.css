@@ -7,20 +7,22 @@
   background-color: inherit;
 }
 
+.drawer-content {
+  width: 100%;
+  margin: 0 auto;
+  height: 100%;
+  background-color: #212238;
+  color: white;
+}
+
 .scroll-box {
   overflow: auto;
-  width: 80%;
-  height: 40%;
-  margin-top: 1em;
+  height: 34%;
   border: 1px solid black;
 }
 
 .scroll-box p {
   margin: 0;
-}
-
-.row-name {
-  font-weight: bold;
 }
 
 .row-set {
@@ -33,22 +35,41 @@
 }
 
 .card-row {
-  border-top: 1px solid black;
+  border-top: 1px solid #3a3b57;
   padding: 0.2em;
   font-size: 0.8em;
 }
 
 .card-row:hover {
-  background-color: #dddddde8;
+  background-color: #2f304c;
   cursor: pointer;
 }
 
-.current-card {
-  margin-top: 2em;
+.drawer-header {
+  border: 1px solid #3a3b57;
+}
+
+.drawer-header p {
+  text-align: center;
+  font-size: 0.8em;
+}
+
+.drawer-card-container {
+  width: 100%;
+  margin-top: 1em;
+  padding-left: 0.4em;
+}
+
+.update-container {
+  width: 49%;
+  height: 13em;
+  display: inline-block;
+  vertical-align: top;
 }
 
 .target-img {
-  display: block;
+  display: inline-block;
+  border-radius: 0.4em;
 }
 
 .add-button {
@@ -56,7 +77,7 @@
 }
 
 .matched {
-  color: #129612;
+  color: #09a6ff;
 }
 
 .modal {
@@ -109,4 +130,64 @@ h1 {
   cursor: pointer;
   color: white;
   background-color: #212238;
+}
+
+::-webkit-scrollbar {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 7px;
+  height: 1em;
+  margin: 0;
+  padding: 0;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(0,0,0,.5);
+  background-color: #b3b3b3;
+  -webkit-box-shadow: 0 0 1px rgba(255,255,255,.5);
+  box-shadow: 0 0 1px rgba(255,255,255,.5);
+}
+
+.info-btn {
+  padding: 0.5em;
+  font-size: 0.8em;
+  float: left;
+  border-radius: 4px;
+  background-color: #31334a;
+  color: white;
+  margin: 0.8em;
+}
+
+.info-btn p {
+  margin: 0;
+  letter-spacing: 1px;
+}
+
+.info-btn:hover {
+  cursor: pointer;
+  background-color: #595c80;
+}
+
+.custom-select {
+  border: 1px solid #ccc;
+  font-size: 16px;
+  height: 20px;
+  width: 36px;
+  padding-left: 0.7em;
+  -webkit-appearance: none;
+  -webkit-border-radius: 0px;
+}
+
+.offer-options {
+  width: 75%;
+  padding: 0.3em;
+  background-color: #31334a;
+  margin-left: 0.6em;
+  border-radius: 4px;
+  margin: 0.8em;
+  margin-left: 0.6em;
+}
+
+.offer-options span {
+  margin-right: 0.7em;
 }

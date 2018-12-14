@@ -117,17 +117,25 @@ td, th {
   font-size: 1em;
 }
 
-.table-header {
-  border-bottom: 2px solid #3a3b57;
+th {
+  padding: 0.5em 0;
 }
 
-.name-field {
-  padding-left: 0.7em;
+.table-header {
+  border-bottom: 3px solid #3a3b57;
 }
 
 .data-row td {
   font-size: 0.8em;
-  padding: 0.8em;
+  padding: 0.8em 0;
+}
+
+.name-field {
+  padding-left: 0.8em !important;
+}
+
+.printing-field {
+  font-style: italic;
 }
 
 .data-row:hover {
@@ -163,10 +171,29 @@ only screen and (max-width: 760px),
 		left: 6px;
 		width: 45%;
 		padding-right: 10px;
-		white-space: nowrap;
-	}
+    white-space: nowrap;
+    padding-left: 0.8em;
+  }
+
+  .name-field {
+    padding-left: 0 !important;
+  }
+
 	td:nth-of-type(1):before { content: "Card: "; }
 	td:nth-of-type(2):before { content: "Printing: "; }
 	td:nth-of-type(3):before { content: "Offered: "; }
-	td:nth-of-type(4):before { content: "Foil: "; }
+  td:nth-of-type(4):before { content: "Foil: "; }
+
+}
+
+.offer-prompt {
+  padding: 0;
+  margin: 0;
+  color: #90919a;
+  margin-top: 7%;
+}
+
+.offer-prompt h4, p {
+  text-align: center;
+  font-weight: normal;
 }
