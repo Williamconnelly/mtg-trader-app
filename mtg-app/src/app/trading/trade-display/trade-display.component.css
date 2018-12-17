@@ -54,7 +54,7 @@ img:hover {
   -webkit-appearance: none;
   appearance: none;
   width: 7px;
-  height: 1em;
+  height: 0.5em;
   margin: 0;
   padding: 0;
 }
