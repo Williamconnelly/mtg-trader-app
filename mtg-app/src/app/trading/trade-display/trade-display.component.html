@@ -1,7 +1,47 @@
-<body>
-  <div class="gallery gallery-responsive portfolio_slider {{ role }}">
-    <div *ngFor="let card of userCards" (click)="targetCardFromOffer(card)" class="inner">
-      <img src="{{ card.printing.img_url }}" alt="{{ card.printing.card.name }}">
+<div *ngIf="trade" class="display-wrapper">
+  <div class="info-bar">
+    <p class="info-username">{{ user.username}}</p>
+    <div (click)="toggleTextDisplay()" class="info-btn info-toggle">
+      <p *ngIf="!textDisplay else displayText">View: Image</p>
+      <ng-template #displayText><p>View: Text</p></ng-template>
+    </div>
+    <div [ngClass]="locked ? 'active' : 'innactive'" class="info-btn">
+      <p>Locked</p>
+    </div>
+    <div [ngClass]="submit ? 'active' : 'innactive'" class="info-btn">
+      <p>Ready</p>
     </div>
   </div>
-</body>
+  <div *ngIf="!textDisplay && userCards.length > 0" class="offer-wrapper">
+    <div class="offer-container">
+      <div *ngFor="let card of userCards" class="card-display">
+        <img src="{{ card.printing.img_url }}" (click)="targetCardFromOffer(card)" alt="{{ card.printing.card.name }}">
+      </div>
+    </div>
+  </div>
+  <div *ngIf="textDisplay && userCards.length > 0" class="textDisplay-wrapper">
+    <table>
+      <tr class="table-header">
+        <th class="name-field">Card</th>
+        <th>Printing</th>
+        <th>Offered</th>
+        <th>Foil</th>
+      </tr>
+      <tr *ngFor="let card of userCards" (click)="targetCardFromOffer(card)" class="data-row">
+        <td class="name-field">{{ card.printing.card.name }}</td>
+        <td class="printing-field">{{ card.printing.set.title }}</td>
+        <td>{{ card.tradescollections.copies_offered }}</td>
+        <td *ngIf="card.foil else nonFoil">Foil</td>
+        <ng-template #nonFoil><td>-</td></ng-template>
+      </tr>
+    </table>
+    <!-- <div *ngIf="userCards.length === 0" class="offer-prompt">
+      <h4>No Cards Offered</h4>
+      <p>Select cards from your collection in the tray</p>
+    </div> -->
+  </div>
+  <div *ngIf="userCards.length === 0 && userCards" class="offer-prompt">
+    <h4>No Cards Offered</h4>
+    <p>Select cards from your collection in the tray</p>
+  </div>
+</div>

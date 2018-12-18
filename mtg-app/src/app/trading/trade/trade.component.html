@@ -1,10 +1,14 @@
-<mat-drawer-container class="example-container">
+<header class="trade-header">
+    <h1 *ngIf="trade && trade.hasOwnProperty('collections')">Trade with {{ partner.username }}</h1>
+    <div class="drawer-btn" (click)="drawer.toggle()">
+      <p>Toggle Drawer</p>
+    </div>
+</header>
+<mat-drawer-container>
   <!-- Main Content -->
   <mat-drawer-content>
-    <button mat-raised-button (click)="drawer.toggle()">Toggle drawer</button>
-    <h1 *ngIf="tradeState.completed">Trade completed!</h1>
-    <app-trade-display *ngIf="trade && trade.hasOwnProperty('collections')" #userDisplay [userCards]="userOffers" [role]="loggedUser.role" (targetCardEmitter)="targetCardFromOffer($event)"></app-trade-display>
-    <app-trade-display *ngIf="trade && trade.hasOwnProperty('collections')" #partnerDisplay [userCards]="partnerOffers" [role]="partner.role"></app-trade-display>
+    <app-trade-display *ngIf="trade && trade.hasOwnProperty('collections')" #userDisplay [trade]="trade" [userCards]="userOffers" [user]="loggedUser" (targetCardEmitter)="targetCardFromOffer($event)"></app-trade-display>
+    <app-trade-display *ngIf="trade && trade.hasOwnProperty('collections')" #partnerDisplay [trade]="trade" [userCards]="partnerOffers" [user]="partner"></app-trade-display>
     <app-trade-message *ngIf="trade && trade.hasOwnProperty('messages')"
     [socket]="socket"
     [tradeId]="tradeId"
@@ -12,41 +16,96 @@
     [partner]="partner"
     [messages]="trade.messages"
     ></app-trade-message>
+    <button id="myBtn" (click)="openModal()">Open Modal</button>
+    <div id="myModal" class="modal">
+      <div class="modal-content">
+        <p>Your trade has been completed!</p>
+        <a routerLink="/view-collection">Back to Collection</a>
+      </div>
+    </div>
   </mat-drawer-content>
   <!-- Drawer Content -->
-  <mat-drawer #drawer mode="side">
+  <mat-drawer #drawer mode="side" opened="true">
     <!-- TODO: REFINE RENDERING ON LOCKED STATE FOR SCROLL-BOX AND CURRENT-CARD -->
-    <div class="scroll-box" *ngIf="trade !== undefined && trade.hasOwnProperty('collections') && !tradeState.locked">
-      <div *ngFor="let card of collection" class="card-row" (click)=targetCard(card) [class.matched]="card.hasOwnProperty('match')">
-        <p class="row-name">{{ card.printing.card.name }} <span *ngIf="card.foil === true">(f)</span></p>
-        <p class="row-set">{{ card.printing.set.title }}<span class="row-num">Available: {{ card.trade_copies }}</span></p>
+    <div *ngIf="trade !== undefined && trade.hasOwnProperty('collections')" class="drawer-content">
+      <div class="drawer-header">
+        <p>Collection</p>
       </div>
-    </div>
-    <div *ngIf="currentCard.selection && currentCard.selection.hasOwnProperty('id') && !tradeState.locked" class="current-card">
-      <img class="target-img" src="{{currentCard.selection.printing.img_url}}" alt="{{currentCard.selection.printing.card.name}}">
-      <div *ngIf ="updateBool === false">
-        <select [(ngModel)]="currentCard.offerNumber" name="offerSelect">
-          <option *ngFor="let i of currentCard.offerArray" [ngValue]="i">{{ i }}</option>
-        </select>
-        <button (click)="addCard()" class="add-button">Add to Trade</button>
+      <div class="scroll-box">
+        <div *ngFor="let card of collection" class="card-row" (click)=targetCard(card) [class.matched]="card.hasOwnProperty('match')">
+          <p class="row-name">{{ card.printing.card.name }} <span *ngIf="card.foil === true">(f)</span></p>
+          <p class="row-set">{{ card.printing.set.title }}<span class="row-num">Available: {{ card.trade_copies }}</span></p>
+        </div>
       </div>
-      <div *ngIf ="updateBool === true">
-        <select [(ngModel)]="currentCard.offerNumber" name="offerSelect">
-          <option *ngFor="let i of currentCard.offerArray" [ngValue]="i">{{ i }}</option>
-        </select>
-      <button (click)="updateCard()" class="add-button">Update Offer</button>
-      <button (click)="removeCard()">Remove</button>
+      <div *ngIf="tradeState.locked && currentCard.selection" id="disabler">
+        <p>Locked</p>
       </div>
-    </div>
-    <div *ngIf="loggedUser['role'] === 'user_a'">
-      <button *ngIf="!trade.a_lock" (click)="progressTrade(loggedUser['role'], 'lock')">Lock Trade</button>
-      <button *ngIf="trade.a_lock" (click)="progressTrade(loggedUser['role'], 'unlock')">Unlock</button>
-      <button *ngIf="trade.a_lock && trade.b_lock" (click)="progressTrade(loggedUser['role'], 'submit')">Submit Trade</button>
-    </div>
-    <div *ngIf="loggedUser['role'] === 'user_b'">
-      <button *ngIf="!trade.b_lock" (click)="progressTrade(loggedUser['role'], 'lock')">Lock Trade</button>
-      <button *ngIf="trade.b_lock" (click)="progressTrade(loggedUser['role'], 'unlock')">Unlock</button>
-      <button *ngIf="trade.a_lock && trade.b_lock" (click)="progressTrade(loggedUser['role'], 'submit')">Submit Trade</button>
+      <div class="drawer-card-container" *ngIf="currentCard.selection && currentCard.selection.hasOwnProperty('id')">
+        <img class="target-img" src="{{currentCard.selection.printing.img_url}}" alt="{{currentCard.selection.printing.card.name}}">
+        <div class="update-container">
+          <div *ngIf ="updateBool === false">
+            <div class="offer-options">
+              <span>Offer</span>
+              <select [(ngModel)]="currentCard.offerNumber" name="offerSelect" class="custom-select">
+                <option *ngFor="let i of currentCard.offerArray" [ngValue]="i">{{ i }}</option>
+              </select>
+            </div>
+            <div>
+              <div class="info-btn" (click)="addCard()">
+                <p>Add to Trade</p>
+              </div>
+            </div>
+          </div>
+          <div *ngIf ="updateBool === true">
+            <div class="offer-options">
+              <span>Offered</span>
+              <select [(ngModel)]="currentCard.offerNumber" name="offerSelect" class="custom-select">
+                <option *ngFor="let i of currentCard.offerArray" [ngValue]="i">{{ i }}</option>
+              </select>
+            </div>
+            <div>
+              <div class="info-btn" (click)="updateCard()">
+                <p>Update Offer</p>
+              </div>
+            </div>
+            <div>
+              <div class="info-btn" (click)="removeCard()">
+                <p>Remove Card</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="trade-control-wrapper">
+        <div *ngIf="loggedUser['role'] === 'user_a'">
+          <!-- <button *ngIf="!trade.a_lock" (click)="progressTrade(loggedUser['role'], 'lock')">Lock Trade</button> -->
+          <div *ngIf="!trade.a_lock" (click)="progressTrade(loggedUser['role'], 'lock')" class="info-btn">
+            <p>Lock Trade</p>
+          </div>
+          <!-- <button *ngIf="trade.a_lock" (click)="progressTrade(loggedUser['role'], 'unlock')">Unlock</button> -->
+          <div *ngIf="trade.a_lock" (click)="progressTrade(loggedUser['role'], 'unlock')" class="info-btn">
+            <p>Unlock Trade</p>
+          </div>
+          <!-- <button *ngIf="trade.a_lock && trade.b_lock" (click)="progressTrade(loggedUser['role'], 'submit')">Submit Trade</button> -->
+          <div *ngIf="trade.a_lock && trade.b_lock" (click)="progressTrade(loggedUser['role'], 'submit')" class="info-btn">
+            <p>Submit Trade</p>
+          </div>
+        </div>
+        <div *ngIf="loggedUser['role'] === 'user_b'">
+          <!-- <button *ngIf="!trade.b_lock" (click)="progressTrade(loggedUser['role'], 'lock')">Lock Trade</button> -->
+          <div *ngIf="!trade.b_lock" (click)="progressTrade(loggedUser['role'], 'lock')" class="info-btn">
+            <p>Lock Trade</p>
+          </div>
+          <!-- <button *ngIf="trade.b_lock" (click)="progressTrade(loggedUser['role'], 'unlock')">Unlock</button> -->
+          <div *ngIf="trade.b_lock" (click)="progressTrade(loggedUser['role'], 'unlock')" class="info-btn">
+            <p>Unlock Trade</p>
+          </div>
+          <!-- <button *ngIf="trade.a_lock && trade.b_lock" (click)="progressTrade(loggedUser['role'], 'submit')">Submit Trade</button> -->
+          <div *ngIf="trade.a_lock && trade.b_lock" (click)="progressTrade(loggedUser['role'], 'submit')" class="info-btn">
+            <p>Submit Trade</p>
+          </div>
+        </div>
+      </div>
     </div>
   </mat-drawer>
 </mat-drawer-container>

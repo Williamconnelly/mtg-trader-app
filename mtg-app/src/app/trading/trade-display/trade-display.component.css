@@ -1,39 +1,199 @@
-body {
-  background-color: lightgray;
-  padding: 1em;
-/*   display: flex;
-  justify-content: center;
-  flex-flow: row wrap; */
+.display-wrapper {
+  display: block;
+  height: 20em;
+  width: 98%;
+  background-color: #212238;
+  margin: 0 0 1em 0;
 }
 
-.portfolio_slider {
-  margin: 0 auto;
-  max-width: 1200px;
-  border: 5px solid black;
-  /*display: flex;*/
-/*   flex-flow: row wrap; */
-}
-.portfolio_slider {
-  flex: 1 1 0;
-  padding: 20px;
-  background-color: whitesmoke;
+.info-bar {
+  height: 15%;
+  width: 100%;
+  overflow: hidden;
+  background-color: #212238;
+  border-bottom: 3px solid #3a3b57;
 }
 
-.slick-initialized img {
-  visibility: visible;
-  width: 85%;
-  height: auto;
-}
-
-.inner {
-  padding: 6px;
+.info-username {
+  float: left;
+  display: block;
+  color: #f2f2f2;
   text-align: center;
+  padding: 12px;
+  text-decoration: none;
+  font-size: 20px;
+  margin: 0;
+}
+
+.offer-wrapper {
+  padding: 0 1em 1em 1em;
+  margin-top: 1em;
+}
+
+.offer-container {
+  width: 100%;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.card-display {
+  display: inline-block;
+  margin: 0 0.5em 0.5em 0.5em;
 }
 
 img {
-  visibility: hidden;
-  width: 0px;
+  object-fit: cover;
+  border-radius: 0.4em;
 }
+
 img:hover {
-  opacity: 0.9;
+  opacity: 0.8;
+}
+
+::-webkit-scrollbar {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 7px;
+  height: 0.5em;
+  margin: 0;
+  padding: 0;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(0,0,0,.5);
+  background-color: #b3b3b3;
+  -webkit-box-shadow: 0 0 1px rgba(255,255,255,.5);
+  box-shadow: 0 0 1px rgba(255,255,255,.5);
+}
+
+.info-btn {
+  padding: 0.5em;
+  font-size: 0.8em;
+  float: left;
+  border-radius: 4px;
+  background-color: #31334a;
+  color: white;
+  margin: 0.8em;
+}
+
+.info-btn p {
+  margin: 0;
+  letter-spacing: 1px;
+}
+
+.active {
+  color: #09a6ff;
+}
+
+.innactive {
+  color: #848484;
+}
+
+.info-toggle p {
+  width: 81px;
+  height: 15px;
+}
+
+.info-toggle:hover {
+  cursor: pointer;
+  background-color: #595c80;
+}
+
+.textDisplay-wrapper {
+  overflow: auto;
+  height: 80%;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  text-align: left;
+  color: white;
+  font-weight: normal;
+  border-bottom: 1px solid #3a3b57;
+  font-size: 1em;
+}
+
+th {
+  padding: 0.5em 0;
+}
+
+.table-header {
+  border-bottom: 3px solid #3a3b57;
+}
+
+.data-row td {
+  font-size: 0.8em;
+  padding: 0.8em 0;
+}
+
+.name-field {
+  padding-left: 0.8em !important;
+}
+
+.printing-field {
+  font-style: italic;
+}
+
+.data-row:hover {
+  background-color: #2f304c;
+  cursor: pointer;
+}
+
+@media
+only screen and (max-width: 760px),
+(min-device-width: 730px) and (max-device-width: 1024px)  {
+
+	table, thead, tbody, th, td, tr {
+		display: block;
+	}
+
+	.table-header {
+		position: absolute;
+		top: -9999px;
+		left: -9999px;
+	}
+
+	tr { border: 1px solid #ccc; }
+
+	td {
+		border: none;
+		border-bottom: 1px solid #eee;
+		position: relative;
+		padding-left: 50%;
+	}
+
+	td:before {
+		top: 6px;
+		left: 6px;
+		width: 45%;
+		padding-right: 10px;
+    white-space: nowrap;
+    padding-left: 0.8em;
+  }
+
+  .name-field {
+    padding-left: 0 !important;
+  }
+
+	td:nth-of-type(1):before { content: "Card: "; }
+	td:nth-of-type(2):before { content: "Printing: "; }
+	td:nth-of-type(3):before { content: "Offered: "; }
+  td:nth-of-type(4):before { content: "Foil: "; }
+
+}
+
+.offer-prompt {
+  padding: 0;
+  margin: 0;
+  color: #90919a;
+  margin-top: 7%;
+}
+
+.offer-prompt h4, p {
+  text-align: center;
+  font-weight: normal;
 }
