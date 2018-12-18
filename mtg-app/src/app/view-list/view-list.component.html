@@ -9,8 +9,11 @@
   <hr>
   <div *ngFor="let wishlist of wishlistArray; let cardIdx = index" class="card-wrapper">
     <div class="card-display">
-      <img *ngIf="wishlist.hasOwnProperty('url')" src="{{ wishlist.url }}" alt="">
-      <p class="card-name">{{ wishlist.name }}</p>
+      <div style="position: relative;">
+        <img *ngIf="wishlist.hasOwnProperty('url')" src="{{ wishlist.url }}" alt="">
+        <img *ngIf="wishlist.pref_foil" class="foilOverlay" src="assets/images/foil-overlay.png" alt="">
+      </div>
+      <p class="card-name">{{ wishlist.card.name }}</p>
       <p *ngIf="wishlist.pref_printing === null" class="card-set">Preferred: None</p>
       <div *ngFor="let printing of wishlist.card.cardPrintings" class="card-set">
         <p *ngIf="printing.id === wishlist.pref_printing">Preferred: {{ printing.set.title }} ({{ printing.set.code }})</p>

@@ -9,7 +9,10 @@
   <hr>
   <div *ngFor="let collection of collectionArray; let cardIdx = index" class="card-wrapper">
     <div class="card-display">
-      <img src="{{ collection.printing.img_url }}" alt="" class="card-image">
+      <div style="position: relative;" class="card-image-div">
+        <img src="{{ collection.printing.img_url }}" alt="">
+        <img *ngIf="collection.foil" class="foilOverlay" src="assets/images/foil-overlay.png" alt="">
+      </div>
       <p class="card-name">{{ collection.printing.card.name }}</p>
       <p class="card-set">{{ collection.printing.set.title }} ({{ collection.printing.set.code }})</p>
       <p class="card-owned">Copies Owned: {{ collection.owned_copies }}</p>

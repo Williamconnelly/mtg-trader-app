@@ -107,6 +107,26 @@ export class EditListComponent implements OnInit {
   childUnsuccessfulUpdate(eventObj) {
     this.wishlistArray[eventObj["index"]].class = "updateUnsuccessful"
     window.alert(eventObj["message"]);
+    let id = this.fullWishlist.findIndex(element => element.id === eventObj.id);
+    setTimeout(() => {
+      let id = this.fullWishlist.findIndex(element => element.id === eventObj.id);
+      if (id > -1) {
+        this.fullWishlist[id].class = "updateDone";
+      }
+    }, 250)
+    if (id > -1) {
+      if (eventObj.updateKeys.includes("pref_foil")) {this.fullWishlist[id].pref_foil = eventObj.dbVersion.pref_foil}
+      if (eventObj.updateKeys.includes("number_wanted")) {this.fullWishlist[id].number_wanted = eventObj.dbVersion.number_wanted}
+      if (eventObj.updateKeys.includes("pref_printing")) {
+        if (eventObj.dbVersion.pref_printing === null) {
+          this.fullWishlist[id].pref_printing = 'none';
+          console.log(this.fullWishlist[id].pref_printing);
+        } else {
+          let printingIndex = this.fullWishlist[id].card.cardPrintings.findIndex(element => element.id === eventObj.dbVersion.pref_printing);
+          this.fullWishlist[id].pref_printing = this.fullWishlist[id].card.cardPrintings[printingIndex];
+        }
+      }
+    }
   }
 
   submitCardToWishlist() {
