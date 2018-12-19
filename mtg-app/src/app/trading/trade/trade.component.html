@@ -7,8 +7,8 @@
 <mat-drawer-container>
   <!-- Main Content -->
   <mat-drawer-content>
-    <app-trade-display *ngIf="trade && trade.hasOwnProperty('collections')" #userDisplay [trade]="trade" [userCards]="userOffers" [user]="loggedUser" (targetCardEmitter)="targetCardFromOffer($event)"></app-trade-display>
-    <app-trade-display *ngIf="trade && trade.hasOwnProperty('collections')" #partnerDisplay [trade]="trade" [userCards]="partnerOffers" [user]="partner"></app-trade-display>
+    <app-trade-display *ngIf="trade && trade.hasOwnProperty('collections')" #userDisplay [trade]="trade" [lock]="loggedUser.role === 'user_a' ? trade.a_lock : trade.b_lock" [submit]="loggedUser.role === 'user_a' ? trade.a_submit : trade.b_submit" [userCards]="userOffers" [user]="loggedUser" (targetCardEmitter)="targetCardFromOffer($event)"></app-trade-display>
+    <app-trade-display *ngIf="trade && trade.hasOwnProperty('collections')" #partnerDisplay [trade]="trade" [lock]="partner.role === 'user_a' ? trade.a_lock : trade.b_lock" [submit]="partner.role === 'user_a' ? trade.a_submit : trade.b_submit" [userCards]="partnerOffers" [user]="partner"></app-trade-display>
     <app-trade-message *ngIf="trade && trade.hasOwnProperty('messages')"
     [socket]="socket"
     [tradeId]="tradeId"
@@ -41,7 +41,11 @@
         <p>Locked</p>
       </div>
       <div class="drawer-card-container" *ngIf="currentCard.selection && currentCard.selection.hasOwnProperty('id')">
-        <img class="target-img" src="{{currentCard.selection.printing.img_url}}" alt="{{currentCard.selection.printing.card.name}}">
+        <!-- TODO: fix the fixDiv -->
+        <div class="fixDiv" style="position: relative; display: inline-block;">
+          <img class="target-img" src="{{currentCard.selection.printing.img_url}}" alt="{{currentCard.selection.printing.card.name}}">
+          <img class="target-img" *ngIf="currentCard.selection.foil" src="assets/images/foil-overlay.png" alt="" style="position: absolute; width: 146px; height: 204px; top: 0; left: 0;">
+        </div>
         <div class="update-container">
           <div *ngIf ="updateBool === false">
             <div class="offer-options">

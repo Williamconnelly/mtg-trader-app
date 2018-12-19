@@ -9,9 +9,11 @@ export class TradeDisplayComponent implements OnInit {
   @Input() userCards;
   @Input() user;
   @Input() trade;
+  @Input() lock;
+  @Input() submit;
   @Output() targetCardEmitter = new EventEmitter();
   locked: Boolean;
-  submit: Boolean;
+  
   textDisplay: Boolean = false;
 
   constructor() { }
@@ -19,13 +21,13 @@ export class TradeDisplayComponent implements OnInit {
   ngOnInit() {
     console.log(this.user);
     console.log(this.trade);
+    console.log(this.userCards);
+    console.log("this.lock: " + this.lock);
     // Check if the respective parties have either locked or submitted
     if (this.user.role === 'user_a') {
       this.trade.a_lock ? this.locked = true : this.locked = false;
-      this.trade.a_submit ? this.submit = true : this.submit = false;
     } else if (this.user.role === 'user_b') {
       this.trade.b_lock ? this.locked = true : this.locked = false;
-      this.trade.b_submit ? this.submit = true : this.submit = false;
     }
   }
 

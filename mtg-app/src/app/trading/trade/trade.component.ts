@@ -22,7 +22,11 @@ export class TradeComponent implements OnInit {
   listenerArray: Array<any> = [
     ["addCard", this.socketAddCard],
     ["updateCard", this.socketUpdateCard],
-    ["removeCard", this.socketRemoveCard]
+    ["removeCard", this.socketRemoveCard],
+    ["lock", this.socketLock],
+    ["unlock", this.socketUnlock],
+    ["submit", this.socketSubmit],
+    ["finalSubmit", this.socketFinalSubmit]
   ];
 
   opened: boolean;
@@ -219,7 +223,24 @@ export class TradeComponent implements OnInit {
         break;
       }
     }
-
+  }
+  socketLock(data) {
+    console.log("socketLock");
+    console.log(data);
+    this.trade[data["lockKey"]] = data["lock"];
+  }
+  socketUnlock(data) {
+    console.log(data);
+    this.trade[data] = null;
+  }
+  socketSubmit(data) {
+    console.log("socketSubmit");
+    console.log(data);
+    this.trade[data] = "true";
+  }
+  socketFinalSubmit(data) {
+    // OPEN MODAL
+    this.openModal();
   }
   getOffers(trade) {
     this.userOffers = [];
@@ -253,7 +274,7 @@ export class TradeComponent implements OnInit {
   }
   progressTrade(role: string, action: string) {
     // Create string of card offers for backend hashing and checking
-    let cardSet = ``;
+    let cardSet = `0`;
     for (const card of this.userOffers) {
       cardSet += `${card.printingId}`;
     }
@@ -263,10 +284,22 @@ export class TradeComponent implements OnInit {
       console.log(result);
       if (action === 'lock') {
         this.tradeState.locked = true;
+        // TODO: replace cardSet with hashed version from backend
         this.trade[`${this.loggedUser['role'][this.loggedUser['role'].length - 1]}_lock`] = cardSet;
+        //
+        this.socket.emit("lock", {
+          roomName: this.roomName,
+          lockKey: `${this.loggedUser['role'][this.loggedUser['role'].length - 1]}_lock`,
+          lock: cardSet
+        })
       } else if (action === 'unlock') {
         this.tradeState.locked = false;
         this.trade[`${this.loggedUser['role'][this.loggedUser['role'].length - 1]}_lock`] = null;
+        //
+        this.socket.emit("unlock", {
+          roomName: this.roomName,
+          lockKey: `${this.loggedUser['role'][this.loggedUser['role'].length - 1]}_lock`
+        })
       } else if (action === 'submit') {
         this.tradeState.submit = true;
         this.trade[`${this.loggedUser['role'][this.loggedUser['role'].length - 1]}_submit`] = 'true';
@@ -275,9 +308,18 @@ export class TradeComponent implements OnInit {
             console.log('HIT COMPLETE ROUTE!');
             console.log(data);
             if (data.completed === true) {
+              this.socket.emit("finalSubmit", {
+                roomName: this.roomName
+              })
               this.openModal();
             }
           });
+        } else {
+          console.log("submit socket")
+          this.socket.emit("submit", {
+            roomName: this.roomName,
+            submitKey: `${this.loggedUser['role'][this.loggedUser['role'].length - 1]}_submit`
+          })
         }
       }
       console.log(this.tradeState);
