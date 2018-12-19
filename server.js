@@ -33,6 +33,7 @@ app.all("*", (req,res,next) => {
 
 io.on('connection', (socket) => {
     console.log('Connected');
+
     socket.on("message", (data)=>{console.log(data)});
 
     socket.on("joinRoom", function(data) {
@@ -52,6 +53,26 @@ io.on('connection', (socket) => {
             collectionId: data["collectionId"]
         });
     });
+    socket.on("lock", (data) => {
+        console.log("lock");
+        socket.to(data["roomName"]).emit("lock", {
+            lockKey: data['lockKey'],
+            lock: data['lock']
+        });
+    })
+    socket.on("unlock", (data) => {
+        console.log("unlock");
+        socket.to(data["roomName"]).emit("unlock", data['lockKey']);
+    })
+    socket.on("submit", (data) => {
+        console.log("submit");
+        console.log(data);
+        socket.to(data["roomName"]).emit("submit", data["submitKey"]);
+    })
+    socket.on("finalSubmit", (data) => {
+        console.log("finalSubmit");
+        socket.to(data["roomName"]).emit("finalSubmit");
+    })
 
     socket.on("tradeMessage", (data) => {
         socket.to(data["roomName"]).emit("tradeMessage", data["messageObject"]);

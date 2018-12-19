@@ -5,7 +5,7 @@
       <p *ngIf="!textDisplay else displayText">View: Image</p>
       <ng-template #displayText><p>View: Text</p></ng-template>
     </div>
-    <div [ngClass]="locked ? 'active' : 'innactive'" class="info-btn">
+    <div [ngClass]="lock ? 'active' : 'innactive'" class="info-btn">
       <p>Locked</p>
     </div>
     <div [ngClass]="submit ? 'active' : 'innactive'" class="info-btn">
@@ -14,8 +14,10 @@
   </div>
   <div *ngIf="!textDisplay && userCards.length > 0" class="offer-wrapper">
     <div class="offer-container">
-      <div *ngFor="let card of userCards" class="card-display">
+      <!-- TODO: remove style properties -->
+      <div *ngFor="let card of userCards" class="card-display" style="position: relative;">
         <img src="{{ card.printing.img_url }}" (click)="targetCardFromOffer(card)" alt="{{ card.printing.card.name }}">
+        <img *ngIf="card.foil" src="assets/images/foil-overlay.png" alt="" (click)="targetCardFromOffer(card)" style="position: absolute; width: 146px; height: 204px; top: 0; left: 0;">
       </div>
     </div>
   </div>
